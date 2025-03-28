@@ -1,11 +1,30 @@
-@import 'tailwindcss';
+@import "@fortawesome/fontawesome-free/css/all.css";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
-@source '../../storage/framework/views/*.php';
-@source '../**/*.blade.php';
-@source '../**/*.js';
+/* Custom form components */
+[x-cloak] {
+    display: none !important;
+}
 
-@theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+/* Input styles */
+input:not([type="checkbox"]):not([type="radio"]),
+textarea,
+select {
+    @apply rounded-md shadow-sm bg-frappe-surface0 border-frappe-surface1 text-frappe-text focus:border-frappe-blue focus:ring-frappe-blue;
+}
+
+/* Buttons */
+.btn-primary {
+    @apply bg-frappe-blue text-frappe-crust hover:bg-frappe-sapphire transition-colors;
+}
+
+/* Alerts and validation */
+.alert-success {
+    @apply bg-frappe-green/20 text-frappe-green border border-frappe-green;
+}
+
+.alert-error {
+    @apply bg-frappe-red/20 text-frappe-red border border-frappe-red;
 }
