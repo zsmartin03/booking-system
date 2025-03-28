@@ -18,15 +18,11 @@ class RegisteredUserController extends Controller
      * Display the registration view.
      */
 
-    protected function create(array $data)
+    public function create(): View
     {
-        return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-            'role' => $data['role'],
-        ]);
+        return view('auth.register');
     }
+
 
     /**
      * Handle an incoming registration request.
@@ -37,20 +33,22 @@ class RegisteredUserController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'role' => ['required', 'in:client,provider'],
+            'terms' => ['accepted'],
         ]);
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'role' => $request->role,
         ]);
 
         event(new Registered($user));
 
         Auth::login($user);
-
-        return redirect(route('dashboard', absolute: false));
+        return redirect()->route('dashboard')->with('status', 'Welcome! Your account has been created successfully.');
     }
 }

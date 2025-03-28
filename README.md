@@ -7,10 +7,10 @@ A booking system for businesses and clients.
 1. Clone and setup:
 
 ```bash
-    git clone https://github.com/zsmartin03/booking-system.git
-    cd booking-system
-    composer install
-    npm install
+git clone https://github.com/zsmartin03/booking-system.git
+cd booking-system
+composer install
+npm install
 ```
 
 2. Configure environment:

@@ -1,25 +1,41 @@
 <x-guest-layout>
-    <div class="mb-4 text-sm text-gray-600">
-        {{ __('Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.') }}
+    <div class="bg-frappe-base rounded-xl shadow-lg p-6 max-w-md mx-auto">
+        <!-- Forgot Password Section -->
+        <h2 class="text-lg font-semibold text-frappe-text mb-4">
+            {{ __('Forgot your password?') }}
+        </h2>
+        <p class="text-sm text-frappe-subtext1 mb-6">
+            {{ __('Enter your email address below, and we’ll send you a link to reset your password.') }}
+        </p>
+
+        <!-- Session Status -->
+        <x-auth-session-status class="mb-4 text-frappe-green" :status="session('status')" />
+
+        <!-- Password Reset Form -->
+        <form method="POST" action="{{ route('password.email') }}">
+            @csrf
+
+            <!-- Email Address Input -->
+            <div class="mb-4">
+                <x-input-label for="email" :value="__('Email')" class="text-frappe-text" />
+                <x-text-input 
+                    id="email" 
+                    class="block mt-1 w-full bg-frappe-surface0 border-frappe-surface1 text-frappe-text focus:ring-frappe-blue focus:border-frappe-blue" 
+                    type="email" 
+                    name="email" 
+                    :value="old('email')" 
+                    required 
+                    autofocus 
+                />
+                <x-input-error :messages="$errors->get('email')" class="mt-2 text-frappe-red text-sm" />
+            </div>
+
+            <!-- Submit Button -->
+            <div class="flex items-center justify-end mt-4">
+                <x-primary-button class="bg-frappe-blue hover:bg-frappe-sapphire">
+                    {{ __('Send Password Reset Link') }}
+                </x-primary-button>
+            </div>
+        </form>
     </div>
-
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
-
-    <form method="POST" action="{{ route('password.email') }}">
-        @csrf
-
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            <x-primary-button>
-                {{ __('Email Password Reset Link') }}
-            </x-primary-button>
-        </div>
-    </form>
 </x-guest-layout>
