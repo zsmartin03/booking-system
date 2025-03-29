@@ -7,12 +7,6 @@ use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\BookingController;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-*/
-
 require __DIR__ . '/auth.php';
 
 Route::middleware('guest')->group(function () {
@@ -27,6 +21,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::post('/profile/update-password', [ProfileController::class, 'updatePassword'])->name('profile.update-password');
 
     Route::middleware('role:provider,admin')->group(function () {
         Route::resource('businesses', BusinessController::class)->except(['show']);
