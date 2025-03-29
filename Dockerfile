@@ -8,21 +8,23 @@ RUN apt-get update && apt-get install -y \
     libpng-dev \
     libonig-dev \
     libxml2-dev \
+    curl \
     && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
 
-# Enable Apache rewrite
-RUN a2enmod rewrite
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
+    && apt-get install -y nodejs
 
-# Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Copy files
+RUN a2enmod rewrite
+
 COPY . /var/www/html
 WORKDIR /var/www/html
 
-# Run build script
-RUN chmod +x render-build.sh
-RUN ./render-build.sh
+RUN composer install --no-dev --optimize-autoloader
+
+RUN npm install && npm run build
 
 # Set permissions
-RUN chown -R www-data:www-data /var/www/html/storage
+RUN chown -R www-data:www-data /var/www/html/storage \
+    && chmod -R 775 storage
