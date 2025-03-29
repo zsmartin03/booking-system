@@ -21,9 +21,16 @@ RUN a2enmod rewrite
 COPY . /var/www/html
 WORKDIR /var/www/html
 
+
+RUN touch database/database.sqlite
+
 RUN composer install --no-dev --optimize-autoloader
 
 RUN npm install && npm run build
+
+RUN php artisan migrate --force
+
+RUN php artisan storage:link
 
 # Set permissions
 RUN chown -R www-data:www-data /var/www/html/storage \
