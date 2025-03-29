@@ -1,40 +1,49 @@
 <?php
 
-use App\Http\Controllers\BookingController;
-use App\Http\Controllers\BusinessController;
-use App\Http\Controllers\EmployeeController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\ServiceController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\BusinessController;
+use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\BookingController;
 
-Route::get('/', function () {
-    return view('welcome');
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+*/
+
+require __DIR__ . '/auth.php';
+
+Route::middleware('guest')->group(function () {
+    Route::view('/', 'welcome')->name('home');
 });
 
-Route::middleware(['auth', 'role:admin,provider'])->group(function () {
-    Route::resource('businesses', BusinessController::class);
-    Route::resource('services', ServiceController::class);
-    Route::resource('employees', EmployeeController::class);
-});
-
-Route::middleware(['auth', 'role:client'])->group(function () {
-    Route::get('/bookings', [BookingController::class, 'index'])->name('bookings.index');
-    Route::get('/bookings/create', [BookingController::class, 'create'])->name('bookings.create');
-    Route::post('/bookings', [BookingController::class, 'store'])->name('bookings.store');
-});
-
-Route::middleware('auth')->group(function () {
+// Authenticated Routes
+Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
 
-    Route::get('/notifications', function () {
-        return view('notifications.index');
-    })->name('notifications.index');
-
-
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+
+    Route::middleware('role:provider,admin')->group(function () {
+        Route::resource('businesses', BusinessController::class)->except(['show']);
+        Route::resource('services', ServiceController::class)->except(['show']);
+        Route::resource('employees', EmployeeController::class);
+
+        Route::post('/business-hours', [BusinessController::class, 'updateHours'])->name('business.hours.update');
+        Route::post('/employee-hours', [EmployeeController::class, 'updateHours'])->name('employee.hours.update');
+    });
+
+    Route::middleware('role:client')->group(function () {
+        Route::get('/bookings/create', [BookingController::class, 'create'])->name('bookings.create');
+        Route::post('/bookings', [BookingController::class, 'store'])->name('bookings.store');
+    });
+
+    Route::resource('bookings', BookingController::class)->except(['create', 'store']);
 });
 
-require __DIR__ . '/auth.php';
+// Public Business View
+Route::get('/business/{id}', [BusinessController::class, 'show'])->name('business.show');
