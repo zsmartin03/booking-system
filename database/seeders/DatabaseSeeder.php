@@ -10,6 +10,7 @@ use App\Models\Service;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Carbon;
 
 class DatabaseSeeder extends Seeder
 {
@@ -24,6 +25,8 @@ class DatabaseSeeder extends Seeder
             'email' => 'admin@example.com',
             'password' => bcrypt('password'),
             'role' => 'admin',
+            'email_verified_at' => Carbon::now(),
+            'phone_number' => '1234567890',
         ]);
 
         // Create a provider user
@@ -32,6 +35,8 @@ class DatabaseSeeder extends Seeder
             'email' => 'provider@example.com',
             'password' => bcrypt('password'),
             'role' => 'provider',
+            'email_verified_at' => Carbon::now(),
+            'phone_number' => '1234567890',
         ]);
 
         // Create a business for the provider
@@ -71,6 +76,8 @@ class DatabaseSeeder extends Seeder
             'email' => 'employee@example.com',
             'password' => bcrypt('password'),
             'role' => 'provider',
+            'email_verified_at' => Carbon::now(),
+            'phone_number' => '2234567890',
         ]);
 
         $employee = Employee::create([
@@ -79,6 +86,8 @@ class DatabaseSeeder extends Seeder
             'name' => 'John Doe',
             'email' => 'john@example.com',
             'active' => true,
+            'email_verified_at' => Carbon::now(),
+            'phone_number' => '3234567890',
         ]);
 
         // Add employee working hours
@@ -100,6 +109,8 @@ class DatabaseSeeder extends Seeder
             'email' => 'client@example.com',
             'password' => bcrypt('password'),
             'role' => 'client',
+            'email_verified_at' => Carbon::now(),
+            'phone_number' => '5234567890',
         ]);
     }
 }

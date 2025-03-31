@@ -30,6 +30,8 @@ RUN npm install && npm run build
 
 RUN php artisan migrate --force
 
+RUN php artisan db:seed --force
+
 RUN php artisan storage:link
 
 # Set permissions
