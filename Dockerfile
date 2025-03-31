@@ -9,7 +9,8 @@ RUN apt-get update && apt-get install -y \
     libonig-dev \
     libxml2-dev \
     curl \
-    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
+    libpq-dev \
+    && docker-php-ext-install pdo pdo_pgsql mbstring exif pcntl bcmath gd
 
 RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
     && apt-get install -y nodejs
@@ -18,22 +19,15 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 RUN a2enmod rewrite
 
-COPY . /var/www/html
 WORKDIR /var/www/html
+COPY . /var/www/html
 
-
-RUN touch database/database.sqlite
-
+# Install dependencies
 RUN composer install --no-dev --optimize-autoloader
 
 RUN npm install && npm run build
 
-RUN php artisan migrate --force
-
-RUN php artisan db:seed --force
-
 RUN php artisan storage:link
 
-# Set permissions
 RUN chown -R www-data:www-data /var/www/html/storage \
     && chmod -R 775 storage

@@ -8,7 +8,6 @@ use App\Models\Employee;
 use App\Models\EmployeeWorkingHour;
 use App\Models\Service;
 use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Carbon;
 
@@ -19,7 +18,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // Create admin user
         $admin = User::create([
             'name' => 'Admin',
             'email' => 'admin@example.com',
@@ -29,27 +27,24 @@ class DatabaseSeeder extends Seeder
             'phone_number' => '1234567890',
         ]);
 
-        // Create a provider user
         $provider = User::create([
             'name' => 'Service Provider',
             'email' => 'provider@example.com',
             'password' => bcrypt('password'),
             'role' => 'provider',
             'email_verified_at' => Carbon::now(),
-            'phone_number' => '1234567890',
+            'phone_number' => '2345678901',
         ]);
 
-        // Create a business for the provider
         $business = Business::create([
             'user_id' => $provider->id,
             'name' => 'Example Business',
             'description' => 'This is an example business',
             'address' => '123 Main St, City',
-            'phone_number' => '1234567890',
+            'phone_number' => '5551234567',
             'email' => 'business@example.com',
         ]);
 
-        // Add business working hours
         $days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
         foreach ($days as $day) {
             BusinessWorkingHour::create([
@@ -60,7 +55,6 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
-        // Create a service
         $service = Service::create([
             'business_id' => $business->id,
             'name' => 'Haircut',
@@ -70,23 +64,24 @@ class DatabaseSeeder extends Seeder
             'active' => true,
         ]);
 
-        // Create an employee
         $employeeUser = User::create([
-            'name' => 'Employee',
+            'name' => 'Employee User',
             'email' => 'employee@example.com',
             'password' => bcrypt('password'),
-            'role' => 'provider',
+            'role' => 'employee', // Changed from 'provider' to 'employee'
+            'email_verified_at' => Carbon::now(),
+            'phone_number' => '3456789012',
         ]);
 
         $employee = Employee::create([
             'business_id' => $business->id,
             'user_id' => $employeeUser->id,
-            'name' => 'John Doe',
+            'name' => 'John Doe (Staff)',
             'email' => 'john@example.com',
+            'bio' => 'Professional stylist with 5 years experience',
             'active' => true,
         ]);
 
-        // Add employee working hours
         foreach ($days as $day) {
             EmployeeWorkingHour::create([
                 'employee_id' => $employee->id,
@@ -96,17 +91,15 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
-        // Associate employee with service
         $service->employees()->attach($employee->id);
 
-        // Create a client user
         User::create([
             'name' => 'Client',
             'email' => 'client@example.com',
             'password' => bcrypt('password'),
             'role' => 'client',
             'email_verified_at' => Carbon::now(),
-            'phone_number' => '5234567890',
+            'phone_number' => '4567890123',
         ]);
     }
 }
