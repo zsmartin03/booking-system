@@ -1,5 +1,6 @@
 FROM php:8.2-apache
 
+# Install dependencies
 RUN apt-get update && apt-get install -y \
     git \
     zip \
@@ -20,14 +21,16 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 RUN a2enmod rewrite
 
 WORKDIR /var/www/html
+
 COPY . /var/www/html
 
-# Install dependencies
 RUN composer install --no-dev --optimize-autoloader
 
 RUN npm install && npm run build
 
-RUN php artisan storage:link
+RUN chown -R www-data:www-data storage bootstrap/cache \
+    && chmod -R 775 storage bootstrap/cache
 
-RUN chown -R www-data:www-data /var/www/html/storage \
-    && chmod -R 775 storage
+RUN php artisan migrate --force
+
+RUN php artisan storage:link
