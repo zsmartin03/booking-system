@@ -6,6 +6,12 @@ use App\Http\Controllers\BusinessController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\BookingController;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\URL;
+
+if (App::environment('production')) {
+    URL::forceScheme('https');
+}
 
 require __DIR__ . '/auth.php';
 
