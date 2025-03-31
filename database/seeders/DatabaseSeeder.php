@@ -76,8 +76,6 @@ class DatabaseSeeder extends Seeder
             'email' => 'employee@example.com',
             'password' => bcrypt('password'),
             'role' => 'provider',
-            'email_verified_at' => Carbon::now(),
-            'phone_number' => '2234567890',
         ]);
 
         $employee = Employee::create([
@@ -86,8 +84,6 @@ class DatabaseSeeder extends Seeder
             'name' => 'John Doe',
             'email' => 'john@example.com',
             'active' => true,
-            'email_verified_at' => Carbon::now(),
-            'phone_number' => '3234567890',
         ]);
 
         // Add employee working hours
