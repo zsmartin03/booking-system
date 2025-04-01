@@ -17,7 +17,7 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
 
         // Trust all proxies
-        $middleware->trustProxies(at: ['*']);
+        $middleware->trustProxies(at: '*');
 
         // Trust all headers
         $middleware->trustProxies(
