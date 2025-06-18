@@ -7,6 +7,7 @@ use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\BusinessWorkingHourController;
+use App\Http\Controllers\EmployeeWorkingHourController;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\URL;
 
@@ -45,8 +46,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::resource('services', ServiceController::class)->except(['show']);
         Route::resource('employees', EmployeeController::class);
 
-        Route::post('/business-hours', [BusinessController::class, 'updateHours'])->name('business.hours.update');
-        Route::post('/employee-hours', [EmployeeController::class, 'updateHours'])->name('employee.hours.update');
+        Route::resource('employee-working-hours', EmployeeWorkingHourController::class)->except(['show']);
     });
 
     Route::middleware('role:client')->group(function () {

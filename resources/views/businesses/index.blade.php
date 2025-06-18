@@ -43,6 +43,12 @@
                                 <x-heroicon-o-briefcase class="w-4 h-4" />
                                 {{ __('Services') }}
                             </a>
+                            <a href="{{ route('employees.index', ['business_id' => $business->id]) }}"
+                                class="inline-flex items-center gap-1 bg-frappe-yellow text-white px-3 py-1.5 rounded hover:bg-frappe-peach transition"
+                                title="{{ __('Employees') }}">
+                                <x-heroicon-o-users class="w-4 h-4" />
+                                {{ __('Employees') }}
+                            </a>
                             <a href="{{ route('businesses.edit', $business->id) }}"
                                 class="inline-flex items-center gap-1 bg-frappe-blue text-white px-3 py-1.5 rounded text-sm hover:bg-frappe-sapphire transition"
                                 title="{{ __('Edit') }}">
