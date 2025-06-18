@@ -16,6 +16,7 @@ module.exports = {
     theme: {
         extend: {
             colors: {
+                'frappe-red': '#e78284',
                 // Catppuccin Frappé palette
                 frappe: {
                     base: "#303446",

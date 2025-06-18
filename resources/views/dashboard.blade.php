@@ -1,13 +1,41 @@
 <x-app-layout>
     <div class="py-12">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="bg-frappe-surface0 rounded-lg p-6 text-center">
-                <p class="text-frappe-text text-lg">
-                    Role:
-                    <span class="font-bold text-frappe-blue">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row md:space-x-8 space-y-6 md:space-y-0 justify-center items-stretch">
+
+                <!-- Role Card -->
+                <div class="flex-1 bg-frappe-surface0 rounded-lg p-6 flex flex-col items-center justify-center shadow">
+                    <x-heroicon-o-user class="w-8 h-8 text-frappe-blue mb-2" />
+                    <div class="text-frappe-text text-lg mb-1">{{ __('Role') }}</div>
+                    <span class="font-bold text-frappe-blue text-xl">
                         {{ ucfirst(auth()->user()->role) }}
                     </span>
-                </p>
+                </div>
+
+                <!-- Manage Businesses (admin/provider only) -->
+                @if (auth()->user()->role === 'admin' || auth()->user()->role === 'provider')
+                    <div
+                        class="flex-1 bg-frappe-surface0 rounded-lg p-6 flex flex-col items-center justify-center shadow">
+                        <x-heroicon-o-briefcase class="w-8 h-8 text-frappe-lavender mb-2" />
+                        <div class="text-frappe-text text-lg mb-1">{{ __('Manage Businesses') }}</div>
+                        <a href="{{ route('businesses.index') }}"
+                            class="mt-2 bg-frappe-blue text-white px-4 py-2 rounded hover:bg-frappe-sapphire transition flex items-center gap-2">
+                            <x-heroicon-o-cog class="w-5 h-5" />
+                            {{ __('Manage') }}
+                        </a>
+                    </div>
+                @endif
+
+                <!-- Browse Businesses (all users) -->
+                <div class="flex-1 bg-frappe-surface0 rounded-lg p-6 flex flex-col items-center justify-center shadow">
+                    <x-heroicon-o-building-storefront class="w-8 h-8 text-frappe-green mb-2" />
+                    <div class="text-frappe-text text-lg mb-1">{{ __('Browse Businesses') }}</div>
+                    <a href="{{ route('businesses.public.index') }}"
+                        class="mt-2 bg-frappe-blue text-white px-4 py-2 rounded hover:bg-frappe-sapphire transition flex items-center gap-2">
+                        <x-heroicon-o-eye class="w-5 h-5" />
+                        {{ __('Browse') }}
+                    </a>
+                </div>
             </div>
         </div>
     </div>

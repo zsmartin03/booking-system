@@ -6,6 +6,7 @@ use App\Http\Controllers\BusinessController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\BookingController;
+use App\Http\Controllers\BusinessWorkingHourController;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\URL;
 
@@ -16,7 +17,7 @@ if (App::environment('production')) {
 require __DIR__ . '/auth.php';
 
 Route::middleware('guest')->group(function () {
-    Route::view('/', 'welcome')->name('home');
+    Route::view('/', 'welcome', ['businesses' => \App\Models\Business::all()])->name('home');
 });
 
 // Authenticated Routes
@@ -30,7 +31,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/profile/update-password', [ProfileController::class, 'updatePassword'])->name('profile.update-password');
 
     Route::middleware('role:provider,admin')->group(function () {
-        Route::resource('businesses', BusinessController::class)->except(['show']);
+
+        // Business management
+        Route::get('/manage/businesses', [BusinessController::class, 'index'])->name('businesses.index');
+        Route::get('/manage/businesses/create', [BusinessController::class, 'create'])->name('businesses.create');
+        Route::post('/manage/businesses', [BusinessController::class, 'store'])->name('businesses.store');
+        Route::get('/manage/businesses/{id}/edit', [BusinessController::class, 'edit'])->name('businesses.edit');
+        Route::put('/manage/businesses/{id}', [BusinessController::class, 'update'])->name('businesses.update');
+        Route::delete('/manage/businesses/{id}', [BusinessController::class, 'destroy'])->name('businesses.destroy');
+
+        Route::resource('business-working-hours', BusinessWorkingHourController::class)->except(['show']);
+
         Route::resource('services', ServiceController::class)->except(['show']);
         Route::resource('employees', EmployeeController::class);
 
@@ -47,4 +58,5 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 // Public Business View
-Route::get('/business/{id}', [BusinessController::class, 'show'])->name('business.show');
+Route::get('/businesses/{id}', [BusinessController::class, 'show'])->name('businesses.show');
+Route::get('/businesses', [BusinessController::class, 'publicIndex'])->name('businesses.public.index');
