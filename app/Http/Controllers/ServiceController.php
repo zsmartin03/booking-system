@@ -2,63 +2,121 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Business;
+use App\Models\Service;
+use App\Models\Employee;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ServiceController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $user = Auth::user();
+        $businessId = $request->query('business_id');
+        $business = Business::where('id', $businessId)
+            ->when($user->role !== 'admin', fn($q) => $q->where('user_id', $user->id))
+            ->firstOrFail();
+
+        $services = $business->services()->with('employees')->get();
+
+        return view('services.index', compact('business', 'services'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        $user = Auth::user();
+        $businessId = $request->query('business_id');
+        $business = Business::where('id', $businessId)
+            ->when($user->role !== 'admin', fn($q) => $q->where('user_id', $user->id))
+            ->firstOrFail();
+
+        $employees = $business->employees()->where('active', true)->get();
+
+        return view('services.create', compact('business', 'employees'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $user = Auth::user();
+        $business = Business::where('id', $request->business_id)
+            ->when($user->role !== 'admin', fn($q) => $q->where('user_id', $user->id))
+            ->firstOrFail();
+
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'required|string',
+            'price' => 'required|integer|min:0',
+            'duration' => 'required|integer|min:1',
+            'active' => 'boolean',
+            'employees' => 'array',
+            'employees.*' => 'exists:employees,id',
+        ]);
+
+        $validated['business_id'] = $business->id;
+        $service = Service::create($validated);
+
+        if (isset($validated['employees'])) {
+            $service->employees()->sync($validated['employees']);
+        }
+
+        return redirect()->route('services.index', ['business_id' => $business->id])
+            ->with('success', 'Service created.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function edit($id)
     {
-        //
+        $user = Auth::user();
+        $service = Service::with('employees')->findOrFail($id);
+        $business = Business::where('id', $service->business_id)
+            ->when($user->role !== 'admin', fn($q) => $q->where('user_id', $user->id))
+            ->firstOrFail();
+
+        $employees = $business->employees()->where('active', true)->get();
+
+        return view('services.edit', compact('business', 'service', 'employees'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function update(Request $request, $id)
     {
-        //
+        $user = Auth::user();
+        $service = Service::findOrFail($id);
+        $business = Business::where('id', $service->business_id)
+            ->when($user->role !== 'admin', fn($q) => $q->where('user_id', $user->id))
+            ->firstOrFail();
+
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'required|string',
+            'price' => 'required|integer|min:0',
+            'duration' => 'required|integer|min:1',
+            'active' => 'boolean',
+            'employees' => 'array',
+            'employees.*' => 'exists:employees,id',
+        ]);
+
+        $service->update($validated);
+
+        if (isset($validated['employees'])) {
+            $service->employees()->sync($validated['employees']);
+        }
+
+        return redirect()->route('services.index', ['business_id' => $business->id])
+            ->with('success', 'Service updated.');
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function destroy($id)
     {
-        //
-    }
+        $user = Auth::user();
+        $service = Service::findOrFail($id);
+        $business = Business::where('id', $service->business_id)
+            ->when($user->role !== 'admin', fn($q) => $q->where('user_id', $user->id))
+            ->firstOrFail();
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        $service->employees()->detach();
+        $service->delete();
+
+        return redirect()->route('services.index', ['business_id' => $business->id])
+            ->with('success', 'Service deleted.');
     }
 }
