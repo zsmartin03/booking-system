@@ -8,6 +8,7 @@ use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\BusinessWorkingHourController;
 use App\Http\Controllers\EmployeeWorkingHourController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\URL;
 
@@ -49,10 +50,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::resource('employee-working-hours', EmployeeWorkingHourController::class)->except(['show']);
     });
 
-    Route::middleware('role:client')->group(function () {
-        Route::get('/bookings/create', [BookingController::class, 'create'])->name('bookings.create');
-        Route::post('/bookings', [BookingController::class, 'store'])->name('bookings.store');
-    });
+    Route::get('/bookings/create', [BookingController::class, 'create'])->name('bookings.create');
+    Route::post('/bookings', [BookingController::class, 'store'])->name('bookings.store');
+
 
     Route::resource('bookings', BookingController::class)->except(['create', 'store']);
 });
@@ -60,3 +60,27 @@ Route::middleware(['auth', 'verified'])->group(function () {
 // Public Business View
 Route::get('/businesses/{id}', [BusinessController::class, 'show'])->name('businesses.show');
 Route::get('/businesses', [BusinessController::class, 'publicIndex'])->name('businesses.public.index');
+
+Route::get('/booking-slots', [\App\Http\Controllers\BookingController::class, 'availableSlots'])
+    ->name('booking-slots')
+    ->middleware(['auth', 'verified']);
+
+Route::get('/debug/booking-slots', function (Request $request) {
+    $service = \App\Models\Service::findOrFail($request->service_id);
+    $employees = $service->employees()->where('active', true)->get();
+
+    $debug = [
+        'service' => $service->toArray(),
+        'employees_count' => $employees->count(),
+        'employees' => $employees->map(function ($emp) {
+            return [
+                'id' => $emp->id,
+                'name' => $emp->name,
+                'working_hours_count' => $emp->workingHours()->count(),
+                'working_hours' => $emp->workingHours()->get()->toArray()
+            ];
+        })
+    ];
+
+    return response()->json($debug);
+});

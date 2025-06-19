@@ -37,4 +37,20 @@ class Employee extends Model
     {
         return $this->hasMany(Booking::class);
     }
+
+    /**
+     * Check if employee can provide a specific service
+     */
+    public function canProvideService($serviceId)
+    {
+        return $this->active && $this->services()->where('service_id', $serviceId)->exists();
+    }
+
+    /**
+     * Get working hours for a specific day
+     */
+    public function getWorkingHoursForDay($dayOfWeek)
+    {
+        return $this->workingHours()->where('day_of_week', $dayOfWeek)->get();
+    }
 }

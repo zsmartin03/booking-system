@@ -26,13 +26,19 @@
             <div class="mb-4">
                 <x-input-label for="start_time" :value="__('Start Time')" />
                 <x-text-input id="start_time" name="start_time" type="time" class="block w-full mt-1"
-                    :value="old('start_time', $workingHour->start_time)" required />
-                <x-input-error :messages="$errors->get('start_time')" class="mt-2 text-frappe-red text-sm" />
+                    :value="old(
+                        'start_time',
+                        \Carbon\Carbon::createFromFormat('H:i:s', $workingHour->start_time)->format('H:i'),
+                    )" required /><x-input-error :messages="$errors->get('start_time')"
+                    class="mt-2 text-frappe-red text-sm" />
             </div>
 
             <div class="mb-4">
                 <x-input-label for="end_time" :value="__('End Time')" />
-                <x-text-input id="end_time" name="end_time" type="time" class="block w-full mt-1" :value="old('end_time', $workingHour->end_time)"
+                <x-text-input id="end_time" name="end_time" type="time" class="block w-full mt-1" :value="old(
+                    'end_time',
+                    \Carbon\Carbon::createFromFormat('H:i:s', $workingHour->end_time)->format('H:i'),
+                )"
                     required />
                 <x-input-error :messages="$errors->get('end_time')" class="mt-2 text-frappe-red text-sm" />
             </div>

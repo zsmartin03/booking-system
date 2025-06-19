@@ -22,6 +22,9 @@ return new class extends Migration
             $table->text('notes');
             $table->integer('total_price');
             $table->timestamps();
+
+            $table->index(['employee_id', 'start_time', 'end_time']);
+            $table->index(['start_time', 'end_time']);
         });
     }
 

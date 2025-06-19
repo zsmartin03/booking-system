@@ -27,6 +27,16 @@
                     @endif
                 </div>
             </div>
+            @auth
+                @if (in_array(auth()->user()->role, ['client', 'provider', 'admin']))
+                    <div class="mt-6">
+                        <a href="{{ route('bookings.create', ['business_id' => $business->id]) }}"
+                            class="bg-frappe-blue text-white px-4 py-2 rounded hover:bg-frappe-sapphire transition">
+                            <x-heroicon-o-calendar class="w-5 h-5 inline" /> {{ __('Book Now') }}
+                        </a>
+                    </div>
+                @endif
+            @endauth
         </div>
     </div>
 </x-app-layout>
