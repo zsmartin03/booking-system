@@ -5,7 +5,9 @@
         </h2>
     </x-slot>
 
-    <div class="py-6 max-w-6xl mx-auto">
+    <di <input type="hidden" name="start_time" x-bind:value="selectedSlot ? selectedSlot.datetime : ''">
+
+        <div>lass="py-6 max-w-6xl mx-auto">
         <!-- Service Selection -->
         <div class="mb-6 p-4 bg-frappe-surface0 rounded shadow">
             <form method="GET" action="{{ route('bookings.create') }}" class="flex flex-wrap gap-4">
@@ -151,43 +153,60 @@
                 <div x-show="selectedSlot" class="mt-6 p-4 bg-frappe-blue/10 border border-frappe-blue rounded">
                     <h4 class="font-semibold text-frappe-text mb-3">Confirm Your Booking</h4>
                     <div class="mb-4">
-                        <span class="text-frappe-subtext1">Selected Time: </span>
+                        <span class="text-frappe-subtext1">Time: </span>
                         <span class="font-medium text-frappe-text" x-text="formatSelectedTime()"></span>
                     </div>
+
+                    <!-- Error Messages -->
+                    @if ($errors->any())
+                        <div class="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+                            <ul class="list-disc pl-5">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
 
                     <!-- Employee Selection (new) -->
                     <div class="mb-4">
                         <span class="text-frappe-subtext1">Choose Employee: </span>
                         <div class="mt-2 space-y-2">
                             <template x-for="employee in availableEmployees" :key="employee.id">
-                                <div class="p-3 border rounded cursor-pointer transition-colors"
+                                <div class="p-3 border rounded cursor-pointer transition-colors relative"
                                     :class="selectedEmployeeId === employee.id ? 'bg-frappe-blue/20 border-frappe-blue' :
                                         'bg-frappe-surface0 border-frappe-surface1 hover:bg-frappe-surface1'"
                                     @click="selectEmployee(employee.id)">
                                     <div class="font-medium text-frappe-text" x-text="employee.name"></div>
                                     <div class="text-sm text-frappe-subtext1"
                                         x-text="employee.bio || 'No bio available'"></div>
+                                    <div x-show="employee.available === false"
+                                        class="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded">
+                                        Unavailable
+                                    </div>
                                 </div>
                             </template>
                         </div>
                     </div>
 
-                    <form method="POST" action="{{ route('bookings.store') }}" class="space-y-4">
+                    <form method="POST" action="{{ route('bookings.store') }}" class="space-y-4" x-ref="bookingForm">
                         @csrf
                         <input type="hidden" name="business_id" value="{{ $selectedBusiness->id }}">
                         <input type="hidden" name="service_id" value="{{ $selectedService->id }}">
-                        <input type="hidden" name="employee_id" :value="selectedEmployeeId">
-                        <input type="hidden" name="start_time" :value="selectedSlot?.datetime">
+                        <!-- Fix: Use proper binding for form submission -->
+                        <input type="hidden" name="employee_id" x-bind:value="selectedEmployeeId || ''">
+                        <input type="hidden" name="start_time"
+                            x-bind:value="selectedSlot ? selectedSlot.datetime : ''">
 
                         <div>
                             <x-input-label for="notes" :value="__('Notes (optional)')" />
                             <textarea name="notes" id="notes" rows="3"
                                 class="block w-full mt-1 bg-frappe-surface0 border-frappe-surface1 text-frappe-text rounded"
-                                placeholder="Any special requests or notes..."></textarea>
+                                placeholder="Any special requests or notes...">{{ old('notes') }}</textarea>
                         </div>
 
                         <div class="flex gap-2">
-                            <button type="submit"
+                            <button type="button" @click="submitBooking()"
                                 class="px-6 py-2 bg-frappe-green text-white rounded hover:bg-frappe-teal transition"
                                 :disabled="!selectedEmployeeId">
                                 Confirm Booking
@@ -210,17 +229,17 @@
                         weekLabel: '',
                         selectedSlot: null,
                         selectedSlotPosition: null,
-                        availableEmployees: [], // New array to hold available employees
-                        selectedEmployeeId: null, // Track selected employee
+                        availableEmployees: [],
+                        selectedEmployeeId: null,
                         loading: false,
                         startHour: 8,
                         endHour: 18,
-                        intervalMinutes: 1,
-                        slotHeight: 1, // pixels per 10-minute slot
+                        intervalMinutes: 5,
+                        slotHeight: 5,
                         serviceDuration: {{ $selectedService->duration }},
 
                         get slotsPerHour() {
-                            return 60 / this.intervalMinutes; // 6 slots per hour
+                            return 60 / this.intervalMinutes;
                         },
 
                         get totalSlots() {
@@ -229,6 +248,17 @@
 
                         get serviceSlotCount() {
                             return Math.ceil(this.serviceDuration / this.intervalMinutes);
+                        },
+
+                        getSlotIndex(hour, minute) {
+                            // Round to nearest 5 minutes
+                            const roundedMinute = Math.round(minute / this.intervalMinutes) * this.intervalMinutes;
+                            const adjustedHour = hour + (roundedMinute >= 60 ? 1 : 0);
+                            const adjustedMinute = roundedMinute % 60;
+
+                            const hourOffset = adjustedHour - this.startHour;
+                            const slotInHour = Math.floor(adjustedMinute / this.intervalMinutes);
+                            return (hourOffset * this.slotsPerHour) + slotInHour;
                         },
 
                         init() {
@@ -301,7 +331,6 @@
                             const schedule = {};
 
                             for (const [dateString, slots] of Object.entries(data)) {
-                                // Create array of all 10-minute intervals for this day
                                 const daySlots = [];
 
                                 for (let i = 0; i < this.totalSlots; i++) {
@@ -310,27 +339,36 @@
 
                                     daySlots.push({
                                         time: `${slotHour.toString().padStart(2, '0')}:${slotMinute.toString().padStart(2, '0')}`,
-                                        type: 'not_available', // default
-                                        employeeIds: [], // Changed to array for multiple employees
-                                        employeeData: {}, // Store employee details keyed by ID
+                                        type: 'not_available',
+                                        employeeIds: [],
+                                        employeeData: {},
                                         datetime: null,
                                         available: false
                                     });
                                 }
 
-                                // Mark working periods and availability
                                 if (slots && slots.length > 0) {
-                                    // Group slots by time instead of employee
                                     const timeSlots = {};
                                     slots.forEach(slot => {
-                                        const timeKey = new Date(slot.time).toISOString();
+                                        const slotDate = new Date(slot.time);
+                                        const minutes = slotDate.getMinutes();
+                                        const roundedMinutes = Math.round(minutes / 5) * 5;
+                                        slotDate.setMinutes(roundedMinutes === 60 ? 0 : roundedMinutes);
+                                        slotDate.setSeconds(0);
+                                        if (roundedMinutes === 60) {
+                                            slotDate.setHours(slotDate.getHours() + 1);
+                                        }
+                                        const timeKey = slotDate.toISOString();
+
                                         if (!timeSlots[timeKey]) {
                                             timeSlots[timeKey] = [];
                                         }
-                                        timeSlots[timeKey].push(slot);
+                                        timeSlots[timeKey].push({
+                                            ...slot,
+                                            time: slotDate.toISOString()
+                                        });
                                     });
 
-                                    // Process each time slot
                                     Object.entries(timeSlots).forEach(([timeKey, timeSlotList]) => {
                                         const slotTime = new Date(timeKey);
                                         const slotIndex = this.getSlotIndex(slotTime.getHours(), slotTime.getMinutes());
@@ -338,53 +376,40 @@
                                         if (slotIndex >= 0 && slotIndex < daySlots.length) {
                                             const slotsNeeded = this.serviceSlotCount;
 
-                                            // Check if all slots are available for the duration
-                                            let allAvailable = true;
-                                            for (let i = 0; i < slotsNeeded && (slotIndex + i) < daySlots.length; i++) {
-                                                if (daySlots[slotIndex + i].type === 'booked') {
-                                                    allAvailable = false;
-                                                    break;
-                                                }
-                                            }
+                                            const availableEmployees = timeSlotList.filter(slot => slot.available);
 
-                                            if (allAvailable) {
-                                                // Collect available employees for this slot
-                                                const availableEmployees = timeSlotList.filter(slot => slot.available);
+                                            if (availableEmployees.length > 0) {
+                                                for (let i = 0; i < slotsNeeded && (slotIndex + i) < daySlots.length; i++) {
+                                                    const currentSlot = daySlots[slotIndex + i];
+                                                    currentSlot.type = 'available';
+                                                    currentSlot.datetime = timeKey;
+                                                    currentSlot.available = true;
 
-                                                if (availableEmployees.length > 0) {
-                                                    // Mark slots as available with multiple employees
-                                                    for (let i = 0; i < slotsNeeded && (slotIndex + i) < daySlots
-                                                        .length; i++) {
-                                                        const currentSlot = daySlots[slotIndex + i];
-                                                        currentSlot.type = 'available';
-                                                        currentSlot.datetime = timeSlotList[0].time;
-                                                        currentSlot.available = true;
-
-                                                        // Store all employee data
-                                                        availableEmployees.forEach(employee => {
-                                                            if (!currentSlot.employeeIds.includes(employee
-                                                                    .employee_id)) {
-                                                                currentSlot.employeeIds.push(employee.employee_id);
-                                                                currentSlot.employeeData[employee.employee_id] = {
-                                                                    id: employee.employee_id,
-                                                                    name: employee.employee_name,
-                                                                    bio: employee.employee_bio || ''
-                                                                };
-                                                            }
-                                                        });
-                                                    }
+                                                    availableEmployees.forEach(employee => {
+                                                        if (!currentSlot.employeeIds.includes(employee
+                                                                .employee_id)) {
+                                                            currentSlot.employeeIds.push(employee.employee_id);
+                                                            currentSlot.employeeData[employee.employee_id] = {
+                                                                id: employee.employee_id,
+                                                                name: employee.employee_name,
+                                                                bio: employee.employee_bio || ''
+                                                            };
+                                                        }
+                                                    });
                                                 }
                                             } else {
-                                                // Mark as booked
+                                                const allEmployees = timeSlotList;
                                                 for (let i = 0; i < slotsNeeded && (slotIndex + i) < daySlots.length; i++) {
                                                     daySlots[slotIndex + i].type = 'booked';
                                                     daySlots[slotIndex + i].available = false;
+                                                    daySlots[slotIndex + i].datetime = timeKey;
+                                                    daySlots[slotIndex + i].bookedEmployees = allEmployees.map(e => e
+                                                        .employee_name).join(', ');
                                                 }
                                             }
                                         }
                                     });
 
-                                    // Mark working hours background (where no specific slot data exists)
                                     const firstSlot = slots[0];
                                     const lastSlot = slots[slots.length - 1];
                                     if (firstSlot && lastSlot) {
@@ -407,12 +432,6 @@
                             }
 
                             return schedule;
-                        },
-
-                        getSlotIndex(hour, minute) {
-                            const hourOffset = hour - this.startHour;
-                            const slotInHour = Math.floor(minute / this.intervalMinutes);
-                            return (hourOffset * this.slotsPerHour) + slotInHour;
                         },
 
                         getDaySlots(dateString) {
@@ -443,37 +462,53 @@
                         },
 
                         getSlotTooltip(slot, dateString, slotIndex) {
+                            if (!slot.time) return '';
+
                             if (slot.type === 'available') {
-                                return `Available at ${slot.time}`;
+                                const employeeCount = Object.keys(slot.employeeData).length;
+                                let tooltip = `Available at ${slot.time}`;
+                                if (employeeCount > 0) {
+                                    tooltip += ` (${employeeCount} employees available)`;
+
+                                    const employeeNames = Object.values(slot.employeeData).map(emp => emp.name).join(', ');
+                                    if (employeeNames) {
+                                        tooltip += `: ${employeeNames}`;
+                                    }
+                                }
+                                return tooltip;
                             } else if (slot.type === 'booked') {
-                                return `Booked at ${slot.time}`;
+                                return `Booked at ${slot.time}${slot.bookedEmployees ? ' by ' + slot.bookedEmployees : ''}`;
                             } else if (slot.type === 'selected') {
-                                return `Selected at ${slot.time}`;
+                                return `Selected: ${slot.time}`;
+                            } else if (slot.type === 'working') {
+                                return `Working hours: ${slot.time}`;
                             }
-                            return `${slot.time} - ${slot.type}`;
+                            return `${slot.time}`;
                         },
 
                         handleSlotClick(slot, dateString, slotIndex) {
                             if (slot.type !== 'available') return;
 
-                            // Check if we can fit the full service duration
                             const slotsNeeded = this.serviceSlotCount;
                             const daySlots = this.getDaySlots(dateString);
 
-                            // Check if all required slots are available
                             for (let i = 0; i < slotsNeeded; i++) {
                                 const checkIndex = slotIndex + i;
                                 if (checkIndex >= daySlots.length || daySlots[checkIndex].type !== 'available') {
-                                    return; // Can't book here
+                                    return;
                                 }
                             }
 
                             this.clearSelection();
 
-                            // Mark slots as selected
+                            const originalSlotTypes = [];
                             for (let i = 0; i < slotsNeeded; i++) {
                                 const selectIndex = slotIndex + i;
                                 if (selectIndex < daySlots.length) {
+                                    originalSlotTypes.push({
+                                        index: selectIndex,
+                                        type: daySlots[selectIndex].type
+                                    });
                                     daySlots[selectIndex].type = 'selected';
                                 }
                             }
@@ -481,15 +516,14 @@
                             this.selectedSlot = slot;
                             this.selectedSlotPosition = {
                                 dateString,
-                                slotIndex
+                                slotIndex,
+                                originalSlotTypes
                             };
 
-                            // Populate available employees from the first slot
                             this.availableEmployees = Object.values(slot.employeeData);
-                            this.selectedEmployeeId = null; // Reset selection
+                            this.selectedEmployeeId = null;
                         },
 
-                        // New method to select an employee
                         selectEmployee(employeeId) {
                             this.selectedEmployeeId = employeeId;
                         },
@@ -498,16 +532,25 @@
                             if (this.selectedSlotPosition) {
                                 const {
                                     dateString,
-                                    slotIndex
+                                    slotIndex,
+                                    originalSlotTypes
                                 } = this.selectedSlotPosition;
                                 const daySlots = this.getDaySlots(dateString);
-                                const slotsNeeded = this.serviceSlotCount;
 
-                                // Restore original state
-                                for (let i = 0; i < slotsNeeded; i++) {
-                                    const restoreIndex = slotIndex + i;
-                                    if (restoreIndex < daySlots.length && daySlots[restoreIndex].type === 'selected') {
-                                        daySlots[restoreIndex].type = 'available';
+                                if (originalSlotTypes && originalSlotTypes.length > 0) {
+                                    originalSlotTypes.forEach((item, index) => {
+                                        const restoreIndex = slotIndex + index;
+                                        if (restoreIndex < daySlots.length) {
+                                            daySlots[restoreIndex].type = item.type;
+                                        }
+                                    });
+                                } else {
+                                    const slotsNeeded = this.serviceSlotCount;
+                                    for (let i = 0; i < slotsNeeded; i++) {
+                                        const restoreIndex = slotIndex + i;
+                                        if (restoreIndex < daySlots.length && daySlots[restoreIndex].type === 'selected') {
+                                            daySlots[restoreIndex].type = 'available';
+                                        }
                                     }
                                 }
                             }
@@ -521,12 +564,30 @@
                         formatSelectedTime() {
                             if (!this.selectedSlot) return '';
                             const date = new Date(this.selectedSlot.datetime);
-                            return date.toLocaleDateString('en-GB', {
+
+                            const endDate = new Date(date);
+                            endDate.setMinutes(endDate.getMinutes() + this.serviceDuration);
+
+                            const formattedDate = date.toLocaleDateString('en-GB', {
                                 weekday: 'long',
                                 day: 'numeric',
                                 month: 'long',
                                 year: 'numeric'
-                            }) + ' at ' + this.selectedSlot.time;
+                            });
+
+                            const startTime = date.toLocaleTimeString('en-GB', {
+                                hour: '2-digit',
+                                minute: '2-digit',
+                                hour12: false
+                            });
+
+                            const endTime = endDate.toLocaleTimeString('en-GB', {
+                                hour: '2-digit',
+                                minute: '2-digit',
+                                hour12: false
+                            });
+
+                            return `${formattedDate} from ${startTime} to ${endTime}`;
                         },
 
                         previousWeek() {
@@ -539,10 +600,46 @@
                             this.weekStart.setDate(this.weekStart.getDate() + 7);
                             this.generateDays();
                             this.loadSchedule();
+                        },
+
+                        submitBooking() {
+                            if (!this.selectedEmployeeId || !this.selectedSlot) {
+                                alert('Please select an employee and time slot first.');
+                                return;
+                            }
+
+                            let formattedDate = '';
+                            if (this.selectedSlot.datetime) {
+                                const date = new Date(this.selectedSlot.datetime);
+
+                                if (isNaN(date.getTime())) {
+                                    alert('Invalid date selected. Please try again.');
+                                    return;
+                                }
+
+                                formattedDate = date.getFullYear() +
+                                    '-' + String(date.getMonth() + 1).padStart(2, '0') +
+                                    '-' + String(date.getDate()).padStart(2, '0') +
+                                    'T' + String(date.getHours()).padStart(2, '0') +
+                                    ':' + String(date.getMinutes()).padStart(2, '0');
+                            }
+
+                            const employeeInput = this.$refs.bookingForm.querySelector('input[name="employee_id"]');
+                            const startTimeInput = this.$refs.bookingForm.querySelector('input[name="start_time"]');
+
+                            if (employeeInput) employeeInput.value = this.selectedEmployeeId;
+                            if (startTimeInput) startTimeInput.value = formattedDate;
+
+                            console.log('Submitting booking with:');
+                            console.log('Employee ID:', this.selectedEmployeeId);
+                            console.log('Start Time:', formattedDate);
+                            console.log('Selected Slot:', this.selectedSlot);
+
+                            this.$refs.bookingForm.submit();
                         }
                     }
                 }
             </script>
         @endif
-    </div>
+        </div>
 </x-app-layout>

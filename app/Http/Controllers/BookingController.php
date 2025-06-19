@@ -8,6 +8,7 @@ use App\Models\Employee;
 use App\Models\Booking;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 
 class BookingController extends Controller
@@ -79,19 +80,23 @@ class BookingController extends Controller
             return back()->withErrors(['start_time' => 'Selected employee is not working at this time.'])->withInput();
         }
 
-        $booking = Booking::create([
-            'client_id' => Auth::id(),
-            'service_id' => $service->id,
-            'employee_id' => $validated['employee_id'],
-            'start_time' => $start,
-            'end_time' => $end,
-            'status' => 'pending',
-            'notes' => $validated['notes'] ?? '',
-            'total_price' => $service->price,
-        ]);
+        try {
+            $booking = Booking::create([
+                'client_id' => Auth::id(),
+                'service_id' => $service->id,
+                'employee_id' => $validated['employee_id'],
+                'start_time' => $start,
+                'end_time' => $end,
+                'status' => 'pending',
+                'notes' => $validated['notes'] ?? '',
+                'total_price' => $service->price,
+            ]);
 
-        return redirect()->route('bookings.show', $booking->id)
-            ->with('success', 'Booking created! Awaiting confirmation.');
+            return redirect()->route('bookings.show', $booking->id)
+                ->with('success', 'Booking created! Awaiting confirmation.');
+        } catch (\Exception $e) {
+            return back()->withErrors(['general' => 'Failed to create booking. Please try again.'])->withInput();
+        }
     }
 
     public function availableSlots(Request $request)
@@ -118,7 +123,7 @@ class BookingController extends Controller
             $slots[$dateString] = [];
 
             foreach ($employees as $employee) {
-                $dayOfWeek = strtolower($date->format('l'));
+                $dayOfWeek = strtolower($date->format('l')); // This returns lowercase like 'monday'
                 $workingHours = $employee->getWorkingHoursForDay($dayOfWeek);
 
                 foreach ($workingHours as $workingHour) {
@@ -140,21 +145,26 @@ class BookingController extends Controller
                     while ($current->copy()->addMinutes($service->duration) <= $endTime) {
                         $slotEnd = $current->copy()->addMinutes($service->duration);
 
-                        // Check for overlapping bookings
+                        // Check for overlapping bookings for this specific employee only
+                        // Use more precise overlap detection
                         $overlap = Booking::where('employee_id', $employee->id)
                             ->where('status', '!=', 'cancelled')
                             ->where(function ($q) use ($current, $slotEnd) {
+                                // A booking overlaps if:
+                                // 1. It starts before our slot ends AND
+                                // 2. It ends after our slot starts
                                 $q->where('start_time', '<', $slotEnd)
                                     ->where('end_time', '>', $current);
                             })->exists();
 
                         $slots[$dateString][] = [
-                            'time' => $current->format('Y-m-d\TH:i'),
+                            'time' => $current->format('Y-m-d\TH:i'), // Ensure exact format match
                             'label' => $current->format('H:i'),
                             'available' => !$overlap,
                             'employee_id' => $employee->id,
                             'employee_name' => $employee->name,
                             'employee_bio' => $employee->bio ?? '',
+                            'service_end_time' => $slotEnd->format('Y-m-d\TH:i'),
                         ];
 
                         $current->addMinutes($interval);
