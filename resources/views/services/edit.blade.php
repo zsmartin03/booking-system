@@ -1,10 +1,8 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="frosted-glass">
-            <h2 class="font-semibold text-xl text-frappe-lavender leading-tight">
-                {{ __('Edit Service for') }} {{ $business->name }}
-            </h2>
-        </div>
+        <h2 class="font-semibold text-xl text-frappe-lavender leading-tight">
+            {{ __('Edit Service for') }} {{ $business->name }}
+        </h2>
     </x-slot>
 
     <div class="py-6 max-w-md mx-auto">

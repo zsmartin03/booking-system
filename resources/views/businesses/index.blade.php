@@ -1,10 +1,8 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="frosted-glass">
-            <h2 class="font-semibold text-xl text-frappe-lavender leading-tight">
-                {{ __('My Businesses') }}
-            </h2>
-        </div>
+        <h2 class="font-semibold text-xl text-frappe-lavender leading-tight">
+            {{ __('My Businesses') }}
+        </h2>
     </x-slot>
 
     <div class="py-6">
@@ -20,69 +18,79 @@
                 </a>
             </div>
 
-            @forelse($businesses as $business)
-                @if ($loop->first)
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                @endif
+            @if ($businesses->count() > 0)
+                <div class="frosted-card rounded-xl shadow-lg overflow-hidden">
+                    <div class="divide-y divide-frappe-surface2/30">
+                        @foreach ($businesses as $business)
+                            <div class="p-6 hover:bg-frappe-surface0/20 transition-all duration-200">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex-1">
+                                        <div class="flex items-center gap-4">
+                                            <div class="flex-1">
+                                                <a href="{{ route('businesses.show', $business->id) }}"
+                                                    class="text-frappe-blue hover:text-frappe-sapphire text-xl font-semibold block mb-1 transition-colors">
+                                                    {{ $business->name }}
+                                                </a>
+                                                <p class="text-frappe-subtext1 text-sm opacity-80 mb-1">
+                                                    {{ $business->address }}</p>
+                                                @if ($business->description)
+                                                    <p class="text-frappe-subtext0 text-sm opacity-70 line-clamp-2">
+                                                        {{ $business->description }}</p>
+                                                @endif
+                                            </div>
+                                            <div class="text-right text-sm text-frappe-subtext1">
+                                                <div class="opacity-60">{{ $business->phone_number }}</div>
+                                                <div class="opacity-60">{{ $business->email }}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
-                <div
-                    class="frosted-card overflow-hidden shadow-lg sm:rounded-xl border border-frappe-surface2 hover:shadow-2xl transition-all duration-300 hover:scale-105">
-                    <div class="p-6">
-                        <div class="mb-4">
-                            <a href="{{ route('businesses.show', $business->id) }}"
-                                class="text-frappe-blue hover:text-frappe-sapphire text-xl font-semibold block mb-2 transition-colors">
-                                {{ $business->name }}
-                            </a>
-                            <p class="text-frappe-subtext1 text-sm opacity-80">{{ $business->address }}</p>
-                        </div>
-
-                        <div class="flex flex-wrap gap-2">
-                            <a href="{{ route('business-working-hours.index', ['business_id' => $business->id]) }}"
-                                class="inline-flex items-center gap-1 bg-gradient-to-r from-green-500/20 to-teal-500/20 backdrop-blur-sm border border-green-400/30 text-green-300 px-3 py-1.5 rounded-lg text-sm hover:from-green-500/30 hover:to-teal-500/30 transition-all"
-                                title="{{ __('Working Hours') }}">
-                                <x-heroicon-o-clock class="w-4 h-4" />
-                                {{ __('Working Hours') }}
-                            </a>
-                            <a href="{{ route('services.index', ['business_id' => $business->id]) }}"
-                                class="inline-flex items-center gap-1 bg-gradient-to-r from-yellow-500/20 to-orange-500/20 backdrop-blur-sm border border-yellow-400/30 text-yellow-300 px-3 py-1.5 rounded-lg text-sm hover:from-yellow-500/30 hover:to-orange-500/30 transition-all"
-                                title="{{ __('Services') }}">
-                                <x-heroicon-o-briefcase class="w-4 h-4" />
-                                {{ __('Services') }}
-                            </a>
-                            <a href="{{ route('employees.index', ['business_id' => $business->id]) }}"
-                                class="inline-flex items-center gap-1 bg-gradient-to-r from-purple-500/20 to-indigo-500/20 backdrop-blur-sm border border-purple-400/30 text-purple-300 px-3 py-1.5 rounded-lg hover:from-purple-500/30 hover:to-indigo-500/30 transition-all"
-                                title="{{ __('Employees') }}">
-                                <x-heroicon-o-users class="w-4 h-4" />
-                                {{ __('Employees') }}
-                            </a>
-                            <a href="{{ route('businesses.edit', $business->id) }}"
-                                class="inline-flex items-center gap-1 bg-gradient-to-r from-blue-500/20 to-indigo-500/20 backdrop-blur-sm border border-blue-400/30 text-blue-300 px-3 py-1.5 rounded-lg text-sm hover:from-blue-500/30 hover:to-indigo-500/30 transition-all"
-                                title="{{ __('Edit') }}">
-                                <x-heroicon-o-pencil class="w-4 h-4" />
-                                {{ __('Edit') }}
-                            </a>
-                            <button
-                                class="inline-flex items-center gap-1 bg-gradient-to-r from-red-500/20 to-pink-500/20 backdrop-blur-sm border border-red-400/30 text-red-300 px-3 py-1.5 rounded-lg text-sm hover:from-red-500/30 hover:to-pink-500/30 transition-all"
-                                onclick="showDeleteModal({{ $business->id }}, '{{ addslashes($business->name) }}')"
-                                title="{{ __('Delete') }}">
-                                <x-heroicon-o-trash class="w-4 h-4" />
-                                {{ __('Delete') }}
-                            </button>
-                        </div>
+                                <div class="mt-4 flex flex-wrap gap-2">
+                                    <a href="{{ route('business-working-hours.index', ['business_id' => $business->id]) }}"
+                                        class="inline-flex items-center gap-1 bg-gradient-to-r from-green-500/20 to-teal-500/20 backdrop-blur-sm border border-green-400/30 text-green-300 px-3 py-1.5 rounded-lg text-sm hover:from-green-500/30 hover:to-teal-500/30 transition-all"
+                                        title="{{ __('Working Hours') }}">
+                                        <x-heroicon-o-clock class="w-4 h-4" />
+                                        {{ __('Working Hours') }}
+                                    </a>
+                                    <a href="{{ route('services.index', ['business_id' => $business->id]) }}"
+                                        class="inline-flex items-center gap-1 bg-gradient-to-r from-yellow-500/20 to-orange-500/20 backdrop-blur-sm border border-yellow-400/30 text-yellow-300 px-3 py-1.5 rounded-lg text-sm hover:from-yellow-500/30 hover:to-orange-500/30 transition-all"
+                                        title="{{ __('Services') }}">
+                                        <x-heroicon-o-briefcase class="w-4 h-4" />
+                                        {{ __('Services') }}
+                                    </a>
+                                    <a href="{{ route('employees.index', ['business_id' => $business->id]) }}"
+                                        class="inline-flex items-center gap-1 bg-gradient-to-r from-purple-500/20 to-indigo-500/20 backdrop-blur-sm border border-purple-400/30 text-purple-300 px-3 py-1.5 rounded-lg hover:from-purple-500/30 hover:to-indigo-500/30 transition-all"
+                                        title="{{ __('Employees') }}">
+                                        <x-heroicon-o-users class="w-4 h-4" />
+                                        {{ __('Employees') }}
+                                    </a>
+                                    <a href="{{ route('businesses.edit', $business->id) }}"
+                                        class="edit-button text-white px-3 py-1.5 rounded-lg inline-flex items-center gap-1 text-sm"
+                                        title="{{ __('Edit') }}">
+                                        <x-heroicon-o-pencil class="w-4 h-4" />
+                                        {{ __('Edit') }}
+                                    </a>
+                                    <button
+                                        class="delete-button text-white px-3 py-1.5 rounded-lg inline-flex items-center gap-1 text-sm"
+                                        onclick="showDeleteModal({{ $business->id }}, '{{ addslashes($business->name) }}')"
+                                        title="{{ __('Delete') }}">
+                                        <x-heroicon-o-trash class="w-4 h-4" />
+                                        {{ __('Delete') }}
+                                    </button>
+                                </div>
+                            </div>
+                        @endforeach
                     </div>
                 </div>
-
-                @if ($loop->last)
+            @else
+                <div class="frosted-card overflow-hidden shadow-lg sm:rounded-xl">
+                    <div class="p-6 text-center">
+                        <p class="text-frappe-subtext1 opacity-80">{{ __('No businesses found.') }}</p>
+                    </div>
+                </div>
+            @endif
         </div>
-        @endif
-    @empty
-        <div class="frosted-card overflow-hidden shadow-lg sm:rounded-xl">
-            <div class="p-6 text-center">
-                <p class="text-frappe-subtext1 opacity-80">{{ __('No businesses found.') }}</p>
-            </div>
-        </div>
-        @endforelse
-    </div>
     </div>
 
     <div id="deleteModal"

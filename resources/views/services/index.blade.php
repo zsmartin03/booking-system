@@ -4,7 +4,6 @@
             <h2 class="font-semibold text-xl text-frappe-lavender leading-tight">
                 {{ __('Services for') }} {{ $business->name }}
             </h2>
-        </div>
     </x-slot>
 
     <div class="py-6 max-w-2xl mx-auto">
