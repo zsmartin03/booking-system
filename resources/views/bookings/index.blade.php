@@ -1,12 +1,14 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-frappe-lavender leading-tight">
-            {{ __('Bookings') }}
-        </h2>
+        <div class="frosted-glass">
+            <h2 class="font-semibold text-xl text-frappe-lavender leading-tight">
+                {{ __('Bookings') }}
+            </h2>
+        </div>
     </x-slot>
 
     <div class="py-6 max-w-5xl mx-auto">
-        <div class="bg-frappe-surface0 rounded shadow p-4">
+        <div class="frosted-card rounded-xl shadow-lg p-4">
             <table class="w-full">
                 <thead>
                     <tr>
@@ -30,7 +32,7 @@
                             <td>{{ ucfirst($booking->status) }}</td>
                             <td>
                                 <a href="{{ route('bookings.show', $booking->id) }}"
-                                    class="bg-frappe-blue text-white px-2 py-1 rounded hover:bg-frappe-sapphire transition">
+                                    class="frosted-button text-white px-3 py-1 rounded-lg hover:transform hover:-translate-y-1 transition-all text-sm">
                                     {{ __('View') }}
                                 </a>
                             </td>

@@ -1,13 +1,15 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-frappe-lavender leading-tight">
-            {{ __('Add New Business') }}
-        </h2>
+        <div class="frosted-glass">
+            <h2 class="font-semibold text-xl text-frappe-lavender leading-tight">
+                {{ __('Add New Business') }}
+            </h2>
+        </div>
     </x-slot>
 
     <div class="py-6">
         <div class="max-w-2xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-frappe-surface0 overflow-hidden shadow-sm sm:rounded-lg">
+            <div class="frosted-card overflow-hidden shadow-lg sm:rounded-xl">
                 <div class="p-6">
                     <form method="POST" action="{{ route('businesses.store') }}">
                         @csrf
@@ -62,9 +64,10 @@
                         </div>
 
                         <div>
-                            <x-primary-button class="bg-frappe-blue hover:bg-frappe-sapphire">
+                            <button type="submit"
+                                class="frosted-button text-white px-6 py-3 rounded-lg font-medium hover:transform hover:-translate-y-1 transition-all">
                                 {{ __('Create Business') }}
-                            </x-primary-button>
+                            </button>
                         </div>
                     </form>
                 </div>

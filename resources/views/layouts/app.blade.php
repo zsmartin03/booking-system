@@ -5,6 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="theme-color" content="#8839ef">
 
     <title>{{ config('app.name', 'BookingSystem') }}</title>
 
@@ -14,15 +15,286 @@
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    <style>
+        html {
+            overscroll-behavior: none;
+        }
+
+        .wave-container {
+            position: relative;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #8839ef, #7c3aed, #6366f1);
+        }
+
+        body {
+            background: linear-gradient(135deg, #8839ef, #7c3aed, #6366f1);
+            min-height: 100vh;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        .wave-container::before {
+            content: '';
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 200%;
+            height: 400px;
+            transform: translate(-50%, -50%) rotate(-15deg);
+            border-radius: 100% 50%;
+            background: rgba(137, 180, 250, 0.15);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .wave-container::after {
+            content: '';
+            position: fixed;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 180%;
+            height: 350px;
+            transform: translate(-50%, -50%) rotate(-15deg);
+            border-radius: 100% 50%;
+            background: rgba(166, 209, 137, 0.1);
+            z-index: -2;
+            pointer-events: none;
+        }
+
+        .frosted-glass {
+            background: rgba(49, 50, 68, 0.35);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(186, 194, 222, 0.15);
+            box-shadow: 0 8px 32px rgba(30, 30, 46, 0.2);
+        }
+
+        .frosted-card {
+            background: rgba(30, 30, 46, 0.7);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(186, 194, 222, 0.1);
+            box-shadow: 0 12px 40px rgba(30, 30, 46, 0.3);
+        }
+
+        .frosted-button {
+            background: rgba(137, 180, 250, 0.25);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(137, 180, 250, 0.35);
+            transition: all 0.3s ease;
+        }
+
+        .frosted-button:hover {
+            background: rgba(137, 180, 250, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(137, 180, 250, 0.15);
+        }
+
+        .frosted-modal {
+            background: rgba(30, 30, 46, 0.9);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(186, 194, 222, 0.15);
+        }
+
+        .content-layer {
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Navigation specific styles */
+        .nav-container {
+            position: relative;
+            z-index: 1000;
+        }
+
+        .nav-frosted {
+            background: rgba(49, 50, 68, 0.6);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(186, 194, 222, 0.15);
+        }
+
+        /* Ensure dropdowns stay above everything */
+        .dropdown-menu {
+            z-index: 9999 !important;
+        }
+
+        /* Header frosted glass */
+        .header-frosted {
+            background: rgba(49, 50, 68, 0.5);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(186, 194, 222, 0.1);
+        }
+
+        /* Select dropdown styling */
+        select {
+            background: rgba(30, 30, 46, 0.8) !important;
+            backdrop-filter: blur(10px) !important;
+            border: 1px solid rgba(186, 194, 222, 0.2) !important;
+            color: #cdd6f4 !important;
+            padding: 0.5rem 1rem !important;
+            border-radius: 0.5rem !important;
+            appearance: none !important;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23cdd6f4' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e") !important;
+            background-position: right 0.5rem center !important;
+            background-repeat: no-repeat !important;
+            background-size: 1.5em 1.5em !important;
+            padding-right: 2.5rem !important;
+        }
+
+        select:focus {
+            outline: none !important;
+            border-color: rgba(137, 180, 250, 0.5) !important;
+            box-shadow: 0 0 0 2px rgba(137, 180, 250, 0.2) !important;
+        }
+
+        select:hover {
+            background: rgba(30, 30, 46, 0.9) !important;
+            border-color: rgba(186, 194, 222, 0.3) !important;
+        }
+
+        /* Option styling */
+        select option {
+            background: rgba(30, 30, 46, 0.95) !important;
+            color: #cdd6f4 !important;
+            padding: 0.5rem !important;
+        }
+
+        select option:hover,
+        select option:focus,
+        select option:checked {
+            background: rgba(137, 180, 250, 0.3) !important;
+            color: #cdd6f4 !important;
+        }
+
+        select option:selected {
+            background: rgba(137, 180, 250, 0.4) !important;
+            color: #ffffff !important;
+        }
+
+        /* WebKit specific option styling */
+        select option:checked {
+            background: rgba(137, 180, 250, 0.4) linear-gradient(0deg, rgba(137, 180, 250, 0.4) 0%, rgba(137, 180, 250, 0.4) 100%) !important;
+        }
+
+        /* Custom dropdown arrow styling */
+        .custom-select {
+            position: relative;
+        }
+
+        .custom-select::after {
+            content: '▼';
+            position: absolute;
+            right: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #cdd6f4;
+            pointer-events: none;
+            font-size: 0.8rem;
+        }
+
+
+
+        /* Standardized button styles */
+        .edit-button {
+            background: rgba(137, 180, 250, 0.25) !important;
+            backdrop-filter: blur(8px) !important;
+            border: 1px solid rgba(137, 180, 250, 0.35) !important;
+            color: white !important;
+            transition: all 0.3s ease !important;
+        }
+
+        .edit-button:hover {
+            background: rgba(137, 180, 250, 0.4) !important;
+            transform: translateY(-2px) !important;
+            box-shadow: 0 8px 25px rgba(137, 180, 250, 0.15) !important;
+        }
+
+        .delete-button {
+            background: rgba(243, 139, 168, 0.25) !important;
+            backdrop-filter: blur(8px) !important;
+            border: 1px solid rgba(243, 139, 168, 0.35) !important;
+            color: white !important;
+            transition: all 0.3s ease !important;
+        }
+
+        .delete-button:hover {
+            background: rgba(243, 139, 168, 0.4) !important;
+            transform: translateY(-2px) !important;
+            box-shadow: 0 8px 25px rgba(243, 139, 168, 0.15) !important;
+        }
+
+        .save-button {
+            background: rgba(166, 209, 137, 0.25) !important;
+            backdrop-filter: blur(8px) !important;
+            border: 1px solid rgba(166, 209, 137, 0.35) !important;
+            color: white !important;
+            transition: all 0.3s ease !important;
+        }
+
+        .save-button:hover {
+            background: rgba(166, 209, 137, 0.4) !important;
+            transform: translateY(-2px) !important;
+            box-shadow: 0 8px 25px rgba(166, 209, 137, 0.15) !important;
+        }
+
+        .action-button {
+            background: rgba(137, 180, 250, 0.25) !important;
+            backdrop-filter: blur(8px) !important;
+            border: 1px solid rgba(137, 180, 250, 0.35) !important;
+            color: white !important;
+            transition: all 0.3s ease !important;
+        }
+
+        .action-button:hover {
+            background: rgba(137, 180, 250, 0.4) !important;
+            transform: translateY(-2px) !important;
+            box-shadow: 0 8px 25px rgba(137, 180, 250, 0.15) !important;
+        }
+
+        /* Standardized input styling */
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        input[type="number"],
+        input[type="time"],
+        input[type="tel"],
+        input[type="file"],
+        textarea,
+        select {
+            background: rgba(30, 30, 46, 0.8) !important;
+            backdrop-filter: blur(10px) !important;
+            border: 1px solid rgba(186, 194, 222, 0.2) !important;
+            color: #cdd6f4 !important;
+            border-radius: 0.5rem !important;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="password"]:focus,
+        input[type="number"]:focus,
+        input[type="time"]:focus,
+        input[type="tel"]:focus,
+        input[type="file"]:focus,
+        textarea:focus,
+        select:focus {
+            outline: none !important;
+            border-color: rgba(137, 180, 250, 0.5) !important;
+            box-shadow: 0 0 0 2px rgba(137, 180, 250, 0.2) !important;
+        }
+
+        textarea {
+            resize: vertical !important;
+        }
+    </style>
 </head>
 
-<body class="font-sans antialiased bg-frappe-base text-frappe-text">
-    <div class="min-h-screen flex flex-col">
+<body class="font-sans antialiased bg-frappe-base text-frappe-text wave-container">
+    <div class="min-h-screen flex flex-col content-layer">
         @include('layouts.navigation')
 
         <!-- Page Heading -->
         @if (isset($header))
-            <header class="bg-frappe-surface0 shadow border-b border-frappe-surface1">
+            <header class="header-frosted shadow">
                 <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
                     {{ $header }}
                 </div>

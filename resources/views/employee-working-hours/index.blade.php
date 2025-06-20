@@ -1,14 +1,16 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-frappe-lavender leading-tight">
-            {{ __('Working Hours for') }} {{ $employee->name }}
-        </h2>
+        <div class="frosted-glass">
+            <h2 class="font-semibold text-xl text-frappe-lavender leading-tight">
+                {{ __('Working Hours for') }} {{ $employee->name }}
+            </h2>
+        </div>
     </x-slot>
 
     <div class="py-6 max-w-2xl mx-auto">
         <a href="{{ route('employee-working-hours.create', ['employee_id' => $employee->id]) }}"
-            class="bg-frappe-blue text-white px-4 py-2 rounded hover:bg-frappe-sapphire transition mb-4 inline-block">
-            <x-heroicon-o-plus class="w-5 h-5 inline" /> {{ __('Add Working Hour') }}
+            class="action-button text-white px-4 py-2 rounded-lg mb-4 inline-flex items-center gap-1">
+            <x-heroicon-o-plus class="w-5 h-5" /> {{ __('Add Working Hour') }}
         </a>
 
         @if (session('success'))
@@ -17,13 +19,13 @@
             </div>
         @endif
 
-        <div class="bg-frappe-surface0 rounded shadow p-4">
+        <div class="frosted-card rounded-xl shadow-lg p-4">
             <table class="w-full">
                 <thead>
                     <tr>
-                        <th class="text-left py-2">{{ __('Day') }}</th>
-                        <th class="text-left py-2">{{ __('Start') }}</th>
-                        <th class="text-left py-2">{{ __('End') }}</th>
+                        <th class="text-left py-2 text-frappe-subtext1">{{ __('Day') }}</th>
+                        <th class="text-left py-2 text-frappe-subtext1">{{ __('Start') }}</th>
+                        <th class="text-left py-2 text-frappe-subtext1">{{ __('End') }}</th>
                         <th class="py-2"></th>
                     </tr>
                 </thead>
@@ -35,7 +37,7 @@
                             <td class="py-2">{{ $hour->end_time }}</td>
                             <td class="py-2 flex gap-2">
                                 <a href="{{ route('employee-working-hours.edit', $hour->id) }}"
-                                    class="bg-frappe-blue text-white px-2 py-1 rounded hover:bg-frappe-sapphire transition flex items-center gap-1">
+                                    class="edit-button text-white px-3 py-1 rounded-lg flex items-center gap-1 text-sm">
                                     <x-heroicon-o-pencil class="w-4 h-4" /> {{ __('Edit') }}
                                 </a>
                                 <form action="{{ route('employee-working-hours.destroy', $hour->id) }}" method="POST"
@@ -43,7 +45,7 @@
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit"
-                                        class="bg-frappe-red text-white px-2 py-1 rounded hover:bg-frappe-maroon transition flex items-center gap-1">
+                                        class="delete-button text-white px-3 py-1 rounded-lg flex items-center gap-1 text-sm">
                                         <x-heroicon-o-trash class="w-4 h-4" /> {{ __('Delete') }}
                                     </button>
                                 </form>

@@ -1,20 +1,20 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-frappe-lavender leading-tight">
-            {{ __('Book a Service') }}
-        </h2>
+        <div class="frosted-glass">
+            <h2 class="font-semibold text-xl text-frappe-lavender leading-tight">
+                {{ __('Book a Service') }}
+            </h2>
+        </div>
     </x-slot>
 
-    <di <input type="hidden" name="start_time" x-bind:value="selectedSlot ? selectedSlot.datetime : ''">
-
-        <div>lass="py-6 max-w-6xl mx-auto">
+    <div class="py-6 max-w-6xl mx-auto">
         <!-- Service Selection -->
-        <div class="mb-6 p-4 bg-frappe-surface0 rounded shadow">
+        <div class="mb-6 p-4 frosted-card rounded-xl shadow-lg">
             <form method="GET" action="{{ route('bookings.create') }}" class="flex flex-wrap gap-4">
                 <div class="flex-1 min-w-[200px]">
                     <x-input-label for="business_id" :value="__('Business')" />
                     <select name="business_id" id="business_id"
-                        class="block w-full mt-1 bg-frappe-surface0 border-frappe-surface1 text-frappe-text rounded"
+                        class="block w-full mt-1 bg-frappe-surface0/50 border-frappe-surface1/30 text-frappe-text rounded-md shadow-sm backdrop-blur-sm focus:border-frappe-blue focus:ring-frappe-blue/50"
                         onchange="this.form.submit()">
                         <option value="">{{ __('Select Business') }}</option>
                         @foreach ($businesses as $business)
@@ -28,7 +28,7 @@
                     <div class="flex-1 min-w-[200px]">
                         <x-input-label for="service_id" :value="__('Service')" />
                         <select name="service_id" id="service_id"
-                            class="block w-full mt-1 bg-frappe-surface0 border-frappe-surface1 text-frappe-text rounded"
+                            class="block w-full mt-1 bg-frappe-surface0/50 border-frappe-surface1/30 text-frappe-text rounded-md shadow-sm backdrop-blur-sm focus:border-frappe-blue focus:ring-frappe-blue/50"
                             onchange="this.form.submit()">
                             <option value="">{{ __('Select Service') }}</option>
                             @foreach ($services as $service)
@@ -44,22 +44,22 @@
 
         @if ($selectedService)
             <!-- Service Info -->
-            <div class="mb-6 p-4 bg-frappe-surface0 rounded shadow">
+            <div class="mb-6 p-4 frosted-card rounded-xl shadow-lg">
                 <h3 class="text-lg font-semibold text-frappe-text mb-2">{{ $selectedService->name }}</h3>
                 <p class="text-frappe-subtext1">Duration: {{ $selectedService->duration }} minutes</p>
                 <p class="text-frappe-subtext1">Price: ${{ number_format($selectedService->price / 100, 2) }}</p>
             </div>
 
             <!-- Interval-based Timetable -->
-            <div class="bg-frappe-surface0 rounded shadow p-4" x-data="intervalTimetable()" x-init="loadSchedule()">
+            <div class="frosted-card rounded-xl shadow-lg p-4" x-data="intervalTimetable()" x-init="loadSchedule()">
                 <div class="flex justify-between items-center mb-4">
                     <button @click="previousWeek()"
-                        class="px-4 py-2 bg-frappe-blue text-white rounded hover:bg-frappe-sapphire transition">
+                        class="frosted-button px-4 py-2 text-white rounded-lg hover:transform hover:-translate-y-1 transition-all">
                         ← Previous Week
                     </button>
                     <h3 class="text-lg font-semibold text-frappe-text" x-text="weekLabel"></h3>
                     <button @click="nextWeek()"
-                        class="px-4 py-2 bg-frappe-blue text-white rounded hover:bg-frappe-sapphire transition">
+                        class="frosted-button px-4 py-2 text-white rounded-lg hover:transform hover:-translate-y-1 transition-all">
                         Next Week →
                     </button>
                 </div>
@@ -150,7 +150,8 @@
                     <div class="text-frappe-subtext1">Loading schedule...</div>
                 </div>
 
-                <div x-show="selectedSlot" class="mt-6 p-4 bg-frappe-blue/10 border border-frappe-blue rounded">
+                <div x-show="selectedSlot"
+                    class="mt-6 p-4 bg-frappe-blue/20 border border-frappe-blue/30 rounded-lg backdrop-blur-sm">
                     <h4 class="font-semibold text-frappe-text mb-3">Confirm Your Booking</h4>
                     <div class="mb-4">
                         <span class="text-frappe-subtext1">Time: </span>
@@ -173,9 +174,10 @@
                         <span class="text-frappe-subtext1">Choose Employee: </span>
                         <div class="mt-2 space-y-2">
                             <template x-for="employee in availableEmployees" :key="employee.id">
-                                <div class="p-3 border rounded cursor-pointer transition-colors relative"
-                                    :class="selectedEmployeeId === employee.id ? 'bg-frappe-blue/20 border-frappe-blue' :
-                                        'bg-frappe-surface0 border-frappe-surface1 hover:bg-frappe-surface1'"
+                                <div class="p-3 border rounded-lg cursor-pointer transition-all relative backdrop-blur-sm"
+                                    :class="selectedEmployeeId === employee.id ?
+                                        'bg-frappe-blue/30 border-frappe-blue shadow-lg' :
+                                        'bg-frappe-surface0/50 border-frappe-surface1/30 hover:bg-frappe-surface1/50'"
                                     @click="selectEmployee(employee.id)">
                                     <div class="font-medium text-frappe-text" x-text="employee.name"></div>
                                     <div class="text-sm text-frappe-subtext1"
@@ -201,18 +203,18 @@
                         <div>
                             <x-input-label for="notes" :value="__('Notes (optional)')" />
                             <textarea name="notes" id="notes" rows="3"
-                                class="block w-full mt-1 bg-frappe-surface0 border-frappe-surface1 text-frappe-text rounded"
+                                class="block w-full mt-1 bg-frappe-surface0/50 border-frappe-surface1/30 text-frappe-text rounded-md shadow-sm backdrop-blur-sm focus:border-frappe-blue focus:ring-frappe-blue/50"
                                 placeholder="Any special requests or notes...">{{ old('notes') }}</textarea>
                         </div>
 
                         <div class="flex gap-2">
                             <button type="button" @click="submitBooking()"
-                                class="px-6 py-2 bg-frappe-green text-white rounded hover:bg-frappe-teal transition"
+                                class="frosted-button px-6 py-3 text-white rounded-lg hover:transform hover:-translate-y-1 transition-all"
                                 :disabled="!selectedEmployeeId">
                                 Confirm Booking
                             </button>
                             <button type="button" @click="clearSelection()"
-                                class="px-6 py-2 bg-frappe-surface2 text-frappe-text rounded hover:bg-frappe-surface1 transition">
+                                class="px-6 py-3 bg-frappe-surface0/50 border border-frappe-surface1/30 text-frappe-text rounded-lg hover:bg-frappe-surface0/70 transition-all backdrop-blur-sm">
                                 Cancel
                             </button>
                         </div>
@@ -641,5 +643,5 @@
                 }
             </script>
         @endif
-        </div>
+    </div>
 </x-app-layout>

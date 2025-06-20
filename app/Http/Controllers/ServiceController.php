@@ -10,6 +10,30 @@ use Illuminate\Support\Facades\Auth;
 
 class ServiceController extends Controller
 {
+    public function index(Request $request)
+    {
+        $user = Auth::user();
+        $business = Business::where('id', $request->business_id)
+            ->when($user->role !== 'admin', fn($q) => $q->where('user_id', $user->id))
+            ->firstOrFail();
+
+        $services = $business->services()->with('employees')->get();
+
+        return view('services.index', compact('business', 'services'));
+    }
+
+    public function create(Request $request)
+    {
+        $user = Auth::user();
+        $business = Business::where('id', $request->business_id)
+            ->when($user->role !== 'admin', fn($q) => $q->where('user_id', $user->id))
+            ->firstOrFail();
+
+        $employees = $business->employees()->where('active', true)->get();
+
+        return view('services.create', compact('business', 'employees'));
+    }
+
     public function store(Request $request)
     {
         $user = Auth::user();
@@ -38,6 +62,19 @@ class ServiceController extends Controller
 
         return redirect()->route('services.index', ['business_id' => $business->id])
             ->with('success', 'Service created.');
+    }
+
+    public function edit($id)
+    {
+        $user = Auth::user();
+        $service = Service::with('employees')->findOrFail($id);
+        $business = Business::where('id', $service->business_id)
+            ->when($user->role !== 'admin', fn($q) => $q->where('user_id', $user->id))
+            ->firstOrFail();
+
+        $employees = $business->employees()->where('active', true)->get();
+
+        return view('services.edit', compact('service', 'business', 'employees'));
     }
 
     public function update(Request $request, $id)
@@ -70,5 +107,19 @@ class ServiceController extends Controller
 
         return redirect()->route('services.index', ['business_id' => $business->id])
             ->with('success', 'Service updated.');
+    }
+
+    public function destroy($id)
+    {
+        $user = Auth::user();
+        $service = Service::findOrFail($id);
+        $business = Business::where('id', $service->business_id)
+            ->when($user->role !== 'admin', fn($q) => $q->where('user_id', $user->id))
+            ->firstOrFail();
+
+        $service->delete();
+
+        return redirect()->route('services.index', ['business_id' => $business->id])
+            ->with('success', 'Service deleted.');
     }
 }

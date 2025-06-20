@@ -1,13 +1,15 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-frappe-lavender leading-tight">
-            {{ $business->name }}
-        </h2>
+        <div class="frosted-glass">
+            <h2 class="font-semibold text-xl text-frappe-lavender leading-tight">
+                {{ $business->name }}
+            </h2>
+        </div>
     </x-slot>
 
     <div class="py-6">
         <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-frappe-surface0 overflow-hidden shadow-sm sm:rounded-lg">
+            <div class="frosted-card overflow-hidden shadow-lg sm:rounded-xl">
                 <div class="p-6">
                     <p class="mb-2 text-frappe-subtext1">{{ $business->description }}</p>
                     <p class="mb-1"><strong>Address:</strong> {{ $business->address }}</p>
@@ -31,8 +33,8 @@
                 @if (in_array(auth()->user()->role, ['client', 'provider', 'admin']))
                     <div class="mt-6">
                         <a href="{{ route('bookings.create', ['business_id' => $business->id]) }}"
-                            class="bg-frappe-blue text-white px-4 py-2 rounded hover:bg-frappe-sapphire transition">
-                            <x-heroicon-o-calendar class="w-5 h-5 inline" /> {{ __('Book Now') }}
+                            class="frosted-button text-white px-6 py-3 rounded-lg hover:transform hover:-translate-y-1 transition-all inline-flex items-center gap-2">
+                            <x-heroicon-o-calendar class="w-5 h-5" /> {{ __('Book Now') }}
                         </a>
                     </div>
                 @endif

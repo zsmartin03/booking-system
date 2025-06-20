@@ -1,5 +1,5 @@
 <x-guest-layout>
-    <div class="bg-frappe-base rounded-xl shadow-lg p-6 max-w-md mx-auto">
+    <div class="frosted-card rounded-xl shadow-lg p-6 max-w-md mx-auto">
         <!-- Forgot Password Section -->
         <h2 class="text-lg font-semibold text-frappe-text mb-4">
             {{ __('Forgot your password?') }}
@@ -18,15 +18,9 @@
             <!-- Email Address Input -->
             <div class="mb-4">
                 <x-input-label for="email" :value="__('Email')" class="text-frappe-text" />
-                <x-text-input 
-                    id="email" 
-                    class="block mt-1 w-full bg-frappe-surface0 border-frappe-surface1 text-frappe-text focus:ring-frappe-blue focus:border-frappe-blue" 
-                    type="email" 
-                    name="email" 
-                    :value="old('email')" 
-                    required 
-                    autofocus 
-                />
+                <x-text-input id="email"
+                    class="block mt-1 w-full bg-frappe-surface0 border-frappe-surface1 text-frappe-text focus:ring-frappe-blue focus:border-frappe-blue"
+                    type="email" name="email" :value="old('email')" required autofocus />
                 <x-input-error :messages="$errors->get('email')" class="mt-2 text-frappe-red text-sm" />
             </div>
 

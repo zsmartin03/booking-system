@@ -1,5 +1,5 @@
 <x-guest-layout>
-    <div class="bg-frappe-base rounded-xl shadow-lg p-6 max-w-md mx-auto">
+    <div class="frosted-card rounded-xl shadow-lg p-6 max-w-md mx-auto">
         <!-- Session Status -->
         <x-auth-session-status class="mb-4 text-frappe-green" :status="session('status')" />
 
