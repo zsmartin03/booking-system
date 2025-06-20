@@ -26,7 +26,6 @@
         body {
             background: linear-gradient(135deg, #8839ef, #7c3aed, #6366f1);
             background-attachment: fixed;
-            min-height: 100vh;
             overflow-x: hidden;
             overflow-y: auto;
             position: relative;
@@ -35,7 +34,6 @@
         .wave-container {
             position: relative;
             width: 100%;
-            min-height: 100vh;
         }
 
         .wave-container::before {
@@ -119,33 +117,50 @@
         </header>
 
         <section class="py-12 flex-1">
-            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
                 <h2 class="text-3xl font-bold text-frappe-lavender mb-8 text-center">{{ __('Browse Businesses') }}</h2>
-                <div class="frosted-card rounded-xl shadow-lg p-8">
-                    <ul class="space-y-6">
-                        @forelse($businesses as $business)
-                            <li
-                                class="p-4 bg-frappe-surface0/30 rounded-lg backdrop-blur-sm border border-frappe-surface1/20">
+
+                @forelse($businesses as $business)
+                    @if ($loop->first)
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    @endif
+
+                    <div
+                        class="frosted-card overflow-hidden shadow-lg sm:rounded-xl border border-frappe-surface2 hover:shadow-2xl transition-all duration-300 hover:scale-105 hover:transform hover:-translate-y-2">
+                        <div class="p-6">
+                            <div class="mb-4">
                                 <a href="{{ route('businesses.show', $business->id) }}"
-                                    class="text-frappe-blue hover:text-frappe-sapphire text-xl font-semibold transition-colors">
+                                    class="text-frappe-blue hover:text-frappe-sapphire text-xl font-semibold block mb-2 transition-colors">
                                     {{ $business->name }}
                                 </a>
-                                <div class="text-frappe-subtext1 mt-2">{{ $business->address }}</div>
+                                <p class="text-frappe-subtext1 text-sm opacity-80">{{ $business->address }}</p>
                                 @if ($business->description)
-                                    <div class="text-frappe-subtext0 mt-1 text-sm">{{ $business->description }}</div>
+                                    <p class="text-frappe-subtext0 text-sm mt-2 opacity-70">
+                                        {{ $business->description }}</p>
                                 @endif
-                            </li>
-                        @empty
-                            <li class="text-center py-8">
-                                <div class="text-frappe-subtext1 text-lg">{{ __('No businesses found.') }}</div>
-                                <div class="text-frappe-subtext0 mt-2">{{ __('Check back later for new listings!') }}
-                                </div>
-                            </li>
-                        @endforelse
-                    </ul>
-                </div>
+                            </div>
+
+                            <div class="flex justify-center">
+                                <a href="{{ route('businesses.show', $business->id) }}"
+                                    class="frosted-button text-white px-4 py-2 rounded-lg hover:transform hover:-translate-y-1 transition-all inline-flex items-center gap-2">
+                                    <x-heroicon-o-eye class="w-4 h-4" />
+                                    {{ __('View Details') }}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    @if ($loop->last)
             </div>
-        </section>
+            @endif
+        @empty
+            <div class="frosted-card rounded-xl shadow-lg p-8 text-center">
+                <div class="text-frappe-subtext1 text-lg">{{ __('No businesses found.') }}</div>
+                <div class="text-frappe-subtext0 mt-2">{{ __('Check back later for new listings!') }}</div>
+            </div>
+            @endforelse
+    </div>
+    </section>
 
 
     </div>

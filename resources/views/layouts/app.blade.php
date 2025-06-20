@@ -48,20 +48,6 @@
             pointer-events: none;
         }
 
-        .wave-container::after {
-            content: '';
-            position: fixed;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 180%;
-            height: 350px;
-            transform: translate(-50%, -50%) rotate(-15deg);
-            border-radius: 100% 50%;
-            background: rgba(166, 209, 137, 0.1);
-            z-index: -2;
-            pointer-events: none;
-        }
 
         .frosted-glass {
             background: rgba(49, 50, 68, 0.35);
@@ -103,19 +89,24 @@
 
         /* Navigation specific styles */
         .nav-container {
-            position: relative;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
             z-index: 1000;
         }
 
         .nav-frosted {
-            background: rgba(49, 50, 68, 0.6);
+            background: rgba(49, 50, 68, 0.8);
             backdrop-filter: blur(15px);
             border-bottom: 1px solid rgba(186, 194, 222, 0.15);
         }
 
+
         /* Ensure dropdowns stay above everything */
         .dropdown-menu {
-            z-index: 9999 !important;
+            z-index: 10000 !important;
         }
 
         /* Header frosted glass */
@@ -123,6 +114,11 @@
             background: rgba(49, 50, 68, 0.5);
             backdrop-filter: blur(12px);
             border-bottom: 1px solid rgba(186, 194, 222, 0.1);
+        }
+
+        .main-content {
+            margin-top: 64px;
+            /* Height of navbar */
         }
 
         /* Select dropdown styling */
@@ -292,20 +288,23 @@
     <div class="min-h-screen flex flex-col content-layer">
         @include('layouts.navigation')
 
-        <!-- Page Heading -->
-        @if (isset($header))
-            <header class="header-frosted shadow">
-                <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
-                    {{ $header }}
-                </div>
-            </header>
-        @endif
+        <div class="main-content ">
+            <!-- Page Heading -->
+            @if (isset($header))
+                <header class="header-frosted shadow">
+                    <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
+                        {{ $header }}
+                    </div>
+                </header>
+            @endif
 
-        <!-- Page Content -->
-        <main class="flex-1">
-            {{ $slot }}
-        </main>
+            <!-- Page Content -->
+            <main class="flex-1">
+                {{ $slot }}
+            </main>
+        </div>
     </div>
+
 </body>
 
 </html>

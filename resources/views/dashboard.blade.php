@@ -5,7 +5,7 @@
 
                 <!-- Role Card -->
                 <div
-                    class="flex-1 frosted-card rounded-xl p-6 flex flex-col items-center justify-center shadow-lg hover:shadow-2xl transition-all duration-300">
+                    class="flex-1 frosted-card rounded-xl p-6 flex flex-col items-center justify-center shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-105 hover:transform hover:-translate-y-2">
                     <x-heroicon-o-user class="w-8 h-8 text-frappe-blue mb-2" />
                     <div class="text-frappe-text text-lg mb-1">{{ __('Role') }}</div>
                     <span class="font-bold text-frappe-blue text-xl">
@@ -16,7 +16,7 @@
                 <!-- Manage Businesses (admin/provider only) -->
                 @if (auth()->user()->role === 'admin' || auth()->user()->role === 'provider')
                     <div
-                        class="flex-1 frosted-card rounded-xl p-6 flex flex-col items-center justify-center shadow-lg hover:shadow-2xl transition-all duration-300">
+                        class="flex-1 frosted-card rounded-xl p-6 flex flex-col items-center justify-center shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-105 hover:transform hover:-translate-y-2">
                         <x-heroicon-o-briefcase class="w-8 h-8 text-frappe-lavender mb-2" />
                         <div class="text-frappe-text text-lg mb-1">{{ __('Manage Businesses') }}</div>
                         <a href="{{ route('businesses.index') }}"
@@ -29,7 +29,7 @@
 
                 <!-- Browse Businesses (all users) -->
                 <div
-                    class="flex-1 frosted-card rounded-xl p-6 flex flex-col items-center justify-center shadow-lg hover:shadow-2xl transition-all duration-300">
+                    class="flex-1 frosted-card rounded-xl p-6 flex flex-col items-center justify-center shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-105 hover:transform hover:-translate-y-2">
                     <x-heroicon-o-building-storefront class="w-8 h-8 text-frappe-green mb-2" />
                     <div class="text-frappe-text text-lg mb-1">{{ __('Browse Businesses') }}</div>
                     <a href="{{ route('businesses.public.index') }}"

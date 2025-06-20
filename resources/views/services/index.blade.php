@@ -47,15 +47,12 @@
                                     class="edit-button text-white px-3 py-1 rounded-lg flex items-center gap-1 text-sm">
                                     <x-heroicon-o-pencil class="w-4 h-4" /> {{ __('Edit') }}
                                 </a>
-                                <form action="{{ route('services.destroy', $service->id) }}" method="POST"
-                                    onsubmit="return confirm('Delete this service?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit"
-                                        class="delete-button text-white px-3 py-1 rounded-lg flex items-center gap-1 text-sm">
-                                        <x-heroicon-o-trash class="w-4 h-4" /> {{ __('Delete') }}
-                                    </button>
-                                </form>
+                                <button
+                                    class="delete-button text-white px-3 py-1 rounded-lg flex items-center gap-1 text-sm"
+                                    onclick="showDeleteModal({{ $service->id }}, '{{ addslashes($service->name) }}')"
+                                    title="{{ __('Delete') }}">
+                                    <x-heroicon-o-trash class="w-4 h-4" /> {{ __('Delete') }}
+                                </button>
                             </td>
                         </tr>
                     @empty
@@ -68,4 +65,39 @@
             </table>
         </div>
     </div>
+
+    <div id="deleteModal"
+        class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 backdrop-blur-sm z-50 hidden">
+        <div class="frosted-modal p-6 rounded-2xl shadow-2xl w-full max-w-md mx-4">
+            <h3 class="text-xl font-semibold mb-4 text-frappe-red">{{ __('Delete Service') }}</h3>
+            <p class="mb-6 text-frappe-text opacity-90">{{ __('Are you sure you want to delete') }} <span
+                    id="modalServiceName" class="font-bold text-frappe-lavender"></span>?</p>
+            <form id="deleteForm" method="POST">
+                @csrf
+                @method('DELETE')
+                <div class="flex justify-end gap-3">
+                    <button type="button" onclick="hideDeleteModal()"
+                        class="px-6 py-2 bg-gradient-to-r from-gray-500/20 to-gray-600/20 backdrop-blur-sm border border-gray-400/30 text-gray-300 rounded-lg hover:from-gray-500/30 hover:to-gray-600/30 transition-all">
+                        {{ __('Cancel') }}
+                    </button>
+                    <button type="submit"
+                        class="px-6 py-2 bg-gradient-to-r from-red-500/30 to-pink-500/30 backdrop-blur-sm border border-red-400/40 text-red-300 rounded-lg hover:from-red-500/40 hover:to-pink-500/40 transition-all">
+                        {{ __('Delete') }}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function showDeleteModal(serviceId, serviceName) {
+            document.getElementById('modalServiceName').textContent = serviceName;
+            document.getElementById('deleteForm').action = "{{ url('/services') }}/" + serviceId;
+            document.getElementById('deleteModal').classList.remove('hidden');
+        }
+
+        function hideDeleteModal() {
+            document.getElementById('deleteModal').classList.add('hidden');
+        }
+    </script>
 </x-app-layout>
