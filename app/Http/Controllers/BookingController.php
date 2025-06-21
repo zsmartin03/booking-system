@@ -120,15 +120,17 @@ class BookingController extends Controller
         foreach (range(0, 6) as $offset) {
             $date = $weekStart->copy()->addDays($offset);
             $dateString = $date->toDateString();
-            $slots[$dateString] = [];
+            $dayOfWeek = strtolower($date->format('l'));
+
+            // Collect all possible time slots from all employees' working hours
+            $timeSlots = [];
 
             foreach ($employees as $employee) {
-                $dayOfWeek = strtolower($date->format('l')); // This returns lowercase like 'monday'
                 $workingHours = $employee->getWorkingHoursForDay($dayOfWeek);
 
                 foreach ($workingHours as $workingHour) {
                     $startTime = Carbon::parse($date->toDateString() . ' ' . $workingHour->start_time);
-                    // Round to nearest 5 minutes
+                    // Round up to nearest 5 minutes
                     $minutes = $startTime->minute;
                     $roundedMinutes = ceil($minutes / $interval) * $interval;
                     if ($roundedMinutes == 60) {
@@ -142,33 +144,95 @@ class BookingController extends Controller
 
                     // Generate slots every 5 minutes
                     $current = $startTime->copy();
-                    while ($current->copy()->addMinutes($service->duration) <= $endTime) {
-                        $slotEnd = $current->copy()->addMinutes($service->duration);
+                    while ($current < $endTime) {
+                        $timeKey = $current->format('Y-m-d\TH:i');
 
-                        // Check for overlapping bookings for this specific employee only
-                        // Use more precise overlap detection
+                        // Check for overlapping bookings for this specific employee
+                        // Check if the employee is available at this specific time (not for full service duration)
                         $overlap = Booking::where('employee_id', $employee->id)
                             ->where('status', '!=', 'cancelled')
-                            ->where(function ($q) use ($current, $slotEnd) {
-                                // A booking overlaps if:
-                                // 1. It starts before our slot ends AND
-                                // 2. It ends after our slot starts
-                                $q->where('start_time', '<', $slotEnd)
+                            ->where(function ($q) use ($current) {
+                                $q->where('start_time', '<=', $current)
                                     ->where('end_time', '>', $current);
                             })->exists();
 
-                        $slots[$dateString][] = [
-                            'time' => $current->format('Y-m-d\TH:i'), // Ensure exact format match
-                            'label' => $current->format('H:i'),
-                            'available' => !$overlap,
+                        // Initialize time slot if it doesn't exist
+                        if (!isset($timeSlots[$timeKey])) {
+                            $timeSlots[$timeKey] = [
+                                'time' => $timeKey,
+                                'label' => $current->format('H:i'),
+                                'employees' => []
+                            ];
+                        }
+
+                        // Calculate how much time is available from this slot until employee becomes unavailable
+                        $nextBooking = Booking::where('employee_id', $employee->id)
+                            ->where('status', '!=', 'cancelled')
+                            ->where('start_time', '>', $current)
+                            ->orderBy('start_time')
+                            ->first();
+
+                        $availableUntil = $endTime; // Default to end of working hours
+                        if ($nextBooking) {
+                            $availableUntil = min($availableUntil, Carbon::parse($nextBooking->start_time));
+                        }
+
+                        $availableMinutes = $current->diffInMinutes($availableUntil);
+                        $hasFullServiceTime = $availableMinutes >= $service->duration;
+
+                        // Add employee availability to this time slot
+                        $timeSlots[$timeKey]['employees'][] = [
                             'employee_id' => $employee->id,
                             'employee_name' => $employee->name,
                             'employee_bio' => $employee->bio ?? '',
-                            'service_end_time' => $slotEnd->format('Y-m-d\TH:i'),
+                            'available' => !$overlap,
+                            'available_minutes' => $availableMinutes,
+                            'has_full_service_time' => $hasFullServiceTime,
+                            'available_until' => $availableUntil->format('Y-m-d\TH:i')
                         ];
 
                         $current->addMinutes($interval);
                     }
+                }
+            }
+
+            // Convert aggregated time slots to the expected format
+            $slots[$dateString] = [];
+            foreach ($timeSlots as $timeKey => $timeSlot) {
+                // Check if ANY employee is available at this time
+                $availableEmployees = array_filter($timeSlot['employees'], function ($emp) {
+                    return $emp['available'];
+                });
+
+                // Find the best available employee (one with most available time)
+                $bestEmployee = null;
+                $maxAvailableMinutes = 0;
+                $hasAnyFullServiceTime = false;
+
+                foreach ($availableEmployees as $employee) {
+                    if ($employee['available_minutes'] > $maxAvailableMinutes) {
+                        $maxAvailableMinutes = $employee['available_minutes'];
+                        $bestEmployee = $employee;
+                    }
+                    if ($employee['has_full_service_time']) {
+                        $hasAnyFullServiceTime = true;
+                    }
+                }
+
+                // Create a slot entry for this time if any employee is working
+                if (!empty($timeSlot['employees'])) {
+                    $slots[$dateString][] = [
+                        'time' => $timeSlot['time'],
+                        'label' => $timeSlot['label'],
+                        'available' => !empty($availableEmployees),
+                        'employee_id' => $bestEmployee ? $bestEmployee['employee_id'] : (!empty($availableEmployees) ? array_values($availableEmployees)[0]['employee_id'] : null),
+                        'employee_name' => $bestEmployee ? $bestEmployee['employee_name'] : (!empty($availableEmployees) ? array_values($availableEmployees)[0]['employee_name'] : 'All employees booked'),
+                        'employee_bio' => $bestEmployee ? $bestEmployee['employee_bio'] : (!empty($availableEmployees) ? array_values($availableEmployees)[0]['employee_bio'] : ''),
+                        'service_end_time' => Carbon::parse($timeSlot['time'])->addMinutes($service->duration)->format('Y-m-d\TH:i'),
+                        'available_minutes' => $maxAvailableMinutes,
+                        'has_full_service_time' => $hasAnyFullServiceTime,
+                        'all_employees' => $timeSlot['employees'] // Include all employee data for frontend
+                    ];
                 }
             }
 

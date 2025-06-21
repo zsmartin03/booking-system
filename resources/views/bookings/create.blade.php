@@ -63,7 +63,7 @@
                 </div>
 
                 <!-- Legend -->
-                <div class="mb-4 flex gap-4 text-sm">
+                <div class="mb-4 flex gap-4 text-sm flex-wrap">
                     <div class="flex items-center gap-1">
                         <div class="w-4 h-4 bg-green-500 rounded"></div>
                         <span>Available</span>
@@ -114,10 +114,12 @@
                                 <div class="space-y-0">
                                     <template x-for="(slot, slotIndex) in getDaySlots(day.dateString)"
                                         :key="`${day.dateString}-${slotIndex}`">
-                                        <div class="cursor-pointer transition-all hover:opacity-80"
+                                        <div class="cursor-pointer transition-all relative"
                                             :class="getSlotClasses(slot, day.dateString, slotIndex)"
                                             :style="`height: ${slotHeight}px`"
                                             @click="handleSlotClick(slot, day.dateString, slotIndex)"
+                                            @mouseenter="handleSlotHover(slot, day.dateString, slotIndex, true)"
+                                            @mouseleave="handleSlotHover(slot, day.dateString, slotIndex, false)"
                                             :title="getSlotTooltip(slot, day.dateString, slotIndex)">
 
 
@@ -348,6 +350,7 @@
                                 }
 
                                 if (slots && slots.length > 0) {
+                                    // Group slots by time
                                     const timeSlots = {};
                                     slots.forEach(slot => {
                                         const slotDate = new Date(slot.time);
@@ -361,30 +364,48 @@
                                         const timeKey = slotDate.toISOString();
 
                                         if (!timeSlots[timeKey]) {
-                                            timeSlots[timeKey] = [];
+                                            timeSlots[timeKey] = slot;
                                         }
-                                        timeSlots[timeKey].push({
-                                            ...slot,
-                                            time: slotDate.toISOString()
-                                        });
                                     });
 
-                                    Object.entries(timeSlots).forEach(([timeKey, timeSlotList]) => {
+                                    // Determine working hours range
+                                    const workingTimes = new Set();
+                                    Object.values(timeSlots).forEach(slot => {
+                                        const slotTime = new Date(slot.time);
+                                        const slotIndex = this.getSlotIndex(slotTime.getHours(), slotTime.getMinutes());
+                                        if (slotIndex >= 0 && slotIndex < daySlots.length) {
+                                            workingTimes.add(slotIndex);
+                                        }
+                                    });
+
+                                    // Mark working hours
+                                    workingTimes.forEach(index => {
+                                        if (daySlots[index].type === 'not_available') {
+                                            daySlots[index].type = 'working';
+                                        }
+                                    });
+
+                                    // Process time slots for availability
+                                    Object.entries(timeSlots).forEach(([timeKey, slot]) => {
                                         const slotTime = new Date(timeKey);
                                         const slotIndex = this.getSlotIndex(slotTime.getHours(), slotTime.getMinutes());
 
                                         if (slotIndex >= 0 && slotIndex < daySlots.length) {
-                                            const slotsNeeded = this.serviceSlotCount;
+                                            const currentSlot = daySlots[slotIndex];
 
-                                            const availableEmployees = timeSlotList.filter(slot => slot.available);
+                                            if (slot.available) {
+                                                // Employee is available at this time
+                                                currentSlot.type = 'available';
+                                                currentSlot.datetime = timeKey;
+                                                currentSlot.available = true;
+                                                currentSlot.hasFullServiceTime = slot.has_full_service_time;
+                                                currentSlot.availableMinutes = slot.available_minutes;
 
-                                            if (availableEmployees.length > 0) {
-                                                for (let i = 0; i < slotsNeeded && (slotIndex + i) < daySlots.length; i++) {
-                                                    const currentSlot = daySlots[slotIndex + i];
-                                                    currentSlot.type = 'available';
-                                                    currentSlot.datetime = timeKey;
-                                                    currentSlot.available = true;
-
+                                                // Handle all employees data if available
+                                                if (slot.all_employees) {
+                                                    // Filter employees who are available AND have enough time for full service
+                                                    const availableEmployees = slot.all_employees.filter(emp => emp
+                                                        .available && emp.has_full_service_time);
                                                     availableEmployees.forEach(employee => {
                                                         if (!currentSlot.employeeIds.includes(employee
                                                                 .employee_id)) {
@@ -392,40 +413,36 @@
                                                             currentSlot.employeeData[employee.employee_id] = {
                                                                 id: employee.employee_id,
                                                                 name: employee.employee_name,
-                                                                bio: employee.employee_bio || ''
+                                                                bio: employee.employee_bio || '',
+                                                                availableMinutes: employee.available_minutes,
+                                                                hasFullServiceTime: employee
+                                                                    .has_full_service_time
                                                             };
                                                         }
                                                     });
+                                                } else {
+                                                    // Fallback to single employee data - only if they have full service time
+                                                    if (slot.employee_id && slot.has_full_service_time && !currentSlot.employeeIds.includes(slot
+                                                            .employee_id)) {
+                                                        currentSlot.employeeIds.push(slot.employee_id);
+                                                        currentSlot.employeeData[slot.employee_id] = {
+                                                            id: slot.employee_id,
+                                                            name: slot.employee_name,
+                                                            bio: slot.employee_bio || '',
+                                                            availableMinutes: slot.available_minutes,
+                                                            hasFullServiceTime: slot.has_full_service_time
+                                                        };
+                                                    }
                                                 }
                                             } else {
-                                                const allEmployees = timeSlotList;
-                                                for (let i = 0; i < slotsNeeded && (slotIndex + i) < daySlots.length; i++) {
-                                                    daySlots[slotIndex + i].type = 'booked';
-                                                    daySlots[slotIndex + i].available = false;
-                                                    daySlots[slotIndex + i].datetime = timeKey;
-                                                    daySlots[slotIndex + i].bookedEmployees = allEmployees.map(e => e
-                                                        .employee_name).join(', ');
-                                                }
+                                                // All employees are busy - mark as booked
+                                                currentSlot.type = 'booked';
+                                                currentSlot.available = false;
+                                                currentSlot.datetime = timeKey;
+                                                currentSlot.bookedEmployees = slot.employee_name || 'All employees booked';
                                             }
                                         }
                                     });
-
-                                    const firstSlot = slots[0];
-                                    const lastSlot = slots[slots.length - 1];
-                                    if (firstSlot && lastSlot) {
-                                        const startTime = new Date(firstSlot.time);
-                                        const endTime = new Date(lastSlot.time);
-                                        endTime.setMinutes(endTime.getMinutes() + this.serviceDuration);
-
-                                        const startIndex = this.getSlotIndex(startTime.getHours(), startTime.getMinutes());
-                                        const endIndex = this.getSlotIndex(endTime.getHours(), endTime.getMinutes());
-
-                                        for (let i = startIndex; i <= endIndex && i < daySlots.length; i++) {
-                                            if (daySlots[i].type === 'not_available') {
-                                                daySlots[i].type = 'working';
-                                            }
-                                        }
-                                    }
                                 }
 
                                 schedule[dateString] = daySlots;
@@ -443,13 +460,20 @@
 
                             switch (slot.type) {
                                 case 'available':
+                                    // All available slots show as green, regardless of full service time
                                     classes.push('bg-green-400', 'text-white');
                                     break;
                                 case 'selected':
-                                    classes.push('bg-blue-400', 'text-white');
+                                    classes.push('bg-blue-500', 'text-white');
                                     break;
                                 case 'booked':
                                     classes.push('bg-red-400', 'text-white');
+                                    break;
+                                case 'hover_preview':
+                                    classes.push('bg-blue-300', 'text-white', 'opacity-70');
+                                    break;
+                                case 'hover_conflict':
+                                    classes.push('bg-red-600', 'text-white');
                                     break;
                                 case 'working':
                                     classes.push('bg-frappe-surface1', 'text-frappe-subtext1');
@@ -467,8 +491,9 @@
                             if (slot.type === 'available') {
                                 const employeeCount = Object.keys(slot.employeeData).length;
                                 let tooltip = `Available at ${slot.time}`;
+
                                 if (employeeCount > 0) {
-                                    tooltip += ` (${employeeCount} employees available)`;
+                                    tooltip += ` - ${employeeCount} employees available`;
 
                                     const employeeNames = Object.values(slot.employeeData).map(emp => emp.name).join(', ');
                                     if (employeeNames) {
@@ -487,20 +512,66 @@
                         },
 
                         handleSlotClick(slot, dateString, slotIndex) {
-                            if (slot.type !== 'available') return;
+                            console.log('Slot clicked:', slot);
+                            console.log('Slot type:', slot.type);
+                            console.log('Employee data:', slot.employeeData);
 
-                            const slotsNeeded = this.serviceSlotCount;
+                            // Clear hover effects first to get the real slot type
+                            this.clearHoverEffects();
+
+                            // Get the actual slot after clearing hover effects
                             const daySlots = this.getDaySlots(dateString);
+                            const actualSlot = daySlots[slotIndex];
 
+                            console.log('Actual slot type after clearing hover:', actualSlot.type);
+
+                            // Allow clicking on available slots, hover previews, and selected slots
+                            const clickableTypes = ['available', 'hover_preview', 'selected'];
+                            const originalType = slot.originalType || slot.type;
+
+                            // Don't allow clicking on slots that would cause conflicts
+                            if (slot.type === 'hover_conflict' || originalType === 'hover_conflict') {
+                                console.log('Cannot click: slot would cause conflict');
+                                return;
+                            }
+
+                            if (!clickableTypes.includes(slot.type) && !clickableTypes.includes(originalType)) {
+                                console.log('Cannot click: slot type is not clickable');
+                                return;
+                            }
+
+                            // Additional check: verify the full service duration doesn't conflict
+                            const slotsNeeded = this.serviceSlotCount;
                             for (let i = 0; i < slotsNeeded; i++) {
                                 const checkIndex = slotIndex + i;
-                                if (checkIndex >= daySlots.length || daySlots[checkIndex].type !== 'available') {
+                                if (checkIndex >= daySlots.length) {
+                                    console.log('Cannot click: service extends beyond working hours');
+                                    return;
+                                }
+
+                                const checkSlot = daySlots[checkIndex];
+                                if (checkSlot.type === 'booked' || checkSlot.type === 'not_available') {
+                                    console.log('Cannot click: service duration conflicts with booked/unavailable slot');
                                     return;
                                 }
                             }
 
+                            // Use the actual slot data after hover clearing
+                            const targetSlot = actualSlot.type === 'available' ? actualSlot : slot;
+
+                            // Check if slot has employee data
+                            if (!targetSlot.employeeData || Object.keys(targetSlot.employeeData).length === 0) {
+                                console.log('No employee data available for this slot');
+                                return;
+                            }
+
+                            console.log('Processing click...');
                             this.clearSelection();
 
+                            // Mark the clicked slot as selected
+                            // slotsNeeded already declared above
+
+                            // Store original types for restoration
                             const originalSlotTypes = [];
                             for (let i = 0; i < slotsNeeded; i++) {
                                 const selectIndex = slotIndex + i;
@@ -513,15 +584,80 @@
                                 }
                             }
 
-                            this.selectedSlot = slot;
+                            this.selectedSlot = targetSlot;
                             this.selectedSlotPosition = {
                                 dateString,
                                 slotIndex,
                                 originalSlotTypes
                             };
 
-                            this.availableEmployees = Object.values(slot.employeeData);
+                            this.availableEmployees = Object.values(targetSlot.employeeData);
                             this.selectedEmployeeId = null;
+
+                            console.log('Selection complete. Available employees:', this.availableEmployees);
+                        },
+
+                        handleSlotHover(slot, dateString, slotIndex, isEntering) {
+                            // Clear any previous hover effects
+                            this.clearHoverEffects();
+
+                            if (!isEntering) return;
+
+                            const slotsNeeded = this.serviceSlotCount;
+                            const daySlots = this.getDaySlots(dateString);
+
+                            // Check if we can fit the full service duration
+                            let canFitService = true;
+                            let hasConflict = false;
+
+                            for (let i = 0; i < slotsNeeded; i++) {
+                                const checkIndex = slotIndex + i;
+                                if (checkIndex >= daySlots.length) {
+                                    canFitService = false;
+                                    break;
+                                }
+
+                                const checkSlot = daySlots[checkIndex];
+                                // Allow hovering over selected slots, but check for conflicts with booked/unavailable
+                                if (checkSlot.type === 'booked' || checkSlot.type === 'not_available') {
+                                    hasConflict = true;
+                                }
+                            }
+
+                            if (canFitService) {
+                                // Apply hover effects to show service duration
+                                for (let i = 0; i < slotsNeeded; i++) {
+                                    const hoverIndex = slotIndex + i;
+                                    if (hoverIndex < daySlots.length) {
+                                        const hoverSlot = daySlots[hoverIndex];
+
+                                        // Store original type for restoration
+                                        if (!hoverSlot.originalType) {
+                                            hoverSlot.originalType = hoverSlot.type;
+                                        }
+
+                                        // Apply hover effect based on conflict
+                                        if (hasConflict) {
+                                            hoverSlot.type = 'hover_conflict';
+                                        } else {
+                                            hoverSlot.type = 'hover_preview';
+                                        }
+                                    }
+                                }
+                            }
+                        },
+
+                        clearHoverEffects() {
+                            // Restore original types for all slots that have hover effects
+                            Object.values(this.schedule).forEach(daySlots => {
+                                daySlots.forEach(slot => {
+                                    if (slot.originalType && (slot.type === 'hover_preview' || slot.type ===
+                                            'hover_conflict')) {
+                                        slot.type = slot.originalType;
+                                        delete slot.originalType;
+                                    }
+                                });
+                            });
                         },
 
                         selectEmployee(employeeId) {
@@ -529,6 +665,9 @@
                         },
 
                         clearSelection() {
+                            // Clear hover effects first
+                            this.clearHoverEffects();
+
                             if (this.selectedSlotPosition) {
                                 const {
                                     dateString,
