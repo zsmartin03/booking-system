@@ -255,6 +255,7 @@
         input[type="time"],
         input[type="tel"],
         input[type="file"],
+        input[type="url"],
         textarea,
         select {
             background: rgba(30, 30, 46, 0.8) !important;

@@ -45,7 +45,6 @@ class BookingController extends Controller
         $service = Service::findOrFail($validated['service_id']);
         $employee = Employee::findOrFail($validated['employee_id']);
 
-        // Verify employee can provide this service
         if (!$employee->canProvideService($service->id)) {
             return back()->withErrors(['employee_id' => 'Selected employee cannot provide this service.'])->withInput();
         }

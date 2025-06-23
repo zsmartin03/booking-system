@@ -31,7 +31,8 @@
                             <option value="">{{ __('Select Service') }}</option>
                             @foreach ($services as $service)
                                 <option value="{{ $service->id }}" @selected(request('service_id') == $service->id)>
-                                    {{ $service->name }} ({{ $service->duration }}min - ${{ $service->price }})
+                                    {{ $service->name }} ({{ $service->duration }}min -
+                                    ${{ number_format($service->price / 100, 2) }})
                                 </option>
                             @endforeach
                         </select>
@@ -422,7 +423,8 @@
                                                     });
                                                 } else {
                                                     // Fallback to single employee data - only if they have full service time
-                                                    if (slot.employee_id && slot.has_full_service_time && !currentSlot.employeeIds.includes(slot
+                                                    if (slot.employee_id && slot.has_full_service_time && !currentSlot
+                                                        .employeeIds.includes(slot
                                                             .employee_id)) {
                                                         currentSlot.employeeIds.push(slot.employee_id);
                                                         currentSlot.employeeData[slot.employee_id] = {

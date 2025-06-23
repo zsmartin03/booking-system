@@ -55,7 +55,7 @@
                         </div>
 
                         <div class="mb-4">
-                            <x-input-label for="logo" :value="__('Logo URL')" />
+                            <x-input-label for="logo" :value="__('Business Logo')" />
                             <x-text-input id="logo" name="logo" type="text" class="mt-1 block w-full"
                                 :value="old('logo')" />
                             <x-input-error :messages="$errors->get('logo')" class="mt-2" />

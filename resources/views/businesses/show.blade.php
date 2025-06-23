@@ -36,6 +36,14 @@
                         </a>
                     </div>
                 @endif
+            @else
+                <div class="mt-6">
+                    <a href="{{ route('login') }}"
+                        class="frosted-button text-white px-6 py-3 rounded-lg hover:transform hover:-translate-y-1 transition-all inline-flex items-center gap-2">
+                        <x-heroicon-o-calendar class="w-5 h-5" /> {{ __('Book Now') }}
+                    </a>
+                    <p class="text-frappe-subtext1 text-sm mt-2">{{ __('Please sign in to make a booking') }}</p>
+                </div>
             @endauth
         </div>
     </div>
