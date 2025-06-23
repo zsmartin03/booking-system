@@ -5,8 +5,8 @@
         </h2>
     </x-slot>
 
-    <div class="py-6 max-w-md mx-auto">
-        <div class="frosted-card rounded-xl shadow-lg p-6">
+    <div class="py-6 max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="frosted-card rounded-xl shadow-lg p-4 sm:p-6">
             <form method="POST" action="{{ route('employees.update', $employee->id) }}" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
@@ -50,10 +50,18 @@
                     </label>
                 </div>
 
-                <x-primary-button class="bg-frappe-blue hover:bg-frappe-sapphire">
-                    <x-heroicon-o-pencil class="w-4 h-4" /> {{ __('Update') }}
-                </x-primary-button>
+                <div class="flex flex-col sm:flex-row gap-4 sm:gap-6">
+                    <button type="submit"
+                        class="frosted-button text-white px-6 py-3 rounded-lg font-medium hover:transform hover:-translate-y-1 transition-all inline-flex items-center justify-center gap-2 w-full sm:w-auto">
+                        <x-heroicon-o-pencil class="w-4 h-4" /> {{ __('Update Employee') }}
+                    </button>
+                    <a href="{{ route('employees.index', ['business_id' => $employee->business_id]) }}"
+                        class="bg-gray-500/20 backdrop-blur-sm border border-gray-400/30 text-gray-300 px-6 py-3 rounded-lg font-medium hover:bg-gray-500/30 transition-all inline-flex items-center justify-center gap-2 w-full sm:w-auto">
+                        {{ __('Cancel') }}
+                    </a>
+                </div>
             </form>
         </div>
+    </div>
     </div>
 </x-app-layout>

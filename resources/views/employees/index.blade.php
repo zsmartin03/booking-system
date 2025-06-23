@@ -5,11 +5,13 @@
         </h2>
     </x-slot>
 
-    <div class="py-6 max-w-6xl mx-auto">
-        <a href="{{ route('employees.create', ['business_id' => $business->id]) }}"
-            class="frosted-button text-white px-4 py-2 rounded-lg hover:transform hover:-translate-y-1 transition-all mb-4 inline-block">
-            <x-heroicon-o-plus class="w-5 h-5 inline" /> {{ __('Add Employee') }}
-        </a>
+    <div class="py-6 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="mb-4">
+            <a href="{{ route('employees.create', ['business_id' => $business->id]) }}"
+                class="frosted-button text-white px-4 py-2 rounded-lg hover:transform hover:-translate-y-1 transition-all inline-flex items-center gap-2">
+                <x-heroicon-o-plus class="w-5 h-5" /> {{ __('Add Employee') }}
+            </a>
+        </div>
 
         @if (session('success'))
             <div class="mb-4 p-3 bg-frappe-green/20 text-frappe-green rounded">
@@ -17,53 +19,120 @@
             </div>
         @endif
 
-        <div class="frosted-card rounded-xl shadow-lg p-4">
-            <table class="w-full">
-                <thead>
-                    <tr>
-                        <th class="text-left py-2">{{ __('Name') }}</th>
-                        <th class="text-left py-2">{{ __('Email') }}</th>
-                        <th class="text-left py-2">{{ __('Active') }}</th>
-                        <th class="py-2"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse($employees as $employee)
-                        <tr>
-                            <td class="py-2">{{ $employee->name }}</td>
-                            <td class="py-2">{{ $employee->email }}</td>
-                            <td class="py-2">
+        <div class="frosted-card rounded-xl shadow-lg overflow-hidden">
+            <!-- Desktop Table View -->
+            <div class="hidden lg:block">
+                <div class="overflow-x-auto">
+                    <table class="w-full min-w-full">
+                        <thead>
+                            <tr class="border-b border-frappe-surface1/30">
+                                <th class="text-left py-3 px-4 font-medium text-frappe-text">{{ __('Name') }}</th>
+                                <th class="text-left py-3 px-4 font-medium text-frappe-text">{{ __('Email') }}</th>
+                                <th class="text-left py-3 px-4 font-medium text-frappe-text">{{ __('Active') }}</th>
+                                <th class="py-3 px-4 font-medium text-frappe-text">{{ __('Actions') }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($employees as $employee)
+                                <tr
+                                    class="border-b border-frappe-surface1/20 hover:bg-frappe-surface0/20 transition-colors">
+                                    <td class="py-3 px-4 text-frappe-text font-medium">{{ $employee->name }}</td>
+                                    <td class="py-3 px-4 text-frappe-subtext1">{{ $employee->email }}</td>
+                                    <td class="py-3 px-4">
+                                        @if ($employee->active)
+                                            <span
+                                                class="inline-flex px-2 py-1 text-xs font-medium rounded-full bg-green-500/20 text-green-300">{{ __('Active') }}</span>
+                                        @else
+                                            <span
+                                                class="inline-flex px-2 py-1 text-xs font-medium rounded-full bg-red-500/20 text-red-300">{{ __('Inactive') }}</span>
+                                        @endif
+                                    </td>
+                                    <td class="py-3 px-4">
+                                        <div class="flex flex-wrap gap-2 justify-center">
+                                            <a href="{{ route('employee-working-hours.index', ['employee_id' => $employee->id]) }}"
+                                                class="action-button text-white px-4 py-2 rounded-lg text-sm flex items-center gap-2 hover:transform hover:-translate-y-1 transition-all"
+                                                title="{{ __('Working Hours') }}">
+                                                <x-heroicon-o-clock class="w-4 h-4" />
+                                                {{ __('Hours') }}
+                                            </a>
+                                            <a href="{{ route('availability-exceptions.index', ['employee_id' => $employee->id]) }}"
+                                                class="inline-flex items-center gap-2 bg-gradient-to-r from-orange-500/20 to-red-500/20 backdrop-blur-sm border border-orange-400/30 text-orange-300 px-4 py-2 rounded-lg text-sm hover:from-orange-500/30 hover:to-red-500/30 hover:transform hover:-translate-y-1 transition-all"
+                                                title="{{ __('Availability Exceptions') }}">
+                                                <x-heroicon-o-calendar-days class="w-4 h-4" />
+                                                {{ __('Exceptions') }}
+                                            </a>
+                                            <a href="{{ route('employees.edit', $employee->id) }}"
+                                                class="edit-button text-white px-4 py-2 rounded-lg text-sm flex items-center gap-2 hover:transform hover:-translate-y-1 transition-all"
+                                                title="{{ __('Edit') }}">
+                                                <x-heroicon-o-pencil class="w-4 h-4" />
+                                                {{ __('Edit') }}
+                                            </a>
+                                            <button
+                                                class="delete-button text-white px-4 py-2 rounded-lg text-sm flex items-center gap-2 hover:transform hover:-translate-y-1 transition-all"
+                                                onclick="showDeleteModal({{ $employee->id }}, '{{ addslashes($employee->name) }}')"
+                                                title="{{ __('Delete') }}">
+                                                <x-heroicon-o-trash class="w-4 h-4" />
+                                                {{ __('Delete') }}
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="4" class="py-8 text-center text-frappe-subtext1">
+                                        {{ __('No employees set.') }}</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Mobile/Tablet Card View -->
+            <div class="lg:hidden">
+                @forelse($employees as $employee)
+                    <div class="p-4 border-b border-frappe-surface1/20 last:border-b-0">
+                        <div class="space-y-3">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h3 class="font-medium text-frappe-text">{{ $employee->name }}</h3>
+                                    <p class="text-sm text-frappe-subtext1">{{ $employee->email }}</p>
+                                </div>
                                 @if ($employee->active)
-                                    <span class="text-frappe-green">Yes</span>
+                                    <span
+                                        class="inline-flex px-2 py-1 text-xs font-medium rounded-full bg-green-500/20 text-green-300">{{ __('Active') }}</span>
                                 @else
-                                    <span class="text-frappe-red">No</span>
+                                    <span
+                                        class="inline-flex px-2 py-1 text-xs font-medium rounded-full bg-red-500/20 text-red-300">{{ __('Inactive') }}</span>
                                 @endif
-                            </td>
-                            <td class="py-2 flex gap-2">
+                            </div>
+
+                            <div class="flex flex-wrap gap-2 justify-center sm:justify-start">
                                 <a href="{{ route('employee-working-hours.index', ['employee_id' => $employee->id]) }}"
-                                    class="action-button text-white px-3 py-1 rounded-lg flex items-center gap-1 text-sm">
-                                    <x-heroicon-o-clock class="w-4 h-4" /> {{ __('Working Hours') }}
+                                    class="action-button text-white px-4 py-2 rounded-lg flex items-center gap-2 text-sm hover:transform hover:-translate-y-1 transition-all">
+                                    <x-heroicon-o-clock class="w-4 h-4" /> {{ __('Hours') }}
+                                </a>
+                                <a href="{{ route('availability-exceptions.index', ['employee_id' => $employee->id]) }}"
+                                    class="inline-flex items-center gap-2 bg-gradient-to-r from-orange-500/20 to-red-500/20 backdrop-blur-sm border border-orange-400/30 text-orange-300 px-4 py-2 rounded-lg text-sm hover:from-orange-500/30 hover:to-red-500/30 hover:transform hover:-translate-y-1 transition-all">
+                                    <x-heroicon-o-calendar-days class="w-4 h-4" /> {{ __('Exceptions') }}
                                 </a>
                                 <a href="{{ route('employees.edit', $employee->id) }}"
-                                    class="edit-button text-white px-3 py-1 rounded-lg flex items-center gap-1 text-sm">
+                                    class="edit-button text-white px-4 py-2 rounded-lg flex items-center gap-2 text-sm hover:transform hover:-translate-y-1 transition-all">
                                     <x-heroicon-o-pencil class="w-4 h-4" /> {{ __('Edit') }}
                                 </a>
                                 <button
-                                    class="delete-button text-white px-3 py-1 rounded-lg flex items-center gap-1 text-sm"
+                                    class="delete-button text-white px-4 py-2 rounded-lg flex items-center gap-2 text-sm hover:transform hover:-translate-y-1 transition-all"
                                     onclick="showDeleteModal({{ $employee->id }}, '{{ addslashes($employee->name) }}')"
                                     title="{{ __('Delete') }}">
                                     <x-heroicon-o-trash class="w-4 h-4" /> {{ __('Delete') }}
                                 </button>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="4" class="py-4 text-center text-frappe-subtext1">
-                                {{ __('No employees set.') }}</td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
+                            </div>
+                        </div>
+                    </div>
+                @empty
+                    <div class="p-8 text-center text-frappe-subtext1">{{ __('No employees set.') }}</div>
+                @endforelse
+            </div>
         </div>
     </div>
 

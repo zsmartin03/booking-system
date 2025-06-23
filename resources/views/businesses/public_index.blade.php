@@ -6,29 +6,30 @@
     </x-slot>
 
     <div class="py-6">
-        <div class="max-w-6xl mx-auto sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             @forelse($businesses as $business)
                 @if ($loop->first)
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                 @endif
 
                 <div
                     class="frosted-card overflow-hidden shadow-lg sm:rounded-xl border border-frappe-surface2 hover:shadow-2xl transition-all duration-300 hover:scale-105 hover:transform hover:-translate-y-2">
-                    <div class="p-6">
+                    <div class="p-4 sm:p-6">
                         <div class="mb-4">
                             <a href="{{ route('businesses.show', $business->id) }}"
-                                class="text-frappe-blue hover:text-frappe-sapphire text-xl font-semibold block mb-2 transition-colors">
+                                class="text-frappe-blue hover:text-frappe-sapphire text-lg sm:text-xl font-semibold block mb-2 transition-colors">
                                 {{ $business->name }}
                             </a>
                             <p class="text-frappe-subtext1 text-sm opacity-80">{{ $business->address }}</p>
                             @if ($business->description)
-                                <p class="text-frappe-subtext0 text-sm mt-2 opacity-70">{{ $business->description }}</p>
+                                <p class="text-frappe-subtext0 text-sm mt-2 opacity-70 line-clamp-3">
+                                    {{ $business->description }}</p>
                             @endif
                         </div>
 
                         <div class="flex justify-center">
                             <a href="{{ route('businesses.show', $business->id) }}"
-                                class="inline-flex items-center gap-1 bg-gradient-to-r from-blue-500/20 to-indigo-500/20 backdrop-blur-sm border border-blue-400/30 text-blue-300 px-4 py-2 rounded-lg text-sm hover:from-blue-500/30 hover:to-indigo-500/30 transition-all">
+                                class="inline-flex items-center gap-2 bg-gradient-to-r from-blue-500/20 to-indigo-500/20 backdrop-blur-sm border border-blue-400/30 text-blue-300 px-4 py-2 rounded-lg text-sm hover:from-blue-500/30 hover:to-indigo-500/30 transition-all">
                                 <x-heroicon-o-eye class="w-4 h-4" />
                                 {{ __('View Details') }}
                             </a>

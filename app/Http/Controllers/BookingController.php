@@ -121,15 +121,19 @@ class BookingController extends Controller
             $dateString = $date->toDateString();
             $dayOfWeek = strtolower($date->format('l'));
 
-            // Collect all possible time slots from all employees' working hours
             $timeSlots = [];
 
             foreach ($employees as $employee) {
                 $workingHours = $employee->getWorkingHoursForDay($dayOfWeek);
 
+                $availableExceptions = $employee->availabilityExceptions()
+                    ->where('date', $dateString)
+                    ->where('type', 'available')
+                    ->get();
+
                 foreach ($workingHours as $workingHour) {
                     $startTime = Carbon::parse($date->toDateString() . ' ' . $workingHour->start_time);
-                    // Round up to nearest 5 minutes
+
                     $minutes = $startTime->minute;
                     $roundedMinutes = ceil($minutes / $interval) * $interval;
                     if ($roundedMinutes == 60) {
@@ -141,13 +145,32 @@ class BookingController extends Controller
 
                     $endTime = Carbon::parse($date->toDateString() . ' ' . $workingHour->end_time);
 
-                    // Generate slots every 5 minutes
+                    // Generate slots
                     $current = $startTime->copy();
                     while ($current < $endTime) {
                         $timeKey = $current->format('Y-m-d\TH:i');
 
-                        // Check for overlapping bookings for this specific employee
-                        // Check if the employee is available at this specific time (not for full service duration)
+                        $availabilityException = $employee->availabilityExceptions()
+                            ->where('date', $date->toDateString())
+                            ->where('start_time', '<=', $current->format('H:i:s'))
+                            ->where('end_time', '>', $current->format('H:i:s'))
+                            ->first();
+
+                        $isWorkingTime = true;
+                        $effectiveEndTime = $endTime;
+
+                        if ($availabilityException) {
+                            if ($availabilityException->type === 'unavailable') {
+                                // skip this time slot - employee is not available
+                                $current->addMinutes($interval);
+                                continue;
+                            } elseif ($availabilityException->type === 'available') {
+                                // override working hours - employee is available
+                                $exceptionEndTime = Carbon::parse($date->toDateString() . ' ' . $availabilityException->end_time);
+                                $effectiveEndTime = min($effectiveEndTime, $exceptionEndTime);
+                            }
+                        }
+
                         $overlap = Booking::where('employee_id', $employee->id)
                             ->where('status', '!=', 'cancelled')
                             ->where(function ($q) use ($current) {
@@ -171,7 +194,85 @@ class BookingController extends Controller
                             ->orderBy('start_time')
                             ->first();
 
-                        $availableUntil = $endTime; // Default to end of working hours
+                        $availableUntil = $effectiveEndTime; // Use effective end time
+                        if ($nextBooking) {
+                            $availableUntil = min($availableUntil, Carbon::parse($nextBooking->start_time));
+                        }
+
+                        // Check for unavailable exceptions that might cut availability short
+                        $nextUnavailableException = $employee->availabilityExceptions()
+                            ->where('date', $date->toDateString())
+                            ->where('type', 'unavailable')
+                            ->where('start_time', '>', $current->format('H:i:s'))
+                            ->orderBy('start_time')
+                            ->first();
+
+                        if ($nextUnavailableException) {
+                            $exceptionStartTime = Carbon::parse($date->toDateString() . ' ' . $nextUnavailableException->start_time);
+                            $availableUntil = min($availableUntil, $exceptionStartTime);
+                        }
+
+                        $availableMinutes = $current->diffInMinutes($availableUntil);
+                        $hasFullServiceTime = $availableMinutes >= $service->duration;
+
+                        // Add employee availability to this time slot
+                        $timeSlots[$timeKey]['employees'][] = [
+                            'employee_id' => $employee->id,
+                            'employee_name' => $employee->name,
+                            'employee_bio' => $employee->bio ?? '',
+                            'available' => !$overlap,
+                            'available_minutes' => $availableMinutes,
+                            'has_full_service_time' => $hasFullServiceTime,
+                            'available_until' => $availableUntil->format('Y-m-d\TH:i')
+                        ];
+
+                        $current->addMinutes($interval);
+                    }
+                }
+
+                // Process 'available' type exceptions (employee available outside regular hours)
+                foreach ($availableExceptions as $exception) {
+                    $startTime = Carbon::parse($date->toDateString() . ' ' . $exception->start_time);
+
+                    $minutes = $startTime->minute;
+                    $roundedMinutes = ceil($minutes / $interval) * $interval;
+                    if ($roundedMinutes == 60) {
+                        $startTime->addHour();
+                        $roundedMinutes = 0;
+                    }
+                    $startTime->minute($roundedMinutes);
+                    $startTime->second(0);
+
+                    $endTime = Carbon::parse($date->toDateString() . ' ' . $exception->end_time);
+
+                    $current = $startTime->copy();
+                    while ($current < $endTime) {
+                        $timeKey = $current->format('Y-m-d\TH:i');
+
+                        $overlap = Booking::where('employee_id', $employee->id)
+                            ->where('status', '!=', 'cancelled')
+                            ->where(function ($q) use ($current) {
+                                $q->where('start_time', '<=', $current)
+                                    ->where('end_time', '>', $current);
+                            })->exists();
+
+                        // Initialize time slot if it doesn't exist
+                        if (!isset($timeSlots[$timeKey])) {
+                            $timeSlots[$timeKey] = [
+                                'time' => $timeKey,
+                                'label' => $current->format('H:i'),
+                                'employees' => []
+                            ];
+                        }
+
+                        // Calculate availability for exception period
+                        $nextBooking = Booking::where('employee_id', $employee->id)
+                            ->where('status', '!=', 'cancelled')
+                            ->where('start_time', '>', $current)
+                            ->orderBy('start_time')
+                            ->first();
+
+                        $availableUntil = $endTime; // Default to end of exception period
                         if ($nextBooking) {
                             $availableUntil = min($availableUntil, Carbon::parse($nextBooking->start_time));
                         }

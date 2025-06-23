@@ -6,13 +6,12 @@
     </x-slot>
 
     <div class="py-6">
-        <div class="max-w-6xl mx-auto sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="mb-6">
                 <a href="{{ route('businesses.create') }}"
                     class="frosted-button text-white px-6 py-3 rounded-lg font-medium inline-flex items-center gap-2">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4">
-                        </path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                     </svg>
                     {{ __('Add New Business') }}
                 </a>
@@ -22,10 +21,11 @@
                 <div class="frosted-card rounded-xl shadow-lg overflow-hidden">
                     <div class="divide-y divide-frappe-surface2/30">
                         @foreach ($businesses as $business)
-                            <div class="p-6 hover:bg-frappe-surface0/20 transition-all duration-200">
-                                <div class="flex items-center justify-between">
+                            <div class="p-4 sm:p-6 hover:bg-frappe-surface0/20 transition-all duration-200">
+                                <!-- Main business info -->
+                                <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                                     <div class="flex-1">
-                                        <div class="flex items-center gap-4">
+                                        <div class="flex flex-col sm:flex-row sm:items-start gap-4">
                                             <div class="flex-1">
                                                 <a href="{{ route('businesses.show', $business->id) }}"
                                                     class="text-frappe-blue hover:text-frappe-sapphire text-xl font-semibold block mb-1 transition-colors">
@@ -34,11 +34,12 @@
                                                 <p class="text-frappe-subtext1 text-sm opacity-80 mb-1">
                                                     {{ $business->address }}</p>
                                                 @if ($business->description)
-                                                    <p class="text-frappe-subtext0 text-sm opacity-70 line-clamp-2">
+                                                    <p
+                                                        class="text-frappe-subtext0 text-sm opacity-70 line-clamp-2 mb-2">
                                                         {{ $business->description }}</p>
                                                 @endif
                                             </div>
-                                            <div class="text-right text-sm text-frappe-subtext1">
+                                            <div class="text-left sm:text-right text-sm text-frappe-subtext1">
                                                 <div class="opacity-60">{{ $business->phone_number }}</div>
                                                 <div class="opacity-60">{{ $business->email }}</div>
                                             </div>
@@ -46,37 +47,39 @@
                                     </div>
                                 </div>
 
-                                <div class="mt-4 flex flex-wrap gap-2">
+                                <!-- Action buttons -->
+                                <div class="mt-4 flex flex-wrap gap-2 justify-center sm:justify-start">
                                     <a href="{{ route('business-working-hours.index', ['business_id' => $business->id]) }}"
-                                        class="inline-flex items-center gap-1 bg-gradient-to-r from-green-500/20 to-teal-500/20 backdrop-blur-sm border border-green-400/30 text-green-300 px-3 py-1.5 rounded-lg text-sm hover:from-green-500/30 hover:to-teal-500/30 transition-all"
+                                        class="inline-flex items-center gap-2 bg-gradient-to-r from-green-500/20 to-teal-500/20 backdrop-blur-sm border border-green-400/30 text-green-300 px-4 py-2 rounded-lg text-sm hover:from-green-500/30 hover:to-teal-500/30 hover:transform hover:-translate-y-1 transition-all"
                                         title="{{ __('Working Hours') }}">
                                         <x-heroicon-o-clock class="w-4 h-4" />
-                                        {{ __('Working Hours') }}
+                                        <span class="hidden sm:inline">{{ __('Working Hours') }}</span>
+                                        <span class="sm:hidden">{{ __('Hours') }}</span>
                                     </a>
                                     <a href="{{ route('services.index', ['business_id' => $business->id]) }}"
-                                        class="inline-flex items-center gap-1 bg-gradient-to-r from-yellow-500/20 to-orange-500/20 backdrop-blur-sm border border-yellow-400/30 text-yellow-300 px-3 py-1.5 rounded-lg text-sm hover:from-yellow-500/30 hover:to-orange-500/30 transition-all"
+                                        class="inline-flex items-center gap-2 bg-gradient-to-r from-yellow-500/20 to-orange-500/20 backdrop-blur-sm border border-yellow-400/30 text-yellow-300 px-4 py-2 rounded-lg text-sm hover:from-yellow-500/30 hover:to-orange-500/30 hover:transform hover:-translate-y-1 transition-all"
                                         title="{{ __('Services') }}">
                                         <x-heroicon-o-briefcase class="w-4 h-4" />
                                         {{ __('Services') }}
                                     </a>
                                     <a href="{{ route('employees.index', ['business_id' => $business->id]) }}"
-                                        class="inline-flex items-center gap-1 bg-gradient-to-r from-purple-500/20 to-indigo-500/20 backdrop-blur-sm border border-purple-400/30 text-purple-300 px-3 py-1.5 rounded-lg hover:from-purple-500/30 hover:to-indigo-500/30 transition-all"
+                                        class="inline-flex items-center gap-2 bg-gradient-to-r from-purple-500/20 to-indigo-500/20 backdrop-blur-sm border border-purple-400/30 text-purple-300 px-4 py-2 rounded-lg hover:from-purple-500/30 hover:to-indigo-500/30 hover:transform hover:-translate-y-1 transition-all"
                                         title="{{ __('Employees') }}">
                                         <x-heroicon-o-users class="w-4 h-4" />
                                         {{ __('Employees') }}
                                     </a>
                                     <a href="{{ route('businesses.edit', $business->id) }}"
-                                        class="edit-button text-white px-3 py-1.5 rounded-lg inline-flex items-center gap-1 text-sm"
+                                        class="edit-button text-white px-4 py-2 rounded-lg inline-flex items-center gap-2 text-sm hover:transform hover:-translate-y-1 transition-all"
                                         title="{{ __('Edit') }}">
                                         <x-heroicon-o-pencil class="w-4 h-4" />
-                                        {{ __('Edit') }}
+                                        <span class="hidden sm:inline">{{ __('Edit') }}</span>
                                     </a>
                                     <button
-                                        class="delete-button text-white px-3 py-1.5 rounded-lg inline-flex items-center gap-1 text-sm"
+                                        class="delete-button text-white px-4 py-2 rounded-lg inline-flex items-center gap-2 text-sm hover:transform hover:-translate-y-1 transition-all"
                                         onclick="showDeleteModal({{ $business->id }}, '{{ addslashes($business->name) }}')"
                                         title="{{ __('Delete') }}">
                                         <x-heroicon-o-trash class="w-4 h-4" />
-                                        {{ __('Delete') }}
+                                        <span class="hidden sm:inline">{{ __('Delete') }}</span>
                                     </button>
                                 </div>
                             </div>

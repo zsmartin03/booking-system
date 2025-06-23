@@ -5,44 +5,96 @@
         </h2>
     </x-slot>
 
-    <div class="py-6 max-w-5xl mx-auto">
-        <div class="frosted-card rounded-xl shadow-lg p-4">
-            <table class="w-full">
-                <thead>
-                    <tr>
-                        <th>{{ __('Service') }}</th>
-                        <th>{{ __('Employee') }}</th>
-                        <th>{{ __('Client') }}</th>
-                        <th>{{ __('Start') }}</th>
-                        <th>{{ __('End') }}</th>
-                        <th>{{ __('Status') }}</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse($bookings as $booking)
-                        <tr>
-                            <td>{{ $booking->service->name }}</td>
-                            <td>{{ $booking->employee->name }}</td>
-                            <td>{{ $booking->client->name }}</td>
-                            <td>{{ $booking->start_time }}</td>
-                            <td>{{ $booking->end_time }}</td>
-                            <td>{{ ucfirst($booking->status) }}</td>
-                            <td>
+    <div class="py-6 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="frosted-card rounded-xl shadow-lg overflow-hidden">
+            <!-- Desktop Table View -->
+            <div class="hidden md:block">
+                <div class="overflow-x-auto">
+                    <table class="w-full min-w-full">
+                        <thead>
+                            <tr class="border-b border-frappe-surface1/30">
+                                <th class="text-left py-3 px-4 font-medium text-frappe-text">{{ __('Service') }}</th>
+                                <th class="text-left py-3 px-4 font-medium text-frappe-text">{{ __('Employee') }}</th>
+                                <th class="text-left py-3 px-4 font-medium text-frappe-text">{{ __('Client') }}</th>
+                                <th class="text-left py-3 px-4 font-medium text-frappe-text">{{ __('Start') }}</th>
+                                <th class="text-left py-3 px-4 font-medium text-frappe-text">{{ __('End') }}</th>
+                                <th class="text-left py-3 px-4 font-medium text-frappe-text">{{ __('Status') }}</th>
+                                <th class="py-3 px-4"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($bookings as $booking)
+                                <tr
+                                    class="border-b border-frappe-surface1/20 hover:bg-frappe-surface0/20 transition-colors">
+                                    <td class="py-3 px-4 text-frappe-text">{{ $booking->service->name }}</td>
+                                    <td class="py-3 px-4 text-frappe-text">{{ $booking->employee->name }}</td>
+                                    <td class="py-3 px-4 text-frappe-text">{{ $booking->client->name }}</td>
+                                    <td class="py-3 px-4 text-frappe-subtext1 text-sm">{{ $booking->start_time }}</td>
+                                    <td class="py-3 px-4 text-frappe-subtext1 text-sm">{{ $booking->end_time }}</td>
+                                    <td class="py-3 px-4">
+                                        <span
+                                            class="inline-flex px-2 py-1 text-xs font-medium rounded-full
+                                            {{ $booking->status === 'confirmed'
+                                                ? 'bg-green-500/20 text-green-300'
+                                                : ($booking->status === 'pending'
+                                                    ? 'bg-yellow-500/20 text-yellow-300'
+                                                    : 'bg-red-500/20 text-red-300') }}">
+                                            {{ ucfirst($booking->status) }}
+                                        </span>
+                                    </td>
+                                    <td class="py-3 px-4">
+                                        <a href="{{ route('bookings.show', $booking->id) }}"
+                                            class="frosted-button text-white px-6 py-2 rounded-lg hover:transform hover:-translate-y-1 transition-all text-sm">
+                                            {{ __('View') }}
+                                        </a>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="7" class="text-center text-frappe-subtext1 py-8">
+                                        {{ __('No bookings found.') }}</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Mobile Card View -->
+            <div class="md:hidden">
+                @forelse($bookings as $booking)
+                    <div class="p-4 border-b border-frappe-surface1/20 last:border-b-0">
+                        <div class="space-y-2">
+                            <div class="flex justify-between items-start">
+                                <h3 class="font-medium text-frappe-text">{{ $booking->service->name }}</h3>
+                                <span
+                                    class="inline-flex px-2 py-1 text-xs font-medium rounded-full
+                                    {{ $booking->status === 'confirmed'
+                                        ? 'bg-green-500/20 text-green-300'
+                                        : ($booking->status === 'pending'
+                                            ? 'bg-yellow-500/20 text-yellow-300'
+                                            : 'bg-red-500/20 text-red-300') }}">
+                                    {{ ucfirst($booking->status) }}
+                                </span>
+                            </div>
+                            <div class="text-sm text-frappe-subtext1">
+                                <div><strong>{{ __('Employee:') }}</strong> {{ $booking->employee->name }}</div>
+                                <div><strong>{{ __('Client:') }}</strong> {{ $booking->client->name }}</div>
+                                <div><strong>{{ __('Time:') }}</strong> {{ $booking->start_time }} -
+                                    {{ $booking->end_time }}</div>
+                            </div>
+                            <div class="pt-2">
                                 <a href="{{ route('bookings.show', $booking->id) }}"
-                                    class="frosted-button text-white px-3 py-1 rounded-lg hover:transform hover:-translate-y-1 transition-all text-sm">
-                                    {{ __('View') }}
+                                    class="frosted-button text-white px-6 py-2 rounded-lg hover:transform hover:-translate-y-1 transition-all text-sm inline-flex items-center gap-2">
+                                    {{ __('View Details') }}
                                 </a>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="7" class="text-center text-frappe-subtext1">{{ __('No bookings found.') }}
-                            </td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
+                            </div>
+                        </div>
+                    </div>
+                @empty
+                    <div class="p-8 text-center text-frappe-subtext1">{{ __('No bookings found.') }}</div>
+                @endforelse
+            </div>
             <div class="mt-4">
                 {{ $bookings->links() }}
             </div>

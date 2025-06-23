@@ -5,11 +5,11 @@
         </h2>
     </x-slot>
 
-    <div class="py-6 max-w-6xl mx-auto">
+    <div class="py-6 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Service Selection -->
-        <div class="mb-6 p-4 frosted-card rounded-xl shadow-lg">
-            <form method="GET" action="{{ route('bookings.create') }}" class="flex flex-wrap gap-4">
-                <div class="flex-1 min-w-[200px]">
+        <div class="mb-6 p-4 sm:p-6 frosted-card rounded-xl shadow-lg">
+            <form method="GET" action="{{ route('bookings.create') }}" class="flex flex-col sm:flex-row gap-4">
+                <div class="flex-1 min-w-0">
                     <x-input-label for="business_id" :value="__('Business')" />
                     <select name="business_id" id="business_id"
                         class="block w-full mt-1 bg-frappe-surface0/50 border-frappe-surface1/30 text-frappe-text rounded-md shadow-sm backdrop-blur-sm focus:border-frappe-blue focus:ring-frappe-blue/50"
@@ -23,7 +23,7 @@
                 </div>
 
                 @if ($selectedBusiness)
-                    <div class="flex-1 min-w-[200px]">
+                    <div class="flex-1 min-w-0">
                         <x-input-label for="service_id" :value="__('Service')" />
                         <select name="service_id" id="service_id"
                             class="block w-full mt-1 bg-frappe-surface0/50 border-frappe-surface1/30 text-frappe-text rounded-md shadow-sm backdrop-blur-sm focus:border-frappe-blue focus:ring-frappe-blue/50"
@@ -43,28 +43,30 @@
 
         @if ($selectedService)
             <!-- Service Info -->
-            <div class="mb-6 p-4 frosted-card rounded-xl shadow-lg">
+            <div class="mb-6 p-4 sm:p-6 frosted-card rounded-xl shadow-lg">
                 <h3 class="text-lg font-semibold text-frappe-text mb-2">{{ $selectedService->name }}</h3>
-                <p class="text-frappe-subtext1">Duration: {{ $selectedService->duration }} minutes</p>
-                <p class="text-frappe-subtext1">Price: ${{ number_format($selectedService->price / 100, 2) }}</p>
+                <div class="flex flex-col sm:flex-row sm:gap-8 text-frappe-subtext1">
+                    <p>Duration: {{ $selectedService->duration }} minutes</p>
+                    <p>Price: ${{ number_format($selectedService->price / 100, 2) }}</p>
+                </div>
             </div>
 
             <!-- Interval-based Timetable -->
-            <div class="frosted-card rounded-xl shadow-lg p-4" x-data="intervalTimetable()" x-init="loadSchedule()">
-                <div class="flex justify-between items-center mb-4">
+            <div class="frosted-card rounded-xl shadow-lg p-4 sm:p-6" x-data="intervalTimetable()" x-init="loadSchedule()">
+                <div class="flex flex-col sm:flex-row justify-between items-center mb-4 gap-4">
                     <button @click="previousWeek()"
-                        class="frosted-button px-4 py-2 text-white rounded-lg hover:transform hover:-translate-y-1 transition-all">
+                        class="frosted-button px-4 py-2 text-white rounded-lg hover:transform hover:-translate-y-1 transition-all w-full sm:w-auto">
                         ← Previous Week
                     </button>
-                    <h3 class="text-lg font-semibold text-frappe-text" x-text="weekLabel"></h3>
+                    <h3 class="text-lg font-semibold text-frappe-text text-center" x-text="weekLabel"></h3>
                     <button @click="nextWeek()"
-                        class="frosted-button px-4 py-2 text-white rounded-lg hover:transform hover:-translate-y-1 transition-all">
+                        class="frosted-button px-4 py-2 text-white rounded-lg hover:transform hover:-translate-y-1 transition-all w-full sm:w-auto">
                         Next Week →
                     </button>
                 </div>
 
                 <!-- Legend -->
-                <div class="mb-4 flex gap-4 text-sm flex-wrap">
+                <div class="mb-4 grid grid-cols-2 sm:flex sm:gap-4 gap-2 text-sm">
                     <div class="flex items-center gap-1">
                         <div class="w-4 h-4 bg-green-500 rounded"></div>
                         <span>Available</span>
@@ -88,12 +90,12 @@
                 </div>
 
                 <!-- Days Grid -->
-                <div class="grid grid-cols-7 gap-2 mb-6">
+                <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2 mb-6">
                     <template x-for="(day, dayIndex) in days" :key="day.dateString">
                         <div>
                             <!-- Day Header -->
                             <div class="text-center font-medium text-frappe-text p-2 bg-frappe-surface1 rounded mb-2">
-                                <div x-text="day.name" class="text-sm"></div>
+                                <div x-text="day.name" class="text-sm font-semibold"></div>
                                 <div class="text-xs text-frappe-subtext1" x-text="day.date"></div>
                             </div>
 
@@ -111,7 +113,7 @@
                                     </div>
                                 </template>
 
-                                <!-- 10-minute interval slots -->
+                                <!-- 5-minute interval slots -->
                                 <div class="space-y-0">
                                     <template x-for="(slot, slotIndex) in getDaySlots(day.dateString)"
                                         :key="`${day.dateString}-${slotIndex}`">
@@ -152,7 +154,7 @@
                 </div>
 
                 <div x-show="selectedSlot"
-                    class="mt-6 p-4 bg-frappe-blue/20 border border-frappe-blue/30 rounded-lg backdrop-blur-sm">
+                    class="mt-6 p-4 sm:p-6 bg-frappe-blue/20 border border-frappe-blue/30 rounded-lg backdrop-blur-sm">
                     <h4 class="font-semibold text-frappe-text mb-3">Confirm Your Booking</h4>
                     <div class="mb-4">
                         <span class="text-frappe-subtext1">Time: </span>
@@ -173,7 +175,7 @@
                     <!-- Employee Selection (new) -->
                     <div class="mb-4">
                         <span class="text-frappe-subtext1">Choose Employee: </span>
-                        <div class="mt-2 space-y-2">
+                        <div class="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-2">
                             <template x-for="employee in availableEmployees" :key="employee.id">
                                 <div class="p-3 border rounded-lg cursor-pointer transition-all relative backdrop-blur-sm"
                                     :class="selectedEmployeeId === employee.id ?
@@ -201,23 +203,25 @@
                         <input type="hidden" name="start_time"
                             x-bind:value="selectedSlot ? selectedSlot.datetime : ''">
 
-                        <div>
-                            <x-input-label for="notes" :value="__('Notes (optional)')" />
-                            <textarea name="notes" id="notes" rows="3"
-                                class="block w-full mt-1 bg-frappe-surface0/50 border-frappe-surface1/30 text-frappe-text rounded-md shadow-sm backdrop-blur-sm focus:border-frappe-blue focus:ring-frappe-blue/50"
-                                placeholder="Any special requests or notes...">{{ old('notes') }}</textarea>
-                        </div>
+                        <div class="space-y-4">
+                            <div>
+                                <x-input-label for="notes" :value="__('Notes (optional)')" />
+                                <textarea name="notes" id="notes" rows="3"
+                                    class="block w-full mt-1 bg-frappe-surface0/50 border-frappe-surface1/30 text-frappe-text rounded-md shadow-sm backdrop-blur-sm focus:border-frappe-blue focus:ring-frappe-blue/50"
+                                    placeholder="Any special requests or notes...">{{ old('notes') }}</textarea>
+                            </div>
 
-                        <div class="flex gap-2">
-                            <button type="button" @click="submitBooking()"
-                                class="frosted-button px-6 py-3 text-white rounded-lg hover:transform hover:-translate-y-1 transition-all"
-                                :disabled="!selectedEmployeeId">
-                                Confirm Booking
-                            </button>
-                            <button type="button" @click="clearSelection()"
-                                class="px-6 py-3 bg-frappe-surface0/50 border border-frappe-surface1/30 text-frappe-text rounded-lg hover:bg-frappe-surface0/70 transition-all backdrop-blur-sm">
-                                Cancel
-                            </button>
+                            <div class="flex flex-col sm:flex-row gap-2">
+                                <button type="button" @click="submitBooking()"
+                                    class="frosted-button px-6 py-3 text-white rounded-lg hover:transform hover:-translate-y-1 transition-all w-full sm:w-auto"
+                                    :disabled="!selectedEmployeeId">
+                                    Confirm Booking
+                                </button>
+                                <button type="button" @click="clearSelection()"
+                                    class="px-6 py-3 bg-frappe-surface0/50 border border-frappe-surface1/30 text-frappe-text rounded-lg hover:bg-frappe-surface0/70 transition-all backdrop-blur-sm w-full sm:w-auto">
+                                    Cancel
+                                </button>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -514,9 +518,6 @@
                         },
 
                         handleSlotClick(slot, dateString, slotIndex) {
-                            console.log('Slot clicked:', slot);
-                            console.log('Slot type:', slot.type);
-                            console.log('Employee data:', slot.employeeData);
 
                             // Clear hover effects first to get the real slot type
                             this.clearHoverEffects();
@@ -525,20 +526,16 @@
                             const daySlots = this.getDaySlots(dateString);
                             const actualSlot = daySlots[slotIndex];
 
-                            console.log('Actual slot type after clearing hover:', actualSlot.type);
-
                             // Allow clicking on available slots, hover previews, and selected slots
                             const clickableTypes = ['available', 'hover_preview', 'selected'];
                             const originalType = slot.originalType || slot.type;
 
                             // Don't allow clicking on slots that would cause conflicts
                             if (slot.type === 'hover_conflict' || originalType === 'hover_conflict') {
-                                console.log('Cannot click: slot would cause conflict');
                                 return;
                             }
 
                             if (!clickableTypes.includes(slot.type) && !clickableTypes.includes(originalType)) {
-                                console.log('Cannot click: slot type is not clickable');
                                 return;
                             }
 
@@ -547,13 +544,11 @@
                             for (let i = 0; i < slotsNeeded; i++) {
                                 const checkIndex = slotIndex + i;
                                 if (checkIndex >= daySlots.length) {
-                                    console.log('Cannot click: service extends beyond working hours');
                                     return;
                                 }
 
                                 const checkSlot = daySlots[checkIndex];
                                 if (checkSlot.type === 'booked' || checkSlot.type === 'not_available') {
-                                    console.log('Cannot click: service duration conflicts with booked/unavailable slot');
                                     return;
                                 }
                             }
@@ -563,11 +558,9 @@
 
                             // Check if slot has employee data
                             if (!targetSlot.employeeData || Object.keys(targetSlot.employeeData).length === 0) {
-                                console.log('No employee data available for this slot');
                                 return;
                             }
 
-                            console.log('Processing click...');
                             this.clearSelection();
 
                             // Mark the clicked slot as selected
@@ -596,7 +589,6 @@
                             this.availableEmployees = Object.values(targetSlot.employeeData);
                             this.selectedEmployeeId = null;
 
-                            console.log('Selection complete. Available employees:', this.availableEmployees);
                         },
 
                         handleSlotHover(slot, dateString, slotIndex, isEntering) {
@@ -771,10 +763,6 @@
                             if (employeeInput) employeeInput.value = this.selectedEmployeeId;
                             if (startTimeInput) startTimeInput.value = formattedDate;
 
-                            console.log('Submitting booking with:');
-                            console.log('Employee ID:', this.selectedEmployeeId);
-                            console.log('Start Time:', formattedDate);
-                            console.log('Selected Slot:', this.selectedSlot);
 
                             this.$refs.bookingForm.submit();
                         }

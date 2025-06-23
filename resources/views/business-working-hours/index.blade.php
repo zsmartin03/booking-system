@@ -5,11 +5,13 @@
         </h2>
     </x-slot>
 
-    <div class="py-6 max-w-2xl mx-auto">
-        <a href="{{ route('business-working-hours.create', ['business_id' => $business->id]) }}"
-            class="frosted-button text-white px-4 py-2 rounded-lg hover:transform hover:-translate-y-1 transition-all mb-4 inline-flex items-center gap-1">
-            <x-heroicon-o-plus class="w-5 h-5" /> {{ __('Add Working Hour') }}
-        </a>
+    <div class="py-6 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="mb-4">
+            <a href="{{ route('business-working-hours.create', ['business_id' => $business->id]) }}"
+                class="frosted-button text-white px-4 py-2 rounded-lg hover:transform hover:-translate-y-1 transition-all inline-flex items-center gap-2">
+                <x-heroicon-o-plus class="w-5 h-5" /> {{ __('Add Working Hour') }}
+            </a>
+        </div>
 
         @if (session('success'))
             <div class="mb-4 p-3 bg-frappe-green/20 text-frappe-green rounded">
@@ -17,43 +19,82 @@
             </div>
         @endif
 
-        <div class="frosted-card rounded-xl shadow-lg p-4">
-            <table class="w-full">
-                <thead>
-                    <tr>
-                        <th class="text-left py-2 text-frappe-text">{{ __('Day') }}</th>
-                        <th class="text-left py-2 text-frappe-text">{{ __('Start') }}</th>
-                        <th class="text-left py-2 text-frappe-text">{{ __('End') }}</th>
-                        <th class="py-2"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse($workingHours as $hour)
-                        <tr>
-                            <td class="py-2 text-frappe-text">{{ ucfirst($hour->day_of_week) }}</td>
-                            <td class="py-2 text-frappe-text">{{ $hour->start_time }}</td>
-                            <td class="py-2 text-frappe-text">{{ $hour->end_time }}</td>
-                            <td class="py-2 flex gap-2">
+        <div class="frosted-card rounded-xl shadow-lg overflow-hidden">
+            <!-- Desktop Table View -->
+            <div class="hidden md:block">
+                <div class="overflow-x-auto">
+                    <table class="w-full min-w-full">
+                        <thead>
+                            <tr class="border-b border-frappe-surface1/30">
+                                <th class="text-left py-3 px-4 font-medium text-frappe-text">{{ __('Day') }}</th>
+                                <th class="text-left py-3 px-4 font-medium text-frappe-text">{{ __('Start') }}</th>
+                                <th class="text-left py-3 px-4 font-medium text-frappe-text">{{ __('End') }}</th>
+                                <th class="py-3 px-4 font-medium text-frappe-text">{{ __('Actions') }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($workingHours as $hour)
+                                <tr
+                                    class="border-b border-frappe-surface1/20 hover:bg-frappe-surface0/20 transition-colors">
+                                    <td class="py-3 px-4 text-frappe-text font-medium">{{ ucfirst($hour->day_of_week) }}
+                                    </td>
+                                    <td class="py-3 px-4 text-frappe-subtext1">{{ $hour->start_time }}</td>
+                                    <td class="py-3 px-4 text-frappe-subtext1">{{ $hour->end_time }}</td>
+                                    <td class="py-3 px-4">
+                                        <div class="flex gap-2 justify-center">
+                                            <a href="{{ route('business-working-hours.edit', $hour->id) }}"
+                                                class="edit-button text-white px-6 py-2 rounded-lg flex items-center gap-2 text-sm hover:transform hover:-translate-y-1 transition-all">
+                                                <x-heroicon-o-pencil class="w-4 h-4" /> {{ __('Edit') }}
+                                            </a>
+                                            <button
+                                                class="delete-button text-white px-6 py-2 rounded-lg flex items-center gap-2 text-sm hover:transform hover:-translate-y-1 transition-all"
+                                                onclick="showDeleteModal({{ $hour->id }}, '{{ ucfirst($hour->day_of_week) }} {{ $hour->start_time }}-{{ $hour->end_time }}')"
+                                                title="{{ __('Delete') }}">
+                                                <x-heroicon-o-trash class="w-4 h-4" /> {{ __('Delete') }}
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="4" class="py-8 text-center text-frappe-subtext1">
+                                        {{ __('No working hours set.') }}</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Mobile Card View -->
+            <div class="md:hidden">
+                @forelse($workingHours as $hour)
+                    <div class="p-4 border-b border-frappe-surface1/20 last:border-b-0">
+                        <div class="space-y-3">
+                            <div class="flex justify-between items-center">
+                                <h3 class="font-medium text-frappe-text">{{ ucfirst($hour->day_of_week) }}</h3>
+                                <span class="text-sm text-frappe-subtext1">{{ $hour->start_time }} -
+                                    {{ $hour->end_time }}</span>
+                            </div>
+
+                            <div class="flex gap-2 justify-center sm:justify-start">
                                 <a href="{{ route('business-working-hours.edit', $hour->id) }}"
-                                    class="edit-button text-white px-3 py-1 rounded-lg flex items-center gap-1 text-sm">
+                                    class="edit-button text-white px-6 py-2 rounded-lg flex items-center gap-2 text-sm hover:transform hover:-translate-y-1 transition-all">
                                     <x-heroicon-o-pencil class="w-4 h-4" /> {{ __('Edit') }}
                                 </a>
                                 <button
-                                    class="delete-button text-white px-3 py-1 rounded-lg flex items-center gap-1 text-sm"
+                                    class="delete-button text-white px-6 py-2 rounded-lg flex items-center gap-2 text-sm hover:transform hover:-translate-y-1 transition-all"
                                     onclick="showDeleteModal({{ $hour->id }}, '{{ ucfirst($hour->day_of_week) }} {{ $hour->start_time }}-{{ $hour->end_time }}')"
                                     title="{{ __('Delete') }}">
                                     <x-heroicon-o-trash class="w-4 h-4" /> {{ __('Delete') }}
                                 </button>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="4" class="py-4 text-center text-frappe-subtext1">
-                                {{ __('No working hours set.') }}</td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
+                            </div>
+                        </div>
+                    </div>
+                @empty
+                    <div class="p-8 text-center text-frappe-subtext1">{{ __('No working hours set.') }}</div>
+                @endforelse
+            </div>
         </div>
     </div>
 

@@ -53,4 +53,45 @@ class Employee extends Model
     {
         return $this->workingHours()->where('day_of_week', $dayOfWeek)->get();
     }
+
+    /**
+     * Check if employee is available at a specific date and time
+     */
+    public function isAvailableAt($date, $time)
+    {
+        $dayOfWeek = strtolower($date->format('l'));
+
+        // Check for availability exceptions first
+        $exception = $this->availabilityExceptions()
+            ->where('date', $date->toDateString())
+            ->where('start_time', '<=', $time)
+            ->where('end_time', '>', $time)
+            ->first();
+
+        if ($exception) {
+            return $exception->type === 'available';
+        }
+
+        // Check regular working hours
+        $workingHours = $this->getWorkingHoursForDay($dayOfWeek);
+
+        foreach ($workingHours as $hours) {
+            if ($time >= $hours->start_time && $time < $hours->end_time) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Get all availability exceptions for a specific date
+     */
+    public function getAvailabilityExceptionsForDate($date)
+    {
+        return $this->availabilityExceptions()
+            ->where('date', $date->toDateString())
+            ->orderBy('start_time')
+            ->get();
+    }
 }

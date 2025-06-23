@@ -8,6 +8,7 @@ use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\BusinessWorkingHourController;
 use App\Http\Controllers\EmployeeWorkingHourController;
+use App\Http\Controllers\AvailabilityExceptionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\URL;
@@ -48,6 +49,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::resource('employees', EmployeeController::class);
 
         Route::resource('employee-working-hours', EmployeeWorkingHourController::class)->except(['show']);
+        Route::resource('availability-exceptions', AvailabilityExceptionController::class)->except(['show']);
     });
 
     Route::get('/bookings/create', [BookingController::class, 'create'])->name('bookings.create');
