@@ -73,7 +73,6 @@
         .frosted-button:hover {
             background: rgba(137, 180, 250, 0.4);
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(137, 180, 250, 0.15);
         }
 
         .frosted-modal {
@@ -202,7 +201,6 @@
         .edit-button:hover {
             background: rgba(137, 180, 250, 0.4) !important;
             transform: translateY(-2px) !important;
-            box-shadow: 0 8px 25px rgba(137, 180, 250, 0.15) !important;
         }
 
         .delete-button {
@@ -230,7 +228,6 @@
         .save-button:hover {
             background: rgba(166, 209, 137, 0.4) !important;
             transform: translateY(-2px) !important;
-            box-shadow: 0 8px 25px rgba(166, 209, 137, 0.15) !important;
         }
 
         .action-button {
@@ -244,7 +241,6 @@
         .action-button:hover {
             background: rgba(137, 180, 250, 0.4) !important;
             transform: translateY(-2px) !important;
-            box-shadow: 0 8px 25px rgba(137, 180, 250, 0.15) !important;
         }
 
         /* Standardized input styling */

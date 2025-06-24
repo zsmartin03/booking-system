@@ -50,13 +50,6 @@ class SettingController extends Controller
             abort(403, 'Unauthorized access to business settings.');
         }
 
-        // Debug: Log the request data
-        Log::info('Settings update request:', [
-            'all_data' => $request->all(),
-            'business_id' => $businessId,
-            'currency' => $request->input('currency')
-        ]);
-
         $validated = $request->validate([
             'business_id' => 'required|exists:businesses,id',
             'booking_advance_hours' => 'required|integer|min:0|max:168', // Max 1 week
@@ -80,17 +73,11 @@ class SettingController extends Controller
             $validated[$field] = $request->has($field);
         }
 
-        Log::info('Final validated data:', $validated);
-
-        // Save each setting
         foreach ($validated as $key => $value) {
             if ($key !== 'business_id') {
-                Log::info("Attempting to save setting: {$key} = " . var_export($value, true));
                 Setting::setValue($businessId, $key, $value);
-                
-                // Verify it was saved
+
                 $savedValue = Setting::getValue($businessId, $key, 'NOT_FOUND');
-                Log::info("Verified setting saved: {$key} = " . var_export($savedValue, true));
             }
         }
 
