@@ -13,6 +13,9 @@
                     <table class="w-full min-w-full">
                         <thead>
                             <tr class="border-b border-frappe-surface1/30">
+                                <th class="text-left py-3 px-4 font-medium text-frappe-text">
+                                    {{ __('messages.business') }}
+                                </th>
                                 <th class="text-left py-3 px-4 font-medium text-frappe-text">{{ __('messages.service') }}
                                 </th>
                                 <th class="text-left py-3 px-4 font-medium text-frappe-text">
@@ -25,13 +28,20 @@
                                 </th>
                                 <th class="text-left py-3 px-4 font-medium text-frappe-text">{{ __('messages.status') }}
                                 </th>
-                                <th class="py-3 px-4"></th>
+                                <th class="text-left py-3 px-4 font-medium text-frappe-text">{{ __('messages.price') }}
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
                             @forelse($bookings as $booking)
                                 <tr
                                     class="border-b border-frappe-surface1/20 hover:bg-frappe-surface0/20 transition-colors">
+                                    <td class="py-3 px-4 text-frappe-text">
+                                        <a href="{{ route('businesses.show', $booking->service->business->id) }}"
+                                            class="text-frappe-blue hover:text-frappe-sapphire transition-colors">
+                                            {{ $booking->service->business->name }}
+                                        </a>
+                                    </td>
                                     <td class="py-3 px-4 text-frappe-text">{{ $booking->service->name }}</td>
                                     <td class="py-3 px-4 text-frappe-text">{{ $booking->employee->name }}</td>
                                     <td class="py-3 px-4 text-frappe-text">{{ $booking->client->name }}</td>
@@ -44,20 +54,19 @@
                                                 ? 'bg-green-500/20 text-green-300'
                                                 : ($booking->status === 'pending'
                                                     ? 'bg-yellow-500/20 text-yellow-300'
-                                                    : 'bg-red-500/20 text-red-300') }}">
+                                                    : ($booking->status === 'completed'
+                                                        ? 'bg-blue-500/20 text-blue-300'
+                                                        : 'bg-red-500/20 text-red-300')) }}">
                                             {{ __('messages.' . $booking->status) }}
                                         </span>
                                     </td>
-                                    <td class="py-3 px-4">
-                                        <a href="{{ route('bookings.show', $booking->id) }}"
-                                            class="frosted-button text-white px-6 py-2 rounded-lg hover:transform hover:-translate-y-1 transition-all text-sm">
-                                            {{ __('messages.view') }}
-                                        </a>
+                                    <td class="py-3 px-4 text-frappe-text">
+                                        {{ \App\Models\Service::formatPrice($booking->total_price, $booking->businessSettings['currency'] ?? 'USD') }}
                                     </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="7" class="text-center text-frappe-subtext1 py-8">
+                                    <td colspan="8" class="text-center text-frappe-subtext1 py-8">
                                         {{ __('No bookings found.') }}</td>
                                 </tr>
                             @endforelse
@@ -79,21 +88,27 @@
                                         ? 'bg-green-500/20 text-green-300'
                                         : ($booking->status === 'pending'
                                             ? 'bg-yellow-500/20 text-yellow-300'
-                                            : 'bg-red-500/20 text-red-300') }}">
+                                            : ($booking->status === 'completed'
+                                                ? 'bg-blue-500/20 text-blue-300'
+                                                : 'bg-red-500/20 text-red-300')) }}">
                                     {{ __('messages.' . $booking->status) }}
                                 </span>
                             </div>
                             <div class="text-sm text-frappe-subtext1">
-                                <div><strong>{{ __('messages.employee') }}:</strong> {{ $booking->employee->name }}</div>
+                                <div><strong>{{ __('messages.business') }}:</strong>
+                                    <a href="{{ route('businesses.show', $booking->service->business->id) }}"
+                                        class="text-frappe-blue hover:text-frappe-sapphire transition-colors">
+                                        {{ $booking->service->business->name }}
+                                    </a>
+                                </div>
+                                <div><strong>{{ __('messages.employee') }}:</strong> {{ $booking->employee->name }}
+                                </div>
                                 <div><strong>{{ __('messages.client') }}:</strong> {{ $booking->client->name }}</div>
                                 <div><strong>{{ __('messages.time') }}:</strong> {{ $booking->start_time }} -
                                     {{ $booking->end_time }}</div>
-                            </div>
-                            <div class="pt-2">
-                                <a href="{{ route('bookings.show', $booking->id) }}"
-                                    class="frosted-button text-white px-6 py-2 rounded-lg hover:transform hover:-translate-y-1 transition-all text-sm inline-flex items-center gap-2">
-                                    {{ __('messages.view') }}
-                                </a>
+                                <div><strong>{{ __('messages.price') }}:</strong>
+                                    {{ \App\Models\Service::formatPrice($booking->total_price, $booking->businessSettings['currency'] ?? 'USD') }}
+                                </div>
                             </div>
                         </div>
                     </div>

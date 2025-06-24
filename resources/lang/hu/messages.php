@@ -43,6 +43,7 @@ return [
 
     // Bookings
     'bookings' => 'Foglalások',
+    'your_bookings' => 'Az Ön foglalásai',
     'manage_bookings' => 'Foglalások kezelése',
     'create_booking' => 'Foglalás létrehozása',
     'booking_date' => 'Foglalás dátuma',
@@ -401,4 +402,11 @@ return [
     // Service create/edit form
     'add_service' => 'Szolgáltatás hozzáadása',
     'update_service' => 'Szolgáltatás frissítése',
+
+    // Booking management
+    'bookings_for_business' => 'Foglalások az üzlethez',
+    'showing_all_bookings' => 'Minden foglalás megjelenítése',
+    'no_bookings_found' => 'Nem találhatók foglalások',
+    'no_bookings_for_selected_business' => 'Nincsenek foglalások a kiválasztott üzlethez.',
+    'select_business_to_manage_bookings' => 'Kérjük, válasszon egy üzletet a fentiekben a foglalások megtekintéséhez és kezeléséhez.',
 ];

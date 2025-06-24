@@ -412,16 +412,85 @@ class BookingController extends Controller
     public function index(Request $request)
     {
         $user = Auth::user();
-        if ($user->role === 'admin') {
-            $bookings = Booking::with(['service', 'employee', 'client'])->latest()->paginate(20);
-        } elseif ($user->role === 'provider') {
-            $bookings = Booking::whereHas('service.business', function ($q) use ($user) {
-                $q->where('user_id', $user->id);
-            })->with(['service', 'employee', 'client'])->latest()->paginate(20);
-        } else {
-            $bookings = Booking::where('client_id', $user->id)->with(['service', 'employee', 'client'])->latest()->paginate(20);
+        // Always show only the current user's own bookings
+        $bookings = Booking::where('client_id', $user->id)->with(['service.business', 'employee', 'client'])->latest()->paginate(20);
+
+        // Load business settings for each booking
+        $businessSettingsCache = [];
+        foreach ($bookings as $booking) {
+            $businessId = $booking->service->business->id;
+            if (!isset($businessSettingsCache[$businessId])) {
+                $businessSettingsCache[$businessId] = Setting::getBusinessSettings($businessId);
+            }
+            $booking->businessSettings = $businessSettingsCache[$businessId];
         }
+
         return view('bookings.index', compact('bookings'));
+    }
+    public function manage(Request $request)
+    {
+        $user = Auth::user();
+
+        // Only allow admins and providers
+        if (!in_array($user->role, ['admin', 'provider'])) {
+            abort(403);
+        }
+
+        // Get businesses based on user role
+        if ($user->role === 'admin') {
+            $businesses = Business::with('services')->get();
+        } else {
+            $businesses = Business::where('user_id', $user->id)->with('services')->get();
+        }
+
+        $selectedBusiness = null;
+        $businessSettings = null;
+
+        // If a business is selected, filter by that business
+        if ($request->business_id) {
+            $selectedBusiness = $businesses->where('id', $request->business_id)->first();
+            if ($selectedBusiness) {
+                $businessSettings = Setting::getBusinessSettings($selectedBusiness->id);
+            }
+        }
+
+        // Get bookings - either for selected business or all businesses the user has access to
+        if ($selectedBusiness) {
+            // Show bookings for selected business only
+            $bookings = Booking::whereHas('service', function ($q) use ($selectedBusiness) {
+                $q->where('business_id', $selectedBusiness->id);
+            })->with(['service.business', 'employee', 'client'])->latest()->paginate(20);
+        } else {
+            // Show bookings for all businesses the user has access to
+            if ($user->role === 'admin') {
+                $bookings = Booking::with(['service.business', 'employee', 'client'])->latest()->paginate(20);
+            } else {
+                $businessIds = $businesses->pluck('id');
+                $bookings = Booking::whereHas('service', function ($q) use ($businessIds) {
+                    $q->whereIn('business_id', $businessIds);
+                })->with(['service.business', 'employee', 'client'])->latest()->paginate(20);
+            }
+        }
+
+        // For providers with only one business, auto-select it
+        if ($user->role === 'provider' && $businesses->count() === 1 && !$selectedBusiness) {
+            $selectedBusiness = $businesses->first();
+            $businessSettings = Setting::getBusinessSettings($selectedBusiness->id);
+        }
+
+        // Load business settings for each booking if showing multiple businesses
+        if (!$selectedBusiness && $bookings->count() > 0) {
+            $businessSettingsCache = [];
+            foreach ($bookings as $booking) {
+                $businessId = $booking->service->business->id;
+                if (!isset($businessSettingsCache[$businessId])) {
+                    $businessSettingsCache[$businessId] = Setting::getBusinessSettings($businessId);
+                }
+                $booking->businessSettings = $businessSettingsCache[$businessId];
+            }
+        }
+
+        return view('bookings.manage', compact('businesses', 'selectedBusiness', 'bookings', 'businessSettings'));
     }
 
     public function show($id)
@@ -454,6 +523,12 @@ class BookingController extends Controller
 
         $booking->status = $validated['status'];
         $booking->save();
+
+        // If updating from manage page, redirect back to manage with business context
+        if ($request->has('from_manage')) {
+            return redirect()->route('bookings.manage', ['business_id' => $booking->service->business_id])
+                ->with('success', 'Booking status updated.');
+        }
 
         return redirect()->route('bookings.show', $booking->id)
             ->with('success', 'Booking status updated.');

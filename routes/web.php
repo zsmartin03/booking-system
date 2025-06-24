@@ -83,7 +83,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/bookings/create', [BookingController::class, 'create'])->name('bookings.create');
     Route::post('/bookings', [BookingController::class, 'store'])->name('bookings.store');
-
+    Route::get('/bookings/manage', [BookingController::class, 'manage'])->name('bookings.manage');
 
     Route::resource('bookings', BookingController::class)->except(['create', 'store']);
 });

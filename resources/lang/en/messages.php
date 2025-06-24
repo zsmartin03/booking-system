@@ -43,6 +43,7 @@ return [
 
     // Bookings
     'bookings' => 'Bookings',
+    'your_bookings' => 'Your Bookings',
     'manage_bookings' => 'Manage Bookings',
     'create_booking' => 'Create Booking',
     'booking_date' => 'Booking Date',
@@ -392,4 +393,11 @@ return [
     // Service create/edit form
     'add_service' => 'Add Service',
     'update_service' => 'Update Service',
+
+    // Booking management
+    'bookings_for_business' => 'Bookings for Business',
+    'showing_all_bookings' => 'Showing all bookings',
+    'no_bookings_found' => 'No Bookings Found',
+    'no_bookings_for_selected_business' => 'There are no bookings for the selected business.',
+    'select_business_to_manage_bookings' => 'Please select a business above to view and manage its bookings.',
 ];
