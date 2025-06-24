@@ -5,7 +5,7 @@
 
             <!-- Name -->
             <div>
-                <x-input-label for="name" :value="__('Name')" class="text-frappe-text" />
+                <x-input-label for="name" :value="__('messages.name')" class="text-frappe-text" />
                 <x-text-input id="name"
                     class="block mt-1 w-full bg-frappe-surface0 border-frappe-surface1 text-frappe-text focus:ring-frappe-blue focus:border-frappe-blue"
                     type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
@@ -14,7 +14,7 @@
 
             <!-- Email Address -->
             <div class="mt-4">
-                <x-input-label for="email" :value="__('Email')" class="text-frappe-text" />
+                <x-input-label for="email" :value="__('messages.email')" class="text-frappe-text" />
                 <x-text-input id="email"
                     class="block mt-1 w-full bg-frappe-surface0 border-frappe-surface1 text-frappe-text focus:ring-frappe-blue focus:border-frappe-blue"
                     type="email" name="email" :value="old('email')" required autocomplete="username" />
@@ -52,7 +52,7 @@
 
             <!-- Confirm Password -->
             <div class="mt-4">
-                <x-input-label for="password_confirmation" :value="__('Confirm Password')" class="text-frappe-text" />
+                <x-input-label for="password_confirmation" :value="__('messages.confirm_password')" class="text-frappe-text" />
                 <x-text-input id="password_confirmation"
                     class="block mt-1 w-full bg-frappe-surface0 border-frappe-surface1 text-frappe-text focus:ring-frappe-blue focus:border-frappe-blue"
                     type="password" name="password_confirmation" required autocomplete="new-password" />

@@ -1,0 +1,395 @@
+<?php
+
+return [
+    // Navigation
+    'dashboard' => 'Dashboard',
+    'profile' => 'Profile',
+    'logout' => 'Logout',
+    'login' => 'Login',
+    'register' => 'Register',
+    'home' => 'Home',
+
+    // Business Management
+    'businesses' => 'Businesses',
+    'manage_businesses' => 'Manage Businesses',
+    'create_business' => 'Create Business',
+    'edit_business' => 'Edit Business',
+    'business_name' => 'Business Name',
+    'business_description' => 'Business Description',
+    'address' => 'Address',
+    'phone' => 'Phone',
+    'email' => 'Email',
+    'website' => 'Website',
+
+    // Services
+    'services' => 'Services',
+    'manage_services' => 'Manage Services',
+    'create_service' => 'Create Service',
+    'edit_service' => 'Edit Service',
+    'service_name' => 'Service Name',
+    'service_description' => 'Service Description',
+    'duration' => 'Duration',
+    'price' => 'Price',
+
+    // Employees
+    'employees' => 'Employees',
+    'manage_employees' => 'Manage Employees',
+    'create_employee' => 'Create Employee',
+    'edit_employee' => 'Edit Employee',
+    'employee_name' => 'Employee Name',
+    'first_name' => 'First Name',
+    'last_name' => 'Last Name',
+    'position' => 'Position',
+
+    // Bookings
+    'bookings' => 'Bookings',
+    'manage_bookings' => 'Manage Bookings',
+    'create_booking' => 'Create Booking',
+    'booking_date' => 'Booking Date',
+    'booking_time' => 'Booking Time',
+    'customer' => 'Customer',
+    'status' => 'Status',
+
+    // Working Hours
+    'working_hours' => 'Working Hours',
+    'business_working_hours' => 'Business Working Hours',
+    'employee_working_hours' => 'Employee Working Hours',
+    'day' => 'Day',
+    'start_time' => 'Start Time',
+    'end_time' => 'End Time',
+    'closed' => 'Closed',
+
+    // Days of week
+    'monday' => 'Monday',
+    'tuesday' => 'Tuesday',
+    'wednesday' => 'Wednesday',
+    'thursday' => 'Thursday',
+    'friday' => 'Friday',
+    'saturday' => 'Saturday',
+    'sunday' => 'Sunday',
+    // Actions
+    'save' => 'Save',
+    'cancel' => 'Cancel',
+    'edit' => 'Edit',
+    'delete' => 'Delete',
+    'create' => 'Create',
+    'update' => 'Update',
+    'view' => 'View',
+    'back' => 'Back',
+    'search' => 'Search',
+    'filter' => 'Filter',
+    'export' => 'Export',
+    'manage' => 'Manage',
+    'browse' => 'Browse',
+    // User roles
+    'role' => 'Role',
+    'admin' => 'Admin',
+    'provider' => 'Provider',
+    'customer' => 'Customer',
+    // Common terms
+    'actions' => 'Actions',
+    'name' => 'Name',
+    'description' => 'Description',
+    'add' => 'Add',
+    'remove' => 'Remove',
+    'select' => 'Select',
+    'choose' => 'Choose',
+    'upload' => 'Upload',
+    'download' => 'Download',
+    'close' => 'Close',
+    'open' => 'Open',
+    'submit' => 'Submit',
+    'reset' => 'Reset',
+    'clear' => 'Clear',
+    'confirm' => 'Confirm',
+    'yes' => 'Yes',
+    'no' => 'No',
+    'active' => 'Active',
+    'inactive' => 'Inactive',
+    'available_with' => 'Available with:',
+    'no_services_set' => 'No services set.',
+    'no_employees_set' => 'No employees set.',
+    'exceptions' => 'Exceptions',
+    'hours' => 'Hours',
+
+    // Confirmation messages
+    'delete_business' => 'Delete Business',
+    'delete_service' => 'Delete Service',
+    'delete_employee' => 'Delete Employee',
+    'are_you_sure_delete' => 'Are you sure you want to delete',
+    'this_action_cannot_be_undone' => 'This action cannot be undone.',
+
+    // Settings
+    'booking_restrictions' => 'Booking Restrictions',
+    'cancellation_hours_limit' => 'Cancellation Hours Limit',
+    'hours_before_appointment' => 'Hours before appointment that cancellation is allowed',
+    'buffer_time_minutes' => 'Buffer Time (Minutes)',
+    'buffer_time_between' => 'Buffer time between appointments',
+    'general_settings' => 'General Settings',
+    'currency' => 'Currency',
+    'select_business_currency' => 'Select your business currency',
+    'business_timezone' => 'Business Timezone',
+    'business_status' => 'Business Status',
+    'holiday_mode' => 'Holiday Mode',
+    'temporarily_disable_bookings' => 'Temporarily disable new bookings',
+    'maintenance_mode' => 'Maintenance Mode',
+    'show_maintenance_message' => 'Show maintenance message to customers',
+    'booking_confirmation_required' => 'Booking Confirmation Required',
+    'require_manual_confirmation' => 'Require manual confirmation for new bookings',
+    'email_notifications' => 'Email Notifications',
+    'send_email_notifications' => 'Send email notifications for bookings',
+    'sms_notifications' => 'SMS Notifications',
+    'send_sms_notifications' => 'Send SMS notifications for bookings (requires SMS service)',
+    'availability_exceptions' => 'Availability Exceptions',
+
+    // Settings page labels and descriptions
+    'minimum_hours_in_advance' => 'Minimum Hours in Advance',
+    'minimum_hours_before_appointment' => 'Minimum hours before appointment can be booked',
+    'maximum_days_in_advance' => 'Maximum Days in Advance',
+    'maximum_days_advance_bookings' => 'Maximum days in advance bookings are allowed',
+    'cancellation_hours_limit' => 'Cancellation Hours Limit',
+    'hours_before_cancellation' => 'Hours before appointment that cancellation is allowed',
+    'buffer_time_minutes' => 'Buffer Time (Minutes)',
+    'buffer_time_between_appointments' => 'Buffer time between appointments',
+    'general_settings' => 'General Settings',
+    'currency' => 'Currency',
+    'select_business_currency' => 'Select your business currency',
+    'business_timezone' => 'Business Timezone',
+    'business_status' => 'Business Status',
+    'holiday_mode' => 'Holiday Mode',
+    'temporarily_disable_bookings' => 'Temporarily disable new bookings',
+    'maintenance_mode' => 'Maintenance Mode',
+    'show_maintenance_message' => 'Show maintenance message to customers',
+    'booking_confirmation_required' => 'Booking Confirmation Required',
+    'require_manual_confirmation' => 'Require manual confirmation for new bookings',
+    'notifications' => 'Notifications',
+    'email_notifications' => 'Email Notifications',
+    'send_email_notifications' => 'Send email notifications for bookings',
+    'sms_notifications' => 'SMS Notifications',
+    'send_sms_notifications' => 'Send SMS notifications for bookings (requires SMS service)',
+    'reset_to_defaults' => 'Reset to Defaults',
+    'save_settings' => 'Save Settings',
+    'reset_settings' => 'Reset Settings',
+    'reset_settings_confirmation' => 'Are you sure you want to reset all settings to their default values? This action cannot be undone.',
+
+    // Form labels
+    'required' => 'Required',
+    'optional' => 'Optional',
+    'business_logo' => 'Business Logo',
+
+    // Authentication
+    'password' => 'Password',
+    'confirm_password' => 'Confirm Password',
+    'remember_me' => 'Remember me',
+    'forgot_password' => 'Forgot your password?',
+    'reset_password' => 'Reset Password',
+    'dont_have_account' => 'Don\'t have an account? Register',
+    'already_have_account' => 'Already have an account? Sign In',
+    'verify_email' => 'Verify Email',
+    'log_in' => 'Log in',
+    'sign_out' => 'Sign Out',
+    'i_want_to' => 'I want to',
+    'book_services' => 'Book Services',
+    'provide_services' => 'Provide Services',
+
+    // Messages
+    'success' => 'Success',
+    'error' => 'Error',
+    'warning' => 'Warning',
+    'info' => 'Information',
+    'confirmation' => 'Are you sure?',
+    'no_data' => 'No data available',
+    'loading' => 'Loading...',
+
+    // Settings
+    'settings' => 'Settings',
+    'general_settings' => 'General Settings',
+    'notifications' => 'Notifications',
+    'preferences' => 'Preferences',
+
+    // Language
+    'language' => 'Language',
+    'select_language' => 'Select Language',
+    'english' => 'English',
+    'hungarian' => 'Hungarian',
+    // Welcome page
+    'welcome_title' => 'Welcome to BookingSystem',
+    'welcome_subtitle' => 'Your professional booking management solution',
+    'get_started' => 'Get Started',
+    'learn_more' => 'Learn More',
+    'available_businesses' => 'Available Businesses',
+    'book_now' => 'Book Now',
+    'no_businesses_found' => 'No businesses found.',
+    'check_back_later' => 'Check back later for new listings!',
+
+    // Page titles with "for" patterns
+    'settings_for' => 'Settings for',
+    'add_service_for' => 'Add Service for',
+    'edit_service_for' => 'Edit Service for',
+    'add_employee_for' => 'Add Employee for',
+    'edit_employee_for' => 'Edit Employee for',
+    'add_working_hour_for' => 'Add Working Hour for',
+    'edit_working_hour_for' => 'Edit Working Hour for',
+    'working_hours_for' => 'Working Hours for',
+    'availability_exceptions_for' => 'Availability Exceptions for',
+
+    // Form specific labels and messages
+    'duration_minutes' => 'Duration (minutes)',
+    'assign_employees' => 'Assign Employees',
+    'confirm_password' => 'Confirm Password',
+    'bio' => 'Bio',
+    'avatar' => 'Avatar',
+    'current_password' => 'Current Password',
+    'new_password' => 'New Password',
+    'password' => 'Password',
+
+    // Availability exceptions
+    'add_exception' => 'Add Exception',
+    'add_exceptions_to_override' => 'Add exceptions to override regular working hours.',
+    'no_availability_exceptions' => 'No availability exceptions set.',
+    'available' => 'Available',
+    'unavailable' => 'Unavailable',
+    'type' => 'Type',
+    'note' => 'Note',
+    'date' => 'Date',
+    'time' => 'Time',
+
+    // Table headers and common terms
+    'day' => 'Day',
+    'start' => 'Start',
+    'end' => 'End',
+    'start_time' => 'Start Time',
+    'end_time' => 'End Time',
+    'actions' => 'Actions',
+
+    // Booking related
+    'book_now' => 'Book Now',
+    'book_service' => 'Book Service',
+    'booking_details' => 'Booking Details',
+    'booking_confirmation' => 'Booking Confirmation',
+    'select_date_time' => 'Select Date & Time',
+    'select_service' => 'Select Service',
+    'select_employee' => 'Select Employee',
+    'customer_information' => 'Customer Information',
+    'contact_information' => 'Contact Information',
+    'special_requests' => 'Special Requests',
+    'booking_summary' => 'Booking Summary',
+    'confirm_booking' => 'Confirm Booking',
+    'booking_confirmed' => 'Booking Confirmed',
+    'booking_cancelled' => 'Booking Cancelled',
+    'pending' => 'Pending',
+    'confirmed' => 'Confirmed',
+    'cancelled' => 'Cancelled',
+    'completed' => 'Completed',
+
+    // Business public pages
+    'about_us' => 'About Us',
+    'our_services' => 'Our Services',
+    'our_team' => 'Our Team',
+    'contact_us' => 'Contact Us',
+    'opening_hours' => 'Opening Hours',
+    'get_directions' => 'Get Directions',
+    'call_us' => 'Call Us',
+    'visit_us' => 'Visit Us',
+    'business_details' => 'Business Details',
+    'service_details' => 'Service Details',
+    'all_businesses' => 'All Businesses',
+    'view_details' => 'View Details',
+    'please_sign_in_to_book' => 'Please sign in to make a booking',
+
+    // Additional business terms
+    'logo_url' => 'Logo URL',
+    'update_business' => 'Update Business',
+
+    // Additional terms
+    'service' => 'Service',
+    'employee' => 'Employee',
+    'client' => 'Client',
+
+    // Booking create page
+    'this_business_not_accepting_bookings' => 'This business is currently not accepting new bookings.',
+    'business_under_maintenance' => 'This business is currently under maintenance. Please try again later.',
+    'booking_pending_confirmation' => 'Your booking will be pending until confirmed by the business.',
+    'booking_advance_restrictions' => 'Bookings must be made at least :hours hours in advance and no more than :days days in advance.',
+    'business' => 'Business',
+    'select_business' => 'Select Business',
+    'select_service' => 'Select Service',
+    'notes_optional' => 'Notes (optional)',
+    'holiday_mode_alert' => 'This business is currently not accepting new bookings (Holiday Mode).',
+    'maintenance_mode_alert' => 'This business is currently under maintenance. Please try again later.',
+
+    // Booking create page - navigation and time slots
+    'previous_week' => 'Previous Week',
+    'next_week' => 'Next Week',
+    'available' => 'Available',
+    'selected' => 'Selected',
+    'booked' => 'Booked',
+    'working_time' => 'Working Time',
+    'not_available' => 'Not Available',
+    'loading_schedule' => 'Loading schedule...',
+    'confirm_your_booking' => 'Confirm Your Booking',
+    'time' => 'Time',
+    'choose_employee' => 'Choose Employee',
+    'confirm_booking' => 'Confirm Booking',
+    'cancel' => 'Cancel',
+    'no_bio_available' => 'No bio available',
+    'unavailable' => 'Unavailable',
+    'minutes' => 'minutes',
+    'hours' => 'hours',
+
+    // Day names (short forms)
+    'mon' => 'Mon',
+    'tue' => 'Tue',
+    'wed' => 'Wed',
+    'thu' => 'Thu',
+    'fri' => 'Fri',
+    'sat' => 'Sat',
+    'sun' => 'Sun',
+
+    // Booking restrictions and validation messages
+    'minimum_advance_notice' => 'Minimum :hours hours advance notice required',
+    'cannot_book_advance' => 'Cannot book more than :days days in advance',
+    'time_slot_not_available' => 'Time slot not available',
+
+    // Form labels for booking
+    'notes_optional' => 'Notes (optional)',
+    'any_special_requests' => 'Any special requests or notes...',
+
+    // Additional terms for employee working hours
+    'add_working_hour' => 'Add Working Hour',
+    'edit_working_hour' => 'Edit Working Hour',
+    'no_working_hours' => 'No working hours set.',
+
+    // Additional terms for availability exceptions
+    'add_availability_exception' => 'Add Availability Exception',
+    'edit_availability_exception' => 'Edit Availability Exception',
+    'no_availability_exceptions' => 'Nincsenek beállított elérhetőségi kivételek.',
+
+    // Day of week label
+    'day_of_week' => 'Day of Week',
+
+    // Delete modal titles
+    'delete_working_hour' => 'Delete Working Hour',
+
+    // Backend messages
+    'all_employees_booked' => 'All employees booked',
+    'selected_employee_cannot_provide_service' => 'Selected employee cannot provide this service.',
+    'selected_employee_not_working' => 'Selected employee is not working at this time.',
+    'failed_to_create_booking' => 'Failed to create booking. Please try again.',
+
+    // Booking confirmation messages
+    'booking_created_awaiting_confirmation' => 'Booking created! Awaiting confirmation.',
+    'booking_confirmed_email_sent' => 'Booking confirmed! You will receive a confirmation email shortly.',
+
+    // Alert messages
+    'please_select_employee_and_time' => 'Please select an employee and time slot first.',
+    'invalid_date_selected' => 'Invalid date selected. Please try again.',
+
+    // Update booking status
+    'update_status' => 'Update Status',
+    'notes' => 'Notes',
+
+    // Service create/edit form
+    'add_service' => 'Add Service',
+    'update_service' => 'Update Service',
+];

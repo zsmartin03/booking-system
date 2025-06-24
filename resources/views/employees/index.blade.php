@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-frappe-lavender leading-tight">
-            {{ __('Employees for') }} {{ $business->name }}
+            {{ __('messages.employees') }} - {{ $business->name }}
         </h2>
     </x-slot>
 
@@ -9,7 +9,7 @@
         <div class="mb-4">
             <a href="{{ route('employees.create', ['business_id' => $business->id]) }}"
                 class="frosted-button text-white px-4 py-2 rounded-lg hover:transform hover:-translate-y-1 transition-all inline-flex items-center gap-2">
-                <x-heroicon-o-plus class="w-5 h-5" /> {{ __('Add Employee') }}
+                <x-heroicon-o-plus class="w-5 h-5" /> {{ __('messages.create_employee') }}
             </a>
         </div>
 
@@ -26,10 +26,13 @@
                     <table class="w-full min-w-full">
                         <thead>
                             <tr class="border-b border-frappe-surface1/30">
-                                <th class="text-left py-3 px-4 font-medium text-frappe-text">{{ __('Name') }}</th>
-                                <th class="text-left py-3 px-4 font-medium text-frappe-text">{{ __('Email') }}</th>
-                                <th class="text-left py-3 px-4 font-medium text-frappe-text">{{ __('Active') }}</th>
-                                <th class="py-3 px-4 font-medium text-frappe-text">{{ __('Actions') }}</th>
+                                <th class="text-left py-3 px-4 font-medium text-frappe-text">{{ __('messages.name') }}
+                                </th>
+                                <th class="text-left py-3 px-4 font-medium text-frappe-text">{{ __('messages.email') }}
+                                </th>
+                                <th class="text-left py-3 px-4 font-medium text-frappe-text">{{ __('messages.active') }}
+                                </th>
+                                <th class="py-3 px-4 font-medium text-frappe-text">{{ __('messages.actions') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -41,10 +44,10 @@
                                     <td class="py-3 px-4">
                                         @if ($employee->active)
                                             <span
-                                                class="inline-flex px-2 py-1 text-xs font-medium rounded-full bg-green-500/20 text-green-300">{{ __('Active') }}</span>
+                                                class="inline-flex px-2 py-1 text-xs font-medium rounded-full bg-green-500/20 text-green-300">{{ __('messages.active') }}</span>
                                         @else
                                             <span
-                                                class="inline-flex px-2 py-1 text-xs font-medium rounded-full bg-red-500/20 text-red-300">{{ __('Inactive') }}</span>
+                                                class="inline-flex px-2 py-1 text-xs font-medium rounded-full bg-red-500/20 text-red-300">{{ __('messages.inactive') }}</span>
                                         @endif
                                     </td>
                                     <td class="py-3 px-4">
@@ -130,7 +133,7 @@
                         </div>
                     </div>
                 @empty
-                    <div class="p-8 text-center text-frappe-subtext1">{{ __('No employees set.') }}</div>
+                    <div class="p-8 text-center text-frappe-subtext1">{{ __('messages.no_employees_set') }}</div>
                 @endforelse
             </div>
         </div>
@@ -139,8 +142,8 @@
     <div id="deleteModal"
         class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 backdrop-blur-sm z-50 hidden">
         <div class="frosted-modal p-6 rounded-2xl shadow-2xl w-full max-w-md mx-4">
-            <h3 class="text-xl font-semibold mb-4 text-frappe-red">{{ __('Delete Employee') }}</h3>
-            <p class="mb-6 text-frappe-text opacity-90">{{ __('Are you sure you want to delete') }} <span
+            <h3 class="text-xl font-semibold mb-4 text-frappe-red">{{ __('messages.delete_employee') }}</h3>
+            <p class="mb-6 text-frappe-text opacity-90">{{ __('messages.are_you_sure_delete') }} <span
                     id="modalEmployeeName" class="font-bold text-frappe-lavender"></span>?</p>
             <form id="deleteForm" method="POST">
                 @csrf

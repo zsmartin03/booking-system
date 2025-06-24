@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-frappe-lavender leading-tight">
-            {{ __('Services for') }} {{ $business->name }}
+            {{ __('messages.services') }} - {{ $business->name }}
         </h2>
     </x-slot>
 
@@ -9,7 +9,7 @@
         <div class="mb-4">
             <a href="{{ route('services.create', ['business_id' => $business->id]) }}"
                 class="frosted-button text-white px-4 py-2 rounded-lg hover:transform hover:-translate-y-1 transition-all inline-flex items-center gap-2">
-                <x-heroicon-o-plus class="w-5 h-5" /> {{ __('Add Service') }}
+                <x-heroicon-o-plus class="w-5 h-5" /> {{ __('messages.create_service') }}
             </a>
         </div>
 
@@ -26,11 +26,15 @@
                     <table class="w-full min-w-full">
                         <thead>
                             <tr class="border-b border-frappe-surface1/30">
-                                <th class="text-left py-3 px-4 font-medium text-frappe-text">{{ __('Name') }}</th>
-                                <th class="text-left py-3 px-4 font-medium text-frappe-text">{{ __('Duration') }}</th>
-                                <th class="text-left py-3 px-4 font-medium text-frappe-text">{{ __('Price') }}</th>
-                                <th class="text-left py-3 px-4 font-medium text-frappe-text">{{ __('Employees') }}</th>
-                                <th class="py-3 px-4 font-medium text-frappe-text">{{ __('Actions') }}</th>
+                                <th class="text-left py-3 px-4 font-medium text-frappe-text">
+                                    {{ __('messages.service_name') }}</th>
+                                <th class="text-left py-3 px-4 font-medium text-frappe-text">
+                                    {{ __('messages.duration') }}</th>
+                                <th class="text-left py-3 px-4 font-medium text-frappe-text">{{ __('messages.price') }}
+                                </th>
+                                <th class="text-left py-3 px-4 font-medium text-frappe-text">
+                                    {{ __('messages.employees') }}</th>
+                                <th class="py-3 px-4 font-medium text-frappe-text">{{ __('messages.actions') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -54,13 +58,13 @@
                                         <div class="flex gap-2 justify-center">
                                             <a href="{{ route('services.edit', $service->id) }}"
                                                 class="edit-button text-white px-6 py-2 rounded-lg flex items-center gap-2 text-sm hover:transform hover:-translate-y-1 transition-all">
-                                                <x-heroicon-o-pencil class="w-4 h-4" /> {{ __('Edit') }}
+                                                <x-heroicon-o-pencil class="w-4 h-4" /> {{ __('messages.edit') }}
                                             </a>
                                             <button
                                                 class="delete-button text-white px-6 py-2 rounded-lg flex items-center gap-2 text-sm hover:transform hover:-translate-y-1 transition-all"
                                                 onclick="showDeleteModal({{ $service->id }}, '{{ addslashes($service->name) }}')"
-                                                title="{{ __('Delete') }}">
-                                                <x-heroicon-o-trash class="w-4 h-4" /> {{ __('Delete') }}
+                                                title="{{ __('messages.delete') }}">
+                                                <x-heroicon-o-trash class="w-4 h-4" /> {{ __('messages.delete') }}
                                             </button>
                                         </div>
                                     </td>
@@ -68,7 +72,7 @@
                             @empty
                                 <tr>
                                     <td colspan="5" class="py-8 text-center text-frappe-subtext1">
-                                        {{ __('No services set.') }}</td>
+                                        {{ __('messages.no_services_set') }}</td>
                                 </tr>
                             @endforelse
                         </tbody>
@@ -94,7 +98,8 @@
 
                             @if ($service->employees->count() > 0)
                                 <div>
-                                    <div class="text-xs text-frappe-subtext1 mb-1">{{ __('Available with:') }}</div>
+                                    <div class="text-xs text-frappe-subtext1 mb-1">{{ __('messages.available_with') }}
+                                    </div>
                                     <div class="flex flex-wrap gap-1">
                                         @foreach ($service->employees as $employee)
                                             <span
@@ -107,19 +112,19 @@
                             <div class="flex gap-2 pt-2 justify-center sm:justify-start">
                                 <a href="{{ route('services.edit', $service->id) }}"
                                     class="edit-button text-white px-6 py-2 rounded-lg flex items-center gap-2 text-sm hover:transform hover:-translate-y-1 transition-all">
-                                    <x-heroicon-o-pencil class="w-4 h-4" /> {{ __('Edit') }}
+                                    <x-heroicon-o-pencil class="w-4 h-4" /> {{ __('messages.edit') }}
                                 </a>
                                 <button
                                     class="delete-button text-white px-6 py-2 rounded-lg flex items-center gap-2 text-sm hover:transform hover:-translate-y-1 transition-all"
                                     onclick="showDeleteModal({{ $service->id }}, '{{ addslashes($service->name) }}')"
-                                    title="{{ __('Delete') }}">
-                                    <x-heroicon-o-trash class="w-4 h-4" /> {{ __('Delete') }}
+                                    title="{{ __('messages.delete') }}">
+                                    <x-heroicon-o-trash class="w-4 h-4" /> {{ __('messages.delete') }}
                                 </button>
                             </div>
                         </div>
                     </div>
                 @empty
-                    <div class="p-8 text-center text-frappe-subtext1">{{ __('No services set.') }}</div>
+                    <div class="p-8 text-center text-frappe-subtext1">{{ __('messages.no_services_set') }}</div>
                 @endforelse
             </div>
         </div>
@@ -128,8 +133,8 @@
     <div id="deleteModal"
         class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 backdrop-blur-sm z-50 hidden">
         <div class="frosted-modal p-6 rounded-2xl shadow-2xl w-full max-w-md mx-4">
-            <h3 class="text-xl font-semibold mb-4 text-frappe-red">{{ __('Delete Service') }}</h3>
-            <p class="mb-6 text-frappe-text opacity-90">{{ __('Are you sure you want to delete') }} <span
+            <h3 class="text-xl font-semibold mb-4 text-frappe-red">{{ __('messages.delete_service') }}</h3>
+            <p class="mb-6 text-frappe-text opacity-90">{{ __('messages.are_you_sure_delete') }} <span
                     id="modalServiceName" class="font-bold text-frappe-lavender"></span>?</p>
             <form id="deleteForm" method="POST">
                 @csrf
@@ -137,11 +142,11 @@
                 <div class="flex justify-end gap-3">
                     <button type="button" onclick="hideDeleteModal()"
                         class="px-6 py-2 bg-gradient-to-r from-gray-500/20 to-gray-600/20 backdrop-blur-sm border border-gray-400/30 text-gray-300 rounded-lg hover:from-gray-500/30 hover:to-gray-600/30 transition-all">
-                        {{ __('Cancel') }}
+                        {{ __('messages.cancel') }}
                     </button>
                     <button type="submit"
                         class="px-6 py-2 bg-gradient-to-r from-red-500/30 to-pink-500/30 backdrop-blur-sm border border-red-400/40 text-red-300 rounded-lg hover:from-red-500/40 hover:to-pink-500/40 transition-all">
-                        {{ __('Delete') }}
+                        {{ __('messages.delete') }}
                     </button>
                 </div>
             </form>

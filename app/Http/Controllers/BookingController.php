@@ -56,24 +56,24 @@ class BookingController extends Controller
 
         // Check if business is in holiday mode
         if ($settings['holiday_mode']) {
-            return back()->withErrors(['general' => 'This business is currently not accepting new bookings (Holiday Mode).'])->withInput();
+            return back()->withErrors(['general' => __('messages.this_business_not_accepting_bookings')])->withInput();
         }
 
         // Check if business is in maintenance mode
         if ($settings['maintenance_mode']) {
-            return back()->withErrors(['general' => 'This business is currently under maintenance. Please try again later.'])->withInput();
+            return back()->withErrors(['general' => __('messages.business_under_maintenance')])->withInput();
         }
 
         if (!$employee->canProvideService($service->id)) {
-            return back()->withErrors(['employee_id' => 'Selected employee cannot provide this service.'])->withInput();
+            return back()->withErrors(['employee_id' => __('messages.selected_employee_cannot_provide_service')])->withInput();
         }
 
         $start = Carbon::parse($validated['start_time']);
-        $end = $start->copy()->addMinutes($service->duration);
+        $end = $start->copy()->addMinutes((int) $service->duration);
         $now = Carbon::now();
 
         // Check minimum advance booking time
-        $minAdvanceHours = $settings['booking_advance_hours'];
+        $minAdvanceHours = (int) $settings['booking_advance_hours'];
         $minBookingTime = $now->copy()->addHours($minAdvanceHours);
 
         if ($start < $minBookingTime) {
@@ -81,7 +81,7 @@ class BookingController extends Controller
         }
 
         // Check maximum advance booking time
-        $maxAdvanceDays = $settings['booking_advance_days'];
+        $maxAdvanceDays = (int) $settings['booking_advance_days'];
         $maxBookingTime = $now->copy()->addDays($maxAdvanceDays);
 
         if ($start > $maxBookingTime) {
@@ -102,7 +102,7 @@ class BookingController extends Controller
         }
 
         // Add buffer time validation
-        $bufferMinutes = $settings['booking_buffer_minutes'];
+        $bufferMinutes = (int) $settings['booking_buffer_minutes'];
         if ($bufferMinutes > 0) {
             $bufferStart = $start->copy()->subMinutes($bufferMinutes);
             $bufferEnd = $end->copy()->addMinutes($bufferMinutes);
@@ -131,7 +131,7 @@ class BookingController extends Controller
         })->isNotEmpty();
 
         if (!$isWorking) {
-            return back()->withErrors(['start_time' => 'Selected employee is not working at this time.'])->withInput();
+            return back()->withErrors(['start_time' => __('messages.selected_employee_not_working')])->withInput();
         }
 
         try {
@@ -150,13 +150,13 @@ class BookingController extends Controller
             ]);
 
             $successMessage = $settings['booking_confirmation_required']
-                ? 'Booking created! Awaiting confirmation.'
-                : 'Booking confirmed! You will receive a confirmation email shortly.';
+                ? __('messages.booking_created_awaiting_confirmation')
+                : __('messages.booking_confirmed_email_sent');
 
             return redirect()->route('bookings.show', $booking->id)
                 ->with('success', $successMessage);
         } catch (\Exception $e) {
-            return back()->withErrors(['general' => 'Failed to create booking. Please try again.'])->withInput();
+            return back()->withErrors(['general' => __('messages.failed_to_create_booking')])->withInput();
         }
     }
 
@@ -388,9 +388,9 @@ class BookingController extends Controller
                         'label' => $timeSlot['label'],
                         'available' => !empty($availableEmployees),
                         'employee_id' => $bestEmployee ? $bestEmployee['employee_id'] : (!empty($availableEmployees) ? array_values($availableEmployees)[0]['employee_id'] : null),
-                        'employee_name' => $bestEmployee ? $bestEmployee['employee_name'] : (!empty($availableEmployees) ? array_values($availableEmployees)[0]['employee_name'] : 'All employees booked'),
+                        'employee_name' => $bestEmployee ? $bestEmployee['employee_name'] : (!empty($availableEmployees) ? array_values($availableEmployees)[0]['employee_name'] : __('messages.all_employees_booked')),
                         'employee_bio' => $bestEmployee ? $bestEmployee['employee_bio'] : (!empty($availableEmployees) ? array_values($availableEmployees)[0]['employee_bio'] : ''),
-                        'service_end_time' => Carbon::parse($timeSlot['time'])->addMinutes($service->duration)->format('Y-m-d\TH:i'),
+                        'service_end_time' => Carbon::parse($timeSlot['time'])->addMinutes((int) $service->duration)->format('Y-m-d\TH:i'),
                         'available_minutes' => $maxAvailableMinutes,
                         'has_full_service_time' => $hasAnyFullServiceTime,
                         'all_employees' => $timeSlot['employees'] // Include all employee data for frontend

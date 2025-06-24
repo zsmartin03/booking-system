@@ -18,11 +18,11 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                         <div class="space-y-3">
                             <div class="bg-frappe-surface0/30 rounded-lg p-3">
-                                <div class="text-sm text-frappe-subtext1 mb-1">{{ __('Address') }}</div>
+                                <div class="text-sm text-frappe-subtext1 mb-1">{{ __('messages.address') }}</div>
                                 <div class="text-frappe-text">{{ $business->address }}</div>
                             </div>
                             <div class="bg-frappe-surface0/30 rounded-lg p-3">
-                                <div class="text-sm text-frappe-subtext1 mb-1">{{ __('Phone') }}</div>
+                                <div class="text-sm text-frappe-subtext1 mb-1">{{ __('messages.phone') }}</div>
                                 <div class="text-frappe-text">
                                     <a href="tel:{{ $business->phone_number }}"
                                         class="text-frappe-blue hover:text-frappe-sapphire">
@@ -34,7 +34,7 @@
 
                         <div class="space-y-3">
                             <div class="bg-frappe-surface0/30 rounded-lg p-3">
-                                <div class="text-sm text-frappe-subtext1 mb-1">{{ __('Email') }}</div>
+                                <div class="text-sm text-frappe-subtext1 mb-1">{{ __('messages.email') }}</div>
                                 <div class="text-frappe-text">
                                     <a href="mailto:{{ $business->email }}"
                                         class="text-frappe-blue hover:text-frappe-sapphire break-all">
@@ -44,7 +44,7 @@
                             </div>
                             @if ($business->website)
                                 <div class="bg-frappe-surface0/30 rounded-lg p-3">
-                                    <div class="text-sm text-frappe-subtext1 mb-1">{{ __('Website') }}</div>
+                                    <div class="text-sm text-frappe-subtext1 mb-1">{{ __('messages.website') }}</div>
                                     <div class="text-frappe-text">
                                         <a href="{{ $business->website }}" target="_blank"
                                             class="text-frappe-blue hover:text-frappe-sapphire break-all">
@@ -70,7 +70,7 @@
                     <div class="mt-6 text-center sm:text-left">
                         <a href="{{ route('bookings.create', ['business_id' => $business->id]) }}"
                             class="frosted-button text-white px-6 py-3 rounded-lg hover:transform hover:-translate-y-1 transition-all inline-flex items-center gap-2">
-                            <x-heroicon-o-calendar class="w-5 h-5" /> {{ __('Book Now') }}
+                            <x-heroicon-o-calendar class="w-5 h-5" /> {{ __('messages.book_now') }}
                         </a>
                     </div>
                 @endif
@@ -78,9 +78,9 @@
                 <div class="mt-6 text-center sm:text-left">
                     <a href="{{ route('login') }}"
                         class="frosted-button text-white px-6 py-3 rounded-lg hover:transform hover:-translate-y-1 transition-all inline-flex items-center gap-2">
-                        <x-heroicon-o-calendar class="w-5 h-5" /> {{ __('Book Now') }}
+                        <x-heroicon-o-calendar class="w-5 h-5" /> {{ __('messages.book_now') }}
                     </a>
-                    <p class="text-frappe-subtext1 text-sm mt-2">{{ __('Please sign in to make a booking') }}</p>
+                    <p class="text-frappe-subtext1 text-sm mt-2">{{ __('messages.please_sign_in_to_book') }}</p>
                 </div>
             @endauth
         </div>

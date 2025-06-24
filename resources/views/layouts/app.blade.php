@@ -302,6 +302,19 @@
         </div>
     </div>
 
+    <script>
+        // Initialize language from localStorage on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedLanguage = localStorage.getItem('language');
+            const currentLanguage = '{{ app()->getLocale() }}';
+
+            // If there's a saved language different from current, switch to it
+            if (savedLanguage && savedLanguage !== currentLanguage) {
+                // Redirect to set the locale in session
+                window.location.href = '/locale/init/' + savedLanguage;
+            }
+        });
+    </script>
 </body>
 
 </html>

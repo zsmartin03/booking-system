@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-frappe-lavender leading-tight">
-            {{ __('Add Employee for') }} {{ $business->name }}
+            {{ __('messages.add_employee_for') }} {{ $business->name }}
         </h2>
     </x-slot>
 
@@ -32,21 +32,21 @@
                 </div>
 
                 <div class="mb-4">
-                    <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
+                    <x-input-label for="password_confirmation" :value="__('messages.confirm_password')" />
                     <x-text-input id="password_confirmation" name="password_confirmation" type="password"
                         class="block w-full mt-1" required />
                     <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2 text-frappe-red text-sm" />
                 </div>
 
                 <div class="mb-4">
-                    <x-input-label for="bio" :value="__('Bio')" />
+                    <x-input-label for="bio" :value="__('messages.bio')" />
                     <textarea id="bio" name="bio"
                         class="block w-full mt-1 bg-frappe-surface1 border-frappe-surface2 text-frappe-text">{{ old('bio') }}</textarea>
                     <x-input-error :messages="$errors->get('bio')" class="mt-2 text-frappe-red text-sm" />
                 </div>
 
                 <div class="mb-4">
-                    <x-input-label for="avatar" :value="__('Avatar')" />
+                    <x-input-label for="avatar" :value="__('messages.avatar')" />
                     <input id="avatar" name="avatar" type="file" class="block w-full mt-1" accept="image/*" />
                     <x-input-error :messages="$errors->get('avatar')" class="mt-2 text-frappe-red text-sm" />
                 </div>

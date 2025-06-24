@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-frappe-lavender leading-tight">
-            {{ __('Bookings') }}
+            {{ __('messages.bookings') }}
         </h2>
     </x-slot>
 
@@ -13,12 +13,18 @@
                     <table class="w-full min-w-full">
                         <thead>
                             <tr class="border-b border-frappe-surface1/30">
-                                <th class="text-left py-3 px-4 font-medium text-frappe-text">{{ __('Service') }}</th>
-                                <th class="text-left py-3 px-4 font-medium text-frappe-text">{{ __('Employee') }}</th>
-                                <th class="text-left py-3 px-4 font-medium text-frappe-text">{{ __('Client') }}</th>
-                                <th class="text-left py-3 px-4 font-medium text-frappe-text">{{ __('Start') }}</th>
-                                <th class="text-left py-3 px-4 font-medium text-frappe-text">{{ __('End') }}</th>
-                                <th class="text-left py-3 px-4 font-medium text-frappe-text">{{ __('Status') }}</th>
+                                <th class="text-left py-3 px-4 font-medium text-frappe-text">{{ __('messages.service') }}
+                                </th>
+                                <th class="text-left py-3 px-4 font-medium text-frappe-text">
+                                    {{ __('messages.employee') }}</th>
+                                <th class="text-left py-3 px-4 font-medium text-frappe-text">{{ __('messages.client') }}
+                                </th>
+                                <th class="text-left py-3 px-4 font-medium text-frappe-text">{{ __('messages.start') }}
+                                </th>
+                                <th class="text-left py-3 px-4 font-medium text-frappe-text">{{ __('messages.end') }}
+                                </th>
+                                <th class="text-left py-3 px-4 font-medium text-frappe-text">{{ __('messages.status') }}
+                                </th>
                                 <th class="py-3 px-4"></th>
                             </tr>
                         </thead>
@@ -39,13 +45,13 @@
                                                 : ($booking->status === 'pending'
                                                     ? 'bg-yellow-500/20 text-yellow-300'
                                                     : 'bg-red-500/20 text-red-300') }}">
-                                            {{ ucfirst($booking->status) }}
+                                            {{ __('messages.' . $booking->status) }}
                                         </span>
                                     </td>
                                     <td class="py-3 px-4">
                                         <a href="{{ route('bookings.show', $booking->id) }}"
                                             class="frosted-button text-white px-6 py-2 rounded-lg hover:transform hover:-translate-y-1 transition-all text-sm">
-                                            {{ __('View') }}
+                                            {{ __('messages.view') }}
                                         </a>
                                     </td>
                                 </tr>
@@ -74,19 +80,19 @@
                                         : ($booking->status === 'pending'
                                             ? 'bg-yellow-500/20 text-yellow-300'
                                             : 'bg-red-500/20 text-red-300') }}">
-                                    {{ ucfirst($booking->status) }}
+                                    {{ __('messages.' . $booking->status) }}
                                 </span>
                             </div>
                             <div class="text-sm text-frappe-subtext1">
-                                <div><strong>{{ __('Employee:') }}</strong> {{ $booking->employee->name }}</div>
-                                <div><strong>{{ __('Client:') }}</strong> {{ $booking->client->name }}</div>
-                                <div><strong>{{ __('Time:') }}</strong> {{ $booking->start_time }} -
+                                <div><strong>{{ __('messages.employee') }}:</strong> {{ $booking->employee->name }}</div>
+                                <div><strong>{{ __('messages.client') }}:</strong> {{ $booking->client->name }}</div>
+                                <div><strong>{{ __('messages.time') }}:</strong> {{ $booking->start_time }} -
                                     {{ $booking->end_time }}</div>
                             </div>
                             <div class="pt-2">
                                 <a href="{{ route('bookings.show', $booking->id) }}"
                                     class="frosted-button text-white px-6 py-2 rounded-lg hover:transform hover:-translate-y-1 transition-all text-sm inline-flex items-center gap-2">
-                                    {{ __('View Details') }}
+                                    {{ __('messages.view') }}
                                 </a>
                             </div>
                         </div>

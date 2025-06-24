@@ -8,7 +8,7 @@
 
             <!-- Email Address -->
             <div>
-                <x-input-label for="email" :value="__('Email')" class="text-frappe-text" />
+                <x-input-label for="email" :value="__('messages.email')" class="text-frappe-text" />
                 <x-text-input id="email"
                     class="block mt-1 w-full bg-frappe-surface0 border-frappe-surface1 text-frappe-text focus:ring-frappe-blue focus:border-frappe-blue"
                     type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
@@ -17,7 +17,7 @@
 
             <!-- Password -->
             <div class="mt-4">
-                <x-input-label for="password" :value="__('Password')" class="text-frappe-text" />
+                <x-input-label for="password" :value="__('messages.password')" class="text-frappe-text" />
                 <x-text-input id="password"
                     class="block mt-1 w-full bg-frappe-surface0 border-frappe-surface1 text-frappe-text focus:ring-frappe-blue focus:border-frappe-blue"
                     type="password" name="password" required autocomplete="current-password" />
@@ -30,22 +30,22 @@
                     <input id="remember_me" type="checkbox"
                         class="rounded bg-frappe-surface0 border-frappe-surface1 text-frappe-blue focus:ring-frappe-blue"
                         name="remember">
-                    <span class="ms-2 text-sm text-frappe-text">{{ __('Remember me') }}</span>
+                    <span class="ms-2 text-sm text-frappe-text">{{ __('messages.remember_me') }}</span>
                 </label>
             </div>
             <x-primary-button class="bg-frappe-blue hover:bg-frappe-sapphire mt-4">
-                {{ __('Log in') }}
+                {{ __('messages.log_in') }}
             </x-primary-button>
         </form>
 
         <div class="flex flex-col items-start mt-4 space-y-2">
             @if (Route::has('password.request'))
                 <a class="text-sm text-frappe-blue hover:text-frappe-sapphire" href="{{ route('password.request') }}">
-                    {{ __('Forgot your password?') }}
+                    {{ __('messages.forgot_password') }}
                 </a>
             @endif
             <a href="{{ route('register') }}" class="text-sm text-frappe-blue hover:text-frappe-sapphire">
-                {{ __("Don't have an account? Register") }}
+                {{ __('messages.dont_have_account') }}
             </a>
         </div>
     </div>

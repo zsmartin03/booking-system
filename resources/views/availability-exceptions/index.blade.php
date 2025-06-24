@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-frappe-lavender leading-tight">
-            {{ __('Availability Exceptions for') }} {{ $employee->name }}
+            {{ __('messages.availability_exceptions_for') }} {{ $employee->name }}
         </h2>
     </x-slot>
 
@@ -9,7 +9,7 @@
         <div class="mb-4">
             <a href="{{ route('availability-exceptions.create', ['employee_id' => $employee->id]) }}"
                 class="action-button text-white px-4 py-2 rounded-lg inline-flex items-center gap-2">
-                <x-heroicon-o-plus class="w-5 h-5" /> {{ __('Add Exception') }}
+                <x-heroicon-o-plus class="w-5 h-5" /> {{ __('messages.add_exception') }}
             </a>
         </div>
 
@@ -26,10 +26,14 @@
                     <table class="w-full min-w-full">
                         <thead>
                             <tr class="border-b border-frappe-surface1/30">
-                                <th class="text-left py-3 px-4 font-medium text-frappe-text">{{ __('Date') }}</th>
-                                <th class="text-left py-3 px-4 font-medium text-frappe-text">{{ __('Time') }}</th>
-                                <th class="text-left py-3 px-4 font-medium text-frappe-text">{{ __('Type') }}</th>
-                                <th class="text-left py-3 px-4 font-medium text-frappe-text">{{ __('Note') }}</th>
+                                <th class="text-left py-3 px-4 font-medium text-frappe-text">{{ __('messages.date') }}
+                                </th>
+                                <th class="text-left py-3 px-4 font-medium text-frappe-text">{{ __('messages.time') }}
+                                </th>
+                                <th class="text-left py-3 px-4 font-medium text-frappe-text">{{ __('messages.type') }}
+                                </th>
+                                <th class="text-left py-3 px-4 font-medium text-frappe-text">{{ __('messages.note') }}
+                                </th>
                                 <th class="py-3 px-4 font-medium text-frappe-text">{{ __('Actions') }}</th>
                             </tr>
                         </thead>
@@ -54,13 +58,13 @@
                                             <span
                                                 class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-frappe-green/20 text-frappe-green">
                                                 <x-heroicon-o-check-circle class="w-3 h-3 mr-1" />
-                                                {{ __('Available') }}
+                                                {{ __('messages.available') }}
                                             </span>
                                         @else
                                             <span
                                                 class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-frappe-red/20 text-frappe-red">
                                                 <x-heroicon-o-x-circle class="w-3 h-3 mr-1" />
-                                                {{ __('Unavailable') }}
+                                                {{ __('messages.unavailable') }}
                                             </span>
                                         @endif
                                     </td>
@@ -87,9 +91,9 @@
                                     <td colspan="5" class="py-8 text-center text-frappe-subtext1">
                                         <div class="flex flex-col items-center gap-2">
                                             <x-heroicon-o-calendar-days class="w-12 h-12 opacity-50" />
-                                            <div>{{ __('No availability exceptions set.') }}</div>
+                                            <div>{{ __('messages.no_availability_exceptions') }}</div>
                                             <div class="text-sm">
-                                                {{ __('Add exceptions to override regular working hours.') }}</div>
+                                                {{ __('messages.add_exceptions_to_override') }}</div>
                                         </div>
                                     </td>
                                 </tr>
@@ -156,8 +160,8 @@
                     <div class="p-8 text-center text-frappe-subtext1">
                         <div class="flex flex-col items-center gap-2">
                             <x-heroicon-o-calendar-days class="w-12 h-12 opacity-50" />
-                            <div>{{ __('No availability exceptions set.') }}</div>
-                            <div class="text-sm">{{ __('Add exceptions to override regular working hours.') }}</div>
+                            <div>{{ __('messages.no_availability_exceptions') }}</div>
+                            <div class="text-sm">{{ __('messages.add_exceptions_to_override') }}</div>
                         </div>
                     </div>
                 @endforelse

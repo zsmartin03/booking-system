@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-frappe-lavender leading-tight">
-            {{ __('Profile Management') }}
+            {{ __('messages.profile') }}
         </h2>
     </x-slot>
 
@@ -18,7 +18,7 @@
                 <div class="p-6">
                     <!-- Profile Update Form -->
                     <div class="mb-10">
-                        <h3 class="text-lg font-medium text-frappe-blue mb-4">{{ __('Profile Information') }}</h3>
+                        <h3 class="text-lg font-medium text-frappe-blue mb-4">{{ __('messages.profile') }}</h3>
 
                         <form method="POST" action="{{ route('profile.update') }}">
                             @csrf
@@ -27,7 +27,7 @@
                             <div class="space-y-4">
                                 <!-- Name -->
                                 <div>
-                                    <x-input-label for="name" :value="__('Name')" class="text-frappe-subtext1" />
+                                    <x-input-label for="name" :value="__('messages.name')" class="text-frappe-subtext1" />
                                     <x-text-input id="name" name="name" type="text"
                                         class="block mt-1 w-full bg-frappe-surface1 border-frappe-surface2 text-frappe-text"
                                         :value="old('name', $user->name)" required autofocus />

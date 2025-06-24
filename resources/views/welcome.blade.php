@@ -107,10 +107,12 @@
                 <div class="text-2xl font-bold text-frappe-lavender">
                     {{ config('app.name', 'Booking System') }}
                 </div>
-                <div>
+                <div class="flex items-center gap-4">
+                    <!-- Language Switcher -->
+                    <x-language-switcher />
                     <a href="{{ route('login') }}"
                         class="frosted-button text-white px-6 py-3 rounded-lg hover:transform hover:-translate-y-1 transition-all inline-flex items-center gap-2">
-                        {{ __('Sign In') }}
+                        {{ __('messages.login') }}
                     </a>
                 </div>
             </div>
@@ -118,7 +120,8 @@
 
         <section class="py-12 flex-1">
             <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-                <h2 class="text-3xl font-bold text-frappe-lavender mb-8 text-center">{{ __('Browse Businesses') }}</h2>
+                <h2 class="text-3xl font-bold text-frappe-lavender mb-8 text-center">
+                    {{ __('messages.available_businesses') }}</h2>
 
                 @forelse($businesses as $business)
                     @if ($loop->first)
@@ -144,7 +147,7 @@
                                 <a href="{{ route('businesses.show', $business->id) }}"
                                     class="frosted-button text-white px-4 py-2 rounded-lg hover:transform hover:-translate-y-1 transition-all inline-flex items-center gap-2">
                                     <x-heroicon-o-eye class="w-4 h-4" />
-                                    {{ __('View Details') }}
+                                    {{ __('messages.view') }}
                                 </a>
                             </div>
                         </div>
@@ -155,8 +158,8 @@
             @endif
         @empty
             <div class="frosted-card rounded-xl shadow-lg p-8 text-center">
-                <div class="text-frappe-subtext1 text-lg">{{ __('No businesses found.') }}</div>
-                <div class="text-frappe-subtext0 mt-2">{{ __('Check back later for new listings!') }}</div>
+                <div class="text-frappe-subtext1 text-lg">{{ __('messages.no_businesses_found') }}</div>
+                <div class="text-frappe-subtext0 mt-2">{{ __('messages.check_back_later') }}</div>
             </div>
             @endforelse
     </div>
@@ -164,6 +167,20 @@
 
 
     </div>
+
+    <script>
+        // Initialize language from localStorage on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedLanguage = localStorage.getItem('language');
+            const currentLanguage = '{{ app()->getLocale() }}';
+
+            // If there's a saved language different from current, switch to it
+            if (savedLanguage && savedLanguage !== currentLanguage) {
+                // Redirect to set the locale in session
+                window.location.href = '/locale/init/' + savedLanguage;
+            }
+        });
+    </script>
 </body>
 
 </html>

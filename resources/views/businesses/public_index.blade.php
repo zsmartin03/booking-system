@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-frappe-lavender leading-tight">
-            {{ __('All Businesses') }}
+            {{ __('messages.all_businesses') }}
         </h2>
     </x-slot>
 
@@ -31,7 +31,7 @@
                             <a href="{{ route('businesses.show', $business->id) }}"
                                 class="inline-flex items-center gap-2 bg-gradient-to-r from-blue-500/20 to-indigo-500/20 backdrop-blur-sm border border-blue-400/30 text-blue-300 px-4 py-2 rounded-lg text-sm hover:from-blue-500/30 hover:to-indigo-500/30 transition-all">
                                 <x-heroicon-o-eye class="w-4 h-4" />
-                                {{ __('View Details') }}
+                                {{ __('messages.view_details') }}
                             </a>
                         </div>
                     </div>
@@ -43,7 +43,7 @@
     @empty
         <div class="frosted-card overflow-hidden shadow-lg sm:rounded-xl">
             <div class="p-6 text-center">
-                <p class="text-frappe-subtext1 opacity-80">{{ __('No businesses found.') }}</p>
+                <p class="text-frappe-subtext1 opacity-80">{{ __('messages.no_businesses_found') }}</p>
             </div>
         </div>
         @endforelse

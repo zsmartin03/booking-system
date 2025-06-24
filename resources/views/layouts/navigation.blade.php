@@ -15,7 +15,10 @@
             </div>
 
             <!-- Settings Dropdown -->
-            <div class="hidden sm:flex sm:items-center sm:ml-6">
+            <div class="hidden sm:flex sm:items-center sm:ml-6 gap-4">
+                <!-- Language Switcher -->
+                <x-language-switcher />
+
                 @auth
                     <x-dropdown align="right" width="48" contentClasses="py-1 frosted-card dropdown-menu">
                         <x-slot name="trigger">
@@ -33,11 +36,11 @@
 
                         <x-slot name="content">
                             <x-dropdown-link :href="route('dashboard')" class="text-frappe-text hover:bg-frappe-surface1">
-                                {{ __('Dashboard') }}
+                                {{ __('messages.dashboard') }}
                             </x-dropdown-link>
 
                             <x-dropdown-link :href="route('profile.edit')" class="text-frappe-text hover:bg-frappe-surface1">
-                                {{ __('Profile Settings') }}
+                                {{ __('messages.profile') }}
                             </x-dropdown-link>
 
                             <form method="POST" action="{{ route('logout') }}">
@@ -45,7 +48,7 @@
                                 <x-dropdown-link :href="route('logout')"
                                     onclick="event.preventDefault(); this.closest('form').submit();"
                                     class="text-frappe-red hover:bg-frappe-surface1">
-                                    {{ __('Log Out') }}
+                                    {{ __('messages.logout') }}
                                 </x-dropdown-link>
                             </form>
                         </x-slot>
@@ -54,11 +57,11 @@
                     <div class="flex items-center gap-4">
                         <a href="{{ route('login') }}"
                             class="inline-flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors duration-150 focus:outline-none text-frappe-text hover:text-frappe-lavender hover:bg-frappe-surface1">
-                            {{ __('Sign In') }}
+                            {{ __('messages.login') }}
                         </a>
                         <a href="{{ route('register') }}"
                             class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md transition-colors duration-150 focus:outline-none bg-frappe-blue text-white hover:bg-frappe-sapphire">
-                            {{ __('Sign Up') }}
+                            {{ __('messages.register') }}
                         </a>
                     </div>
                 @endauth
@@ -82,11 +85,18 @@
 
     <!-- Responsive Navigation Menu -->
     <div :class="{ 'block': open, 'hidden': !open }" class="hidden sm:hidden nav-frosted">
+        <!-- Language Switcher for Mobile -->
+        <div class="pt-2 pb-3 border-b border-frappe-surface1">
+            <div class="px-4">
+                <x-language-switcher />
+            </div>
+        </div>
+
         @auth
             <div class="pt-2 pb-3 space-y-1">
                 <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')"
                     class="text-frappe-text hover:bg-frappe-surface1">
-                    {{ __('Dashboard') }}
+                    {{ __('messages.dashboard') }}
                 </x-responsive-nav-link>
             </div>
 
@@ -99,7 +109,7 @@
 
                 <div class="mt-3 space-y-1">
                     <x-responsive-nav-link :href="route('profile.edit')" class="text-frappe-text hover:bg-frappe-surface1">
-                        {{ __('Profile Settings') }}
+                        {{ __('messages.profile') }}
                     </x-responsive-nav-link>
 
                     <form method="POST" action="{{ route('logout') }}">
@@ -107,7 +117,7 @@
                         <x-responsive-nav-link :href="route('logout')"
                             onclick="event.preventDefault(); this.closest('form').submit();"
                             class="text-frappe-red hover:bg-frappe-surface1">
-                            {{ __('Log Out') }}
+                            {{ __('messages.logout') }}
                         </x-responsive-nav-link>
                     </form>
                 </div>
@@ -116,10 +126,10 @@
             <!-- Guest responsive navigation -->
             <div class="pt-2 pb-3 space-y-1">
                 <x-responsive-nav-link :href="route('login')" class="text-frappe-text hover:bg-frappe-surface1">
-                    {{ __('Sign In') }}
+                    {{ __('messages.login') }}
                 </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('register')" class="text-frappe-text hover:bg-frappe-surface1">
-                    {{ __('Sign Up') }}
+                    {{ __('messages.register') }}
                 </x-responsive-nav-link>
             </div>
         @endauth

@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-frappe-lavender leading-tight">
-            {{ __('Book a Service') }}
+            {{ __('messages.book_service') }}
         </h2>
     </x-slot>
 
@@ -12,9 +12,9 @@
                 <div class="mb-6 p-4 bg-orange-500/20 border border-orange-400/30 text-orange-300 rounded-lg">
                     <div class="flex items-center gap-2">
                         <x-heroicon-o-exclamation-triangle class="w-5 h-5" />
-                        <span class="font-semibold">{{ __('Holiday Mode') }}</span>
+                        <span class="font-semibold">{{ __('messages.holiday_mode') }}</span>
                     </div>
-                    <p class="mt-1 text-sm">{{ __('This business is currently not accepting new bookings.') }}</p>
+                    <p class="mt-1 text-sm">{{ __('messages.this_business_not_accepting_bookings') }}</p>
                 </div>
             @endif
 
@@ -22,10 +22,10 @@
                 <div class="mb-6 p-4 bg-red-500/20 border border-red-400/30 text-red-300 rounded-lg">
                     <div class="flex items-center gap-2">
                         <x-heroicon-o-wrench-screwdriver class="w-5 h-5" />
-                        <span class="font-semibold">{{ __('Maintenance Mode') }}</span>
+                        <span class="font-semibold">{{ __('messages.maintenance_mode') }}</span>
                     </div>
                     <p class="mt-1 text-sm">
-                        {{ __('This business is currently under maintenance. Please try again later.') }}</p>
+                        {{ __('messages.business_under_maintenance') }}</p>
                 </div>
             @endif
 
@@ -33,9 +33,9 @@
                 <div class="mb-6 p-4 bg-blue-500/20 border border-blue-400/30 text-blue-300 rounded-lg">
                     <div class="flex items-center gap-2">
                         <x-heroicon-o-clock class="w-5 h-5" />
-                        <span class="font-semibold">{{ __('Booking Confirmation Required') }}</span>
+                        <span class="font-semibold">{{ __('messages.booking_confirmation_required') }}</span>
                     </div>
-                    <p class="mt-1 text-sm">{{ __('Your booking will be pending until confirmed by the business.') }}
+                    <p class="mt-1 text-sm">{{ __('messages.booking_pending_confirmation') }}
                     </p>
                 </div>
             @endif
@@ -44,10 +44,10 @@
                 <div class="mb-6 p-4 bg-frappe-blue/20 border border-frappe-blue/30 text-frappe-blue rounded-lg">
                     <div class="flex items-center gap-2">
                         <x-heroicon-o-information-circle class="w-5 h-5" />
-                        <span class="font-semibold">{{ __('Booking Restrictions') }}</span>
+                        <span class="font-semibold">{{ __('messages.booking_restrictions') }}</span>
                     </div>
                     <p class="mt-1 text-sm">
-                        {{ __('Bookings must be made at least :hours hours in advance and no more than :days days in advance.', [
+                        {{ __('messages.booking_advance_restrictions', [
                             'hours' => $businessSettings['booking_advance_hours'],
                             'days' => $businessSettings['booking_advance_days'],
                         ]) }}
@@ -62,11 +62,11 @@
             <div class="mb-6 p-4 sm:p-6 frosted-card rounded-xl shadow-lg">
                 <form method="GET" action="{{ route('bookings.create') }}" class="flex flex-col sm:flex-row gap-4">
                     <div class="flex-1 min-w-0">
-                        <x-input-label for="business_id" :value="__('Business')" />
+                        <x-input-label for="business_id" :value="__('messages.business')" />
                         <select name="business_id" id="business_id"
                             class="block w-full mt-1 bg-frappe-surface0/50 border-frappe-surface1/30 text-frappe-text rounded-md shadow-sm backdrop-blur-sm focus:border-frappe-blue focus:ring-frappe-blue/50"
                             onchange="this.form.submit()">
-                            <option value="">{{ __('Select Business') }}</option>
+                            <option value="">{{ __('messages.select_business') }}</option>
                             @foreach ($businesses as $business)
                                 <option value="{{ $business->id }}" @selected(request('business_id') == $business->id)>{{ $business->name }}
                                 </option>
@@ -76,11 +76,11 @@
 
                     @if ($selectedBusiness)
                         <div class="flex-1 min-w-0">
-                            <x-input-label for="service_id" :value="__('Service')" />
+                            <x-input-label for="service_id" :value="__('messages.service')" />
                             <select name="service_id" id="service_id"
                                 class="block w-full mt-1 bg-frappe-surface0/50 border-frappe-surface1/30 text-frappe-text rounded-md shadow-sm backdrop-blur-sm focus:border-frappe-blue focus:ring-frappe-blue/50"
                                 onchange="this.form.submit()">
-                                <option value="">{{ __('Select Service') }}</option>
+                                <option value="">{{ __('messages.select_service') }}</option>
                                 @foreach ($services as $service)
                                     <option value="{{ $service->id }}" @selected(request('service_id') == $service->id)>
                                         {{ $service->name }} ({{ $service->duration }}min -
@@ -98,8 +98,9 @@
                 <div class="mb-6 p-4 sm:p-6 frosted-card rounded-xl shadow-lg">
                     <h3 class="text-lg font-semibold text-frappe-text mb-2">{{ $selectedService->name }}</h3>
                     <div class="flex flex-col sm:flex-row sm:gap-8 text-frappe-subtext1">
-                        <p>Duration: {{ $selectedService->duration }} minutes</p>
-                        <p>Price:
+                        <p>{{ __('messages.duration') }}: {{ $selectedService->duration }}
+                            {{ __('messages.minutes') }}</p>
+                        <p>{{ __('messages.price') }}:
                             {{ \App\Models\Service::formatPrice($selectedService->price, $businessSettings['currency'] ?? 'USD') }}
                         </p>
                     </div>
@@ -111,12 +112,12 @@
                     <div class="flex flex-col sm:flex-row justify-between items-center mb-4 gap-4">
                         <button @click="previousWeek()"
                             class="frosted-button px-4 py-2 text-white rounded-lg hover:transform hover:-translate-y-1 transition-all w-full sm:w-auto">
-                            ← Previous Week
+                            ← {{ __('messages.previous_week') }}
                         </button>
                         <h3 class="text-lg font-semibold text-frappe-text text-center" x-text="weekLabel"></h3>
                         <button @click="nextWeek()"
                             class="frosted-button px-4 py-2 text-white rounded-lg hover:transform hover:-translate-y-1 transition-all w-full sm:w-auto">
-                            Next Week →
+                            {{ __('messages.next_week') }} →
                         </button>
                     </div>
 
@@ -124,23 +125,23 @@
                     <div class="mb-4 grid grid-cols-2 sm:flex sm:gap-4 gap-2 text-sm">
                         <div class="flex items-center gap-1">
                             <div class="w-4 h-4 bg-green-500 rounded"></div>
-                            <span>Available</span>
+                            <span>{{ __('messages.available') }}</span>
                         </div>
                         <div class="flex items-center gap-1">
                             <div class="w-4 h-4 bg-blue-500 rounded"></div>
-                            <span>Selected</span>
+                            <span>{{ __('messages.selected') }}</span>
                         </div>
                         <div class="flex items-center gap-1">
                             <div class="w-4 h-4 bg-red-500 rounded"></div>
-                            <span>Booked</span>
+                            <span>{{ __('messages.booked') }}</span>
                         </div>
                         <div class="flex items-center gap-1">
                             <div class="w-4 h-4 bg-frappe-surface1 border border-frappe-surface2 rounded"></div>
-                            <span>Working Time</span>
+                            <span>{{ __('messages.working_time') }}</span>
                         </div>
                         <div class="flex items-center gap-1">
                             <div class="w-4 h-4 bg-frappe-surface0 border border-frappe-surface1 rounded"></div>
-                            <span>Not Available</span>
+                            <span>{{ __('messages.not_available') }}</span>
                         </div>
                     </div>
 
@@ -206,14 +207,14 @@
 
                     <!-- Loading State -->
                     <div x-show="loading" class="text-center py-8">
-                        <div class="text-frappe-subtext1">Loading schedule...</div>
+                        <div class="text-frappe-subtext1">{{ __('messages.loading_schedule') }}</div>
                     </div>
 
                     <div x-show="selectedSlot"
                         class="mt-6 p-4 sm:p-6 bg-frappe-blue/20 border border-frappe-blue/30 rounded-lg backdrop-blur-sm">
-                        <h4 class="font-semibold text-frappe-text mb-3">Confirm Your Booking</h4>
+                        <h4 class="font-semibold text-frappe-text mb-3">{{ __('messages.confirm_your_booking') }}</h4>
                         <div class="mb-4">
-                            <span class="text-frappe-subtext1">Time: </span>
+                            <span class="text-frappe-subtext1">{{ __('messages.time') }}: </span>
                             <span class="font-medium text-frappe-text" x-text="formatSelectedTime()"></span>
                         </div>
 
@@ -230,7 +231,7 @@
 
                         <!-- Employee Selection (new) -->
                         <div class="mb-4">
-                            <span class="text-frappe-subtext1">Choose Employee: </span>
+                            <span class="text-frappe-subtext1">{{ __('messages.choose_employee') }}: </span>
                             <div class="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-2">
                                 <template x-for="employee in availableEmployees" :key="employee.id">
                                     <div class="p-3 border rounded-lg cursor-pointer transition-all relative backdrop-blur-sm"
@@ -240,10 +241,10 @@
                                         @click="selectEmployee(employee.id)">
                                         <div class="font-medium text-frappe-text" x-text="employee.name"></div>
                                         <div class="text-sm text-frappe-subtext1"
-                                            x-text="employee.bio || 'No bio available'"></div>
+                                            x-text="employee.bio || '{{ __('messages.no_bio_available') }}'"></div>
                                         <div x-show="employee.available === false"
                                             class="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded">
-                                            Unavailable
+                                            {{ __('messages.unavailable') }}
                                         </div>
                                     </div>
                                 </template>
@@ -262,21 +263,21 @@
 
                             <div class="space-y-4">
                                 <div>
-                                    <x-input-label for="notes" :value="__('Notes (optional)')" />
+                                    <x-input-label for="notes" :value="__('messages.notes_optional')" />
                                     <textarea name="notes" id="notes" rows="3"
                                         class="block w-full mt-1 bg-frappe-surface0/50 border-frappe-surface1/30 text-frappe-text rounded-md shadow-sm backdrop-blur-sm focus:border-frappe-blue focus:ring-frappe-blue/50"
-                                        placeholder="Any special requests or notes...">{{ old('notes') }}</textarea>
+                                        placeholder="{{ __('messages.any_special_requests') }}">{{ old('notes') }}</textarea>
                                 </div>
 
                                 <div class="flex flex-col sm:flex-row gap-2">
                                     <button type="button" @click="submitBooking()"
                                         class="frosted-button px-6 py-3 text-white rounded-lg hover:transform hover:-translate-y-1 transition-all w-full sm:w-auto"
                                         :disabled="!selectedEmployeeId">
-                                        Confirm Booking
+                                        {{ __('messages.confirm_booking') }}
                                     </button>
                                     <button type="button" @click="clearSelection()"
                                         class="px-6 py-3 bg-frappe-surface0/50 border border-frappe-surface1/30 text-frappe-text rounded-lg hover:bg-frappe-surface0/70 transition-all backdrop-blur-sm w-full sm:w-auto">
-                                        Cancel
+                                        {{ __('messages.cancel') }}
                                     </button>
                                 </div>
                             </div>
@@ -364,15 +365,15 @@
                                 const timeDiffMs = slotDateTime.getTime() - now.getTime();
 
                                 if (timeDiffMs < minAdvanceMs) {
-                                    return `Minimum ${this.bookingAdvanceHours} hours advance notice required`;
+                                    return `{{ __('messages.minimum_advance_notice', ['hours' => '']) }}${this.bookingAdvanceHours}`;
                                 }
 
                                 const maxAdvanceMs = this.bookingAdvanceDays * 24 * 60 * 60 * 1000;
                                 if (timeDiffMs > maxAdvanceMs) {
-                                    return `Cannot book more than ${this.bookingAdvanceDays} days in advance`;
+                                    return `{{ __('messages.cannot_book_advance', ['days' => '']) }}${this.bookingAdvanceDays}`;
                                 }
 
-                                return 'Time slot not available';
+                                return '{{ __('messages.time_slot_not_available') }}';
                             },
 
                             init() {
@@ -385,7 +386,15 @@
 
                             generateDays() {
                                 this.days = [];
-                                const dayNames = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+                                const dayNames = [
+                                    '{{ __('messages.monday') }}',
+                                    '{{ __('messages.tuesday') }}',
+                                    '{{ __('messages.wednesday') }}',
+                                    '{{ __('messages.thursday') }}',
+                                    '{{ __('messages.friday') }}',
+                                    '{{ __('messages.saturday') }}',
+                                    '{{ __('messages.sunday') }}'
+                                ];
 
                                 for (let i = 0; i < 7; i++) {
                                     const date = new Date(this.weekStart);
@@ -873,15 +882,15 @@
                             submitBooking() {
                                 @if ($businessSettings && ($businessSettings['holiday_mode'] || $businessSettings['maintenance_mode']))
                                     @if ($businessSettings['holiday_mode'])
-                                        alert('{{ __('This business is currently not accepting new bookings (Holiday Mode).') }}');
+                                        alert('{{ __('messages.this_business_not_accepting_bookings') }}');
                                     @elseif ($businessSettings['maintenance_mode'])
-                                        alert('{{ __('This business is currently under maintenance. Please try again later.') }}');
+                                        alert('{{ __('messages.business_under_maintenance') }}');
                                     @endif
                                     return;
                                 @endif
 
                                 if (!this.selectedEmployeeId || !this.selectedSlot) {
-                                    alert('Please select an employee and time slot first.');
+                                    alert('{{ __('messages.please_select_employee_and_time') }}');
                                     return;
                                 }
 
@@ -890,7 +899,7 @@
                                     const date = new Date(this.selectedSlot.datetime);
 
                                     if (isNaN(date.getTime())) {
-                                        alert('Invalid date selected. Please try again.');
+                                        alert('{{ __('messages.invalid_date_selected') }}');
                                         return;
                                     }
 

@@ -84,10 +84,29 @@
 
 <body class="min-h-screen bg-frappe-crust font-sans text-frappe-text antialiased wave-container">
     <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 content-layer">
+        <!-- Language Switcher for Guest Layout -->
+        <div class="absolute top-4 right-4">
+            <x-language-switcher />
+        </div>
+
         <div class="w-full sm:max-w-md px-6 py-8">
             {{ $slot }}
         </div>
     </div>
+
+    <script>
+        // Initialize language from localStorage on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedLanguage = localStorage.getItem('language');
+            const currentLanguage = '{{ app()->getLocale() }}';
+
+            // If there's a saved language different from current, switch to it
+            if (savedLanguage && savedLanguage !== currentLanguage) {
+                // Redirect to set the locale in session
+                window.location.href = '/locale/init/' + savedLanguage;
+            }
+        });
+    </script>
 </body>
 
 </html>

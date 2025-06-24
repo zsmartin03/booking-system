@@ -20,6 +20,29 @@ if (App::environment('production')) {
 
 require __DIR__ . '/auth.php';
 
+// Language switching route
+Route::post('/locale', function (Request $request) {
+    $supportedLocales = ['en', 'hu'];
+    $locale = $request->input('locale');
+
+    if (in_array($locale, $supportedLocales)) {
+        session(['locale' => $locale]);
+    }
+
+    return response()->json(['success' => true, 'locale' => session('locale')]);
+})->name('locale.switch');
+
+// Route to set locale from localStorage on initial page load
+Route::get('/locale/init/{locale}', function ($locale) {
+    $supportedLocales = ['en', 'hu'];
+
+    if (in_array($locale, $supportedLocales)) {
+        session(['locale' => $locale]);
+    }
+
+    return redirect()->back();
+})->name('locale.init');
+
 Route::middleware('guest')->group(function () {
     Route::view('/', 'welcome', ['businesses' => \App\Models\Business::all()])->name('home');
 });
