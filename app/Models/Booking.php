@@ -8,6 +8,12 @@ class Booking extends Model
 {
     protected $fillable = ['client_id', 'service_id', 'employee_id', 'start_time', 'end_time', 'status', 'notes', 'total_price'];
 
+    protected $casts = [
+        'start_time' => 'datetime',
+        'end_time' => 'datetime',
+        'total_price' => 'decimal:2',
+    ];
+
     public function client()
     {
         return $this->belongsTo(User::class, 'client_id');

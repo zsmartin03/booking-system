@@ -25,10 +25,9 @@
                         class="block w-full mt-1 bg-frappe-surface1 border-frappe-surface2 text-frappe-text" required>{{ old('description', $service->description) }}</textarea>
                     <x-input-error :messages="$errors->get('description')" class="mt-2 text-frappe-red text-sm" />
                 </div>
-
                 <div class="mb-4">
-                    <x-input-label for="price" :value="__('Price (in cents)')" />
-                    <x-text-input id="price" name="price" type="number" class="block w-full mt-1"
+                    <x-input-label for="price" :value="__('Price')" />
+                    <x-text-input id="price" name="price" type="number" step="0.01" class="block w-full mt-1"
                         :value="old('price', $service->price)" required min="0" />
                     <x-input-error :messages="$errors->get('price')" class="mt-2 text-frappe-red text-sm" />
                 </div>

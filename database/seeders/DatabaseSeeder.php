@@ -7,6 +7,7 @@ use App\Models\BusinessWorkingHour;
 use App\Models\Employee;
 use App\Models\EmployeeWorkingHour;
 use App\Models\Service;
+use App\Models\Setting;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Carbon;
@@ -80,12 +81,13 @@ class DatabaseSeeder extends Seeder
                     'phone_number' => '555-0001',
                     'email' => 'info@hairsalon.com',
                 ],
+                'currency' => 'USD',
                 'services' => [
-                    ['name' => 'Haircut', 'description' => 'Professional haircut service', 'price' => 4500, 'duration' => 45],
-                    ['name' => 'Hair Coloring', 'description' => 'Hair color service', 'price' => 8000, 'duration' => 120],
-                    ['name' => 'Hair Wash', 'description' => 'Shampoo and conditioning', 'price' => 2500, 'duration' => 30],
-                    ['name' => 'Hair Highlights', 'description' => 'Hair highlighting service', 'price' => 9500, 'duration' => 150],
-                    ['name' => 'Hair Treatment', 'description' => 'Deep conditioning treatment', 'price' => 3500, 'duration' => 60],
+                    ['name' => 'Haircut', 'description' => 'Professional haircut service', 'price' => 45.00, 'duration' => 45],
+                    ['name' => 'Hair Coloring', 'description' => 'Hair color service', 'price' => 85.00, 'duration' => 120],
+                    ['name' => 'Hair Wash', 'description' => 'Shampoo and conditioning', 'price' => 25.00, 'duration' => 30],
+                    ['name' => 'Hair Highlights', 'description' => 'Hair highlighting service', 'price' => 125.00, 'duration' => 150],
+                    ['name' => 'Hair Treatment', 'description' => 'Deep conditioning treatment', 'price' => 55.00, 'duration' => 60],
                 ],
                 'employees' => [
                     ['name' => 'Hair Stylist One', 'email' => 'stylist1@hairsalon.com', 'bio' => 'Professional hair stylist'],
@@ -101,12 +103,13 @@ class DatabaseSeeder extends Seeder
                     'phone_number' => '555-0002',
                     'email' => 'service@autorepair.com',
                 ],
+                'currency' => 'EUR',
                 'services' => [
-                    ['name' => 'Oil Change', 'description' => 'Vehicle oil change service', 'price' => 3500, 'duration' => 30],
-                    ['name' => 'Brake Service', 'description' => 'Brake inspection and repair', 'price' => 5000, 'duration' => 45],
-                    ['name' => 'Tire Service', 'description' => 'Tire rotation and balancing', 'price' => 4000, 'duration' => 40],
-                    ['name' => 'Engine Diagnostic', 'description' => 'Computer diagnostic service', 'price' => 7500, 'duration' => 60],
-                    ['name' => 'AC Repair', 'description' => 'Air conditioning repair service', 'price' => 8500, 'duration' => 90],
+                    ['name' => 'Oil Change', 'description' => 'Vehicle oil change service', 'price' => 35.50, 'duration' => 30],
+                    ['name' => 'Brake Service', 'description' => 'Brake inspection and repair', 'price' => 89.99, 'duration' => 45],
+                    ['name' => 'Tire Service', 'description' => 'Tire rotation and balancing', 'price' => 65.00, 'duration' => 40],
+                    ['name' => 'Engine Diagnostic', 'description' => 'Computer diagnostic service', 'price' => 120.00, 'duration' => 60],
+                    ['name' => 'AC Repair', 'description' => 'Air conditioning repair service', 'price' => 175.50, 'duration' => 90],
                 ],
                 'employees' => [
                     ['name' => 'Mechanic One', 'email' => 'mechanic1@autorepair.com', 'bio' => 'Certified automotive mechanic'],
@@ -122,12 +125,13 @@ class DatabaseSeeder extends Seeder
                     'phone_number' => '555-0003',
                     'email' => 'appointments@dentalclinic.com',
                 ],
+                'currency' => 'HUF',
                 'services' => [
-                    ['name' => 'Dental Cleaning', 'description' => 'Professional teeth cleaning', 'price' => 8000, 'duration' => 60],
-                    ['name' => 'Dental Checkup', 'description' => 'Comprehensive dental examination', 'price' => 6000, 'duration' => 45],
-                    ['name' => 'Teeth Whitening', 'description' => 'Professional whitening treatment', 'price' => 15000, 'duration' => 90],
-                    ['name' => 'Dental Filling', 'description' => 'Cavity filling service', 'price' => 12000, 'duration' => 75],
-                    ['name' => 'Root Canal', 'description' => 'Root canal consultation', 'price' => 10000, 'duration' => 60],
+                    ['name' => 'Dental Cleaning', 'description' => 'Professional teeth cleaning', 'price' => 25000.00, 'duration' => 60],
+                    ['name' => 'Dental Checkup', 'description' => 'Comprehensive dental examination', 'price' => 18000.00, 'duration' => 45],
+                    ['name' => 'Teeth Whitening', 'description' => 'Professional whitening treatment', 'price' => 65000.00, 'duration' => 90],
+                    ['name' => 'Dental Filling', 'description' => 'Cavity filling service', 'price' => 45000.00, 'duration' => 75],
+                    ['name' => 'Root Canal', 'description' => 'Root canal consultation', 'price' => 85000.00, 'duration' => 60],
                 ],
                 'employees' => [
                     ['name' => 'Dentist One', 'email' => 'dentist1@dentalclinic.com', 'bio' => 'General dentist'],
@@ -143,12 +147,13 @@ class DatabaseSeeder extends Seeder
                     'phone_number' => '555-0004',
                     'email' => 'trainers@fitnessgym.com',
                 ],
+                'currency' => 'GBP',
                 'services' => [
-                    ['name' => 'Personal Training', 'description' => 'One-on-one personal training session', 'price' => 6000, 'duration' => 60],
-                    ['name' => 'Nutrition Consultation', 'description' => 'Personalized nutrition planning', 'price' => 7500, 'duration' => 45],
-                    ['name' => 'Fitness Assessment', 'description' => 'Complete fitness evaluation', 'price' => 5000, 'duration' => 90],
-                    ['name' => 'Group Training', 'description' => 'Small group training session', 'price' => 3000, 'duration' => 45],
-                    ['name' => 'Sports Massage', 'description' => 'Therapeutic sports massage', 'price' => 8000, 'duration' => 60],
+                    ['name' => 'Personal Training', 'description' => 'One-on-one personal training session', 'price' => 50.00, 'duration' => 60],
+                    ['name' => 'Nutrition Consultation', 'description' => 'Personalized nutrition planning', 'price' => 65.00, 'duration' => 45],
+                    ['name' => 'Fitness Assessment', 'description' => 'Complete fitness evaluation', 'price' => 35.00, 'duration' => 90],
+                    ['name' => 'Group Training', 'description' => 'Small group training session', 'price' => 25.00, 'duration' => 45],
+                    ['name' => 'Sports Massage', 'description' => 'Therapeutic sports massage', 'price' => 75.00, 'duration' => 60],
                 ],
                 'employees' => [
                     ['name' => 'Personal Trainer One', 'email' => 'trainer1@fitnessgym.com', 'bio' => 'Certified personal trainer'],
@@ -164,13 +169,14 @@ class DatabaseSeeder extends Seeder
                     'phone_number' => '555-0005',
                     'email' => 'book@beautyspa.com',
                 ],
+                'currency' => 'CAD',
                 'services' => [
-                    ['name' => 'Facial Treatment', 'description' => 'Deep cleansing facial treatment', 'price' => 7000, 'duration' => 75],
-                    ['name' => 'Manicure', 'description' => 'Complete nail care service', 'price' => 3500, 'duration' => 45],
-                    ['name' => 'Pedicure', 'description' => 'Foot care treatment', 'price' => 4500, 'duration' => 60],
-                    ['name' => 'Eyebrow Shaping', 'description' => 'Professional eyebrow shaping', 'price' => 2500, 'duration' => 30],
-                    ['name' => 'Body Massage', 'description' => 'Relaxing full body massage', 'price' => 9000, 'duration' => 90],
-                    ['name' => 'Makeup Service', 'description' => 'Professional makeup application', 'price' => 6500, 'duration' => 60],
+                    ['name' => 'Facial Treatment', 'description' => 'Deep cleansing facial treatment', 'price' => 95.00, 'duration' => 75],
+                    ['name' => 'Manicure', 'description' => 'Complete nail care service', 'price' => 45.00, 'duration' => 45],
+                    ['name' => 'Pedicure', 'description' => 'Foot care treatment', 'price' => 55.00, 'duration' => 60],
+                    ['name' => 'Eyebrow Shaping', 'description' => 'Professional eyebrow shaping', 'price' => 35.00, 'duration' => 30],
+                    ['name' => 'Body Massage', 'description' => 'Relaxing full body massage', 'price' => 120.00, 'duration' => 90],
+                    ['name' => 'Makeup Service', 'description' => 'Professional makeup application', 'price' => 85.00, 'duration' => 60],
                 ],
                 'employees' => [
                     ['name' => 'Esthetician One', 'email' => 'esthetician1@beautyspa.com', 'bio' => 'Licensed esthetician'],
@@ -200,6 +206,33 @@ class DatabaseSeeder extends Seeder
                     'day_of_week' => $day,
                     'start_time' => $business->name === 'Auto Repair Shop' ? '08:00:00' : '09:00:00',
                     'end_time' => $business->name === 'Fitness Gym' ? '21:00:00' : '18:00:00',
+                ]);
+            }
+
+            // Create business settings
+            $defaultSettings = [
+                'booking_advance_hours' => 2,
+                'booking_advance_days' => 30,
+                'currency' => $data['currency'],
+                'holiday_mode' => false,
+                'maintenance_mode' => false,
+                'booking_confirmation_required' => false,
+            ];
+
+            // Add some variation for different businesses
+            if ($business->name === 'Dental Clinic') {
+                $defaultSettings['booking_advance_hours'] = 24; // Dental requires 24 hours notice
+                $defaultSettings['booking_confirmation_required'] = true;
+            } elseif ($business->name === 'Auto Repair Shop') {
+                $defaultSettings['booking_advance_hours'] = 4; // Auto repair needs less notice
+                $defaultSettings['booking_advance_days'] = 14; // But less advance booking
+            }
+
+            foreach ($defaultSettings as $key => $value) {
+                Setting::create([
+                    'business_id' => $business->id,
+                    'key' => $key,
+                    'value' => $value,
                 ]);
             }
 

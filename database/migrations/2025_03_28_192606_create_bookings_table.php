@@ -20,7 +20,7 @@ return new class extends Migration
             $table->dateTime('end_time');
             $table->enum('status', ['pending', 'confirmed', 'completed', 'cancelled'])->default('pending');
             $table->text('notes')->nullable();
-            $table->integer('total_price');
+            $table->decimal('total_price', 8, 2); // 8 digits total, 2 decimal places
             $table->timestamps();
 
             $table->index(['employee_id', 'start_time', 'end_time']);

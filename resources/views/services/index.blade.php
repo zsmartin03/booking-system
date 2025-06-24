@@ -40,7 +40,8 @@
                                     <td class="py-3 px-4 text-frappe-text font-medium">{{ $service->name }}</td>
                                     <td class="py-3 px-4 text-frappe-subtext1">{{ $service->duration }} min</td>
                                     <td class="py-3 px-4 text-frappe-subtext1">
-                                        ${{ number_format($service->price / 100, 2) }}</td>
+                                        {{ \App\Models\Service::formatPrice($service->price, $businessSettings['currency'] ?? 'USD') }}
+                                    </td>
                                     <td class="py-3 px-4">
                                         <div class="flex flex-wrap gap-1">
                                             @foreach ($service->employees as $employee)
@@ -85,7 +86,8 @@
                                     <h3 class="font-medium text-frappe-text">{{ $service->name }}</h3>
                                     <div class="text-sm text-frappe-subtext1 mt-1">
                                         <span class="mr-4">{{ $service->duration }} min</span>
-                                        <span class="font-medium">${{ number_format($service->price / 100, 2) }}</span>
+                                        <span
+                                            class="font-medium">{{ \App\Models\Service::formatPrice($service->price, $businessSettings['currency'] ?? 'USD') }}</span>
                                     </div>
                                 </div>
                             </div>

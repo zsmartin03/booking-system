@@ -6,6 +6,56 @@
     </x-slot>
 
     <div class="py-6 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Business Status Messages -->
+        @if ($selectedBusiness && $businessSettings)
+            @if ($businessSettings['holiday_mode'])
+                <div class="mb-6 p-4 bg-orange-500/20 border border-orange-400/30 text-orange-300 rounded-lg">
+                    <div class="flex items-center gap-2">
+                        <x-heroicon-o-exclamation-triangle class="w-5 h-5" />
+                        <span class="font-semibold">{{ __('Holiday Mode') }}</span>
+                    </div>
+                    <p class="mt-1 text-sm">{{ __('This business is currently not accepting new bookings.') }}</p>
+                </div>
+            @endif
+
+            @if ($businessSettings['maintenance_mode'])
+                <div class="mb-6 p-4 bg-red-500/20 border border-red-400/30 text-red-300 rounded-lg">
+                    <div class="flex items-center gap-2">
+                        <x-heroicon-o-wrench-screwdriver class="w-5 h-5" />
+                        <span class="font-semibold">{{ __('Maintenance Mode') }}</span>
+                    </div>
+                    <p class="mt-1 text-sm">
+                        {{ __('This business is currently under maintenance. Please try again later.') }}</p>
+                </div>
+            @endif
+
+            @if ($businessSettings['booking_confirmation_required'])
+                <div class="mb-6 p-4 bg-blue-500/20 border border-blue-400/30 text-blue-300 rounded-lg">
+                    <div class="flex items-center gap-2">
+                        <x-heroicon-o-clock class="w-5 h-5" />
+                        <span class="font-semibold">{{ __('Booking Confirmation Required') }}</span>
+                    </div>
+                    <p class="mt-1 text-sm">{{ __('Your booking will be pending until confirmed by the business.') }}
+                    </p>
+                </div>
+            @endif
+
+            @if ($businessSettings['booking_advance_hours'] > 0 || $businessSettings['booking_advance_days'] > 0)
+                <div class="mb-6 p-4 bg-frappe-blue/20 border border-frappe-blue/30 text-frappe-blue rounded-lg">
+                    <div class="flex items-center gap-2">
+                        <x-heroicon-o-information-circle class="w-5 h-5" />
+                        <span class="font-semibold">{{ __('Booking Restrictions') }}</span>
+                    </div>
+                    <p class="mt-1 text-sm">
+                        {{ __('Bookings must be made at least :hours hours in advance and no more than :days days in advance.', [
+                            'hours' => $businessSettings['booking_advance_hours'],
+                            'days' => $businessSettings['booking_advance_days'],
+                        ]) }}
+                    </p>
+                </div>
+            @endif
+        @endif
+
         <!-- Service Selection -->
         <div class="mb-6 p-4 sm:p-6 frosted-card rounded-xl shadow-lg">
             <form method="GET" action="{{ route('bookings.create') }}" class="flex flex-col sm:flex-row gap-4">
@@ -32,7 +82,7 @@
                             @foreach ($services as $service)
                                 <option value="{{ $service->id }}" @selected(request('service_id') == $service->id)>
                                     {{ $service->name }} ({{ $service->duration }}min -
-                                    ${{ number_format($service->price / 100, 2) }})
+                                    {{ \App\Models\Service::formatPrice($service->price, $businessSettings['currency'] ?? 'USD') }})
                                 </option>
                             @endforeach
                         </select>
@@ -47,7 +97,9 @@
                 <h3 class="text-lg font-semibold text-frappe-text mb-2">{{ $selectedService->name }}</h3>
                 <div class="flex flex-col sm:flex-row sm:gap-8 text-frappe-subtext1">
                     <p>Duration: {{ $selectedService->duration }} minutes</p>
-                    <p>Price: ${{ number_format($selectedService->price / 100, 2) }}</p>
+                    <p>Price:
+                        {{ \App\Models\Service::formatPrice($selectedService->price, $businessSettings['currency'] ?? 'USD') }}
+                    </p>
                 </div>
             </div>
 
@@ -194,7 +246,8 @@
                         </div>
                     </div>
 
-                    <form method="POST" action="{{ route('bookings.store') }}" class="space-y-4" x-ref="bookingForm">
+                    <form method="POST" action="{{ route('bookings.store') }}" class="space-y-4"
+                        x-ref="bookingForm">
                         @csrf
                         <input type="hidden" name="business_id" value="{{ $selectedBusiness->id }}">
                         <input type="hidden" name="service_id" value="{{ $selectedService->id }}">
@@ -736,6 +789,15 @@
                         },
 
                         submitBooking() {
+                            @if ($businessSettings && ($businessSettings['holiday_mode'] || $businessSettings['maintenance_mode']))
+                                @if ($businessSettings['holiday_mode'])
+                                    alert('{{ __('This business is currently not accepting new bookings (Holiday Mode).') }}');
+                                @elseif ($businessSettings['maintenance_mode'])
+                                    alert('{{ __('This business is currently under maintenance. Please try again later.') }}');
+                                @endif
+                                return;
+                            @endif
+
                             if (!this.selectedEmployeeId || !this.selectedSlot) {
                                 alert('Please select an employee and time slot first.');
                                 return;

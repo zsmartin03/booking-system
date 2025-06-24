@@ -26,8 +26,8 @@
                 </div>
 
                 <div class="mb-4">
-                    <x-input-label for="price" :value="__('Price (in cents)')" />
-                    <x-text-input id="price" name="price" type="number" class="block w-full mt-1"
+                    <x-input-label for="price" :value="__('Price')" />
+                    <x-text-input id="price" name="price" type="number" step="0.01" class="block w-full mt-1"
                         :value="old('price')" required min="0" />
                     <x-input-error :messages="$errors->get('price')" class="mt-2 text-frappe-red text-sm" />
                 </div>

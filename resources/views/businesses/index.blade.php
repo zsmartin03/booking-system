@@ -68,6 +68,12 @@
                                         <x-heroicon-o-users class="w-4 h-4" />
                                         {{ __('Employees') }}
                                     </a>
+                                    <a href="{{ route('settings.index', ['business_id' => $business->id]) }}"
+                                        class="inline-flex items-center gap-2 bg-gradient-to-r from-cyan-500/20 to-blue-500/20 backdrop-blur-sm border border-cyan-400/30 text-cyan-300 px-4 py-2 rounded-lg text-sm hover:from-cyan-500/30 hover:to-blue-500/30 hover:transform hover:-translate-y-1 transition-all"
+                                        title="{{ __('Settings') }}">
+                                        <x-heroicon-o-cog-6-tooth class="w-4 h-4" />
+                                        {{ __('Settings') }}
+                                    </a>
                                     <a href="{{ route('businesses.edit', $business->id) }}"
                                         class="edit-button text-white px-4 py-2 rounded-lg inline-flex items-center gap-2 text-sm hover:transform hover:-translate-y-1 transition-all"
                                         title="{{ __('Edit') }}">

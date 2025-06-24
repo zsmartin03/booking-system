@@ -6,6 +6,7 @@ use App\Http\Controllers\BusinessController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\BookingController;
+use App\Http\Controllers\SettingController;
 use App\Http\Controllers\BusinessWorkingHourController;
 use App\Http\Controllers\EmployeeWorkingHourController;
 use App\Http\Controllers\AvailabilityExceptionController;
@@ -50,6 +51,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::resource('employee-working-hours', EmployeeWorkingHourController::class)->except(['show']);
         Route::resource('availability-exceptions', AvailabilityExceptionController::class)->except(['show']);
+
+        // Settings management
+        Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
+        Route::put('/settings', [SettingController::class, 'update'])->name('settings.update');
+        Route::post('/settings/reset', [SettingController::class, 'reset'])->name('settings.reset');
     });
 
     Route::get('/bookings/create', [BookingController::class, 'create'])->name('bookings.create');

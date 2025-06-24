@@ -6,6 +6,7 @@ use App\Models\Business;
 use App\Models\Service;
 use App\Models\Employee;
 use App\Models\Booking;
+use App\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -22,13 +23,17 @@ class BookingController extends Controller
         $employees = $selectedService ? $selectedService->employees()->where('active', true)->get() : collect();
         $selectedEmployee = $request->employee_id ? Employee::find($request->employee_id) : null;
 
+        // Get business settings if a business is selected
+        $businessSettings = $selectedBusiness ? Setting::getBusinessSettings($selectedBusiness->id) : null;
+
         return view('bookings.create', compact(
             'businesses',
             'selectedBusiness',
             'services',
             'selectedService',
             'employees',
-            'selectedEmployee'
+            'selectedEmployee',
+            'businessSettings'
         ));
     }
 
@@ -44,6 +49,20 @@ class BookingController extends Controller
 
         $service = Service::findOrFail($validated['service_id']);
         $employee = Employee::findOrFail($validated['employee_id']);
+        $business = Business::findOrFail($validated['business_id']);
+
+        // Get business settings
+        $settings = Setting::getBusinessSettings($business->id);
+
+        // Check if business is in holiday mode
+        if ($settings['holiday_mode']) {
+            return back()->withErrors(['general' => 'This business is currently not accepting new bookings (Holiday Mode).'])->withInput();
+        }
+
+        // Check if business is in maintenance mode
+        if ($settings['maintenance_mode']) {
+            return back()->withErrors(['general' => 'This business is currently under maintenance. Please try again later.'])->withInput();
+        }
 
         if (!$employee->canProvideService($service->id)) {
             return back()->withErrors(['employee_id' => 'Selected employee cannot provide this service.'])->withInput();
@@ -51,6 +70,23 @@ class BookingController extends Controller
 
         $start = Carbon::parse($validated['start_time']);
         $end = $start->copy()->addMinutes($service->duration);
+        $now = Carbon::now();
+
+        // Check minimum advance booking time
+        $minAdvanceHours = $settings['booking_advance_hours'];
+        $minBookingTime = $now->copy()->addHours($minAdvanceHours);
+
+        if ($start < $minBookingTime) {
+            return back()->withErrors(['start_time' => "Bookings must be made at least {$minAdvanceHours} hours in advance."])->withInput();
+        }
+
+        // Check maximum advance booking time
+        $maxAdvanceDays = $settings['booking_advance_days'];
+        $maxBookingTime = $now->copy()->addDays($maxAdvanceDays);
+
+        if ($start > $maxBookingTime) {
+            return back()->withErrors(['start_time' => "Bookings cannot be made more than {$maxAdvanceDays} days in advance."])->withInput();
+        }
 
         // Check for overlapping bookings
         $overlap = Booking::where('employee_id', $validated['employee_id'])
@@ -63,6 +99,25 @@ class BookingController extends Controller
 
         if ($overlap) {
             return back()->withErrors(['start_time' => 'This time slot is already booked.'])->withInput();
+        }
+
+        // Add buffer time validation
+        $bufferMinutes = $settings['booking_buffer_minutes'];
+        if ($bufferMinutes > 0) {
+            $bufferStart = $start->copy()->subMinutes($bufferMinutes);
+            $bufferEnd = $end->copy()->addMinutes($bufferMinutes);
+
+            $bufferConflict = Booking::where('employee_id', $validated['employee_id'])
+                ->where('status', '!=', 'cancelled')
+                ->where(function ($q) use ($bufferStart, $bufferEnd) {
+                    $q->where('start_time', '<', $bufferEnd)
+                        ->where('end_time', '>', $bufferStart);
+                })
+                ->exists();
+
+            if ($bufferConflict) {
+                return back()->withErrors(['start_time' => "This time slot conflicts with the required {$bufferMinutes} minute buffer time."])->withInput();
+            }
         }
 
         // Verify employee is working at this time
@@ -80,19 +135,26 @@ class BookingController extends Controller
         }
 
         try {
+            // Determine initial booking status based on settings
+            $initialStatus = $settings['booking_confirmation_required'] ? 'pending' : 'confirmed';
+
             $booking = Booking::create([
                 'client_id' => Auth::id(),
                 'service_id' => $service->id,
                 'employee_id' => $validated['employee_id'],
                 'start_time' => $start,
                 'end_time' => $end,
-                'status' => 'pending',
+                'status' => $initialStatus,
                 'notes' => $validated['notes'] ?? '',
                 'total_price' => $service->price,
             ]);
 
+            $successMessage = $settings['booking_confirmation_required']
+                ? 'Booking created! Awaiting confirmation.'
+                : 'Booking confirmed! You will receive a confirmation email shortly.';
+
             return redirect()->route('bookings.show', $booking->id)
-                ->with('success', 'Booking created! Awaiting confirmation.');
+                ->with('success', $successMessage);
         } catch (\Exception $e) {
             return back()->withErrors(['general' => 'Failed to create booking. Please try again.'])->withInput();
         }

@@ -19,7 +19,10 @@ class ServiceController extends Controller
 
         $services = $business->services()->with('employees')->get();
 
-        return view('services.index', compact('business', 'services'));
+        // Get business settings for currency display
+        $businessSettings = \App\Models\Setting::getBusinessSettings($business->id);
+
+        return view('services.index', compact('business', 'services', 'businessSettings'));
     }
 
     public function create(Request $request)
@@ -44,7 +47,7 @@ class ServiceController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'required|string',
-            'price' => 'required|integer|min:0',
+            'price' => 'required|numeric|min:0',
             'duration' => 'required|integer|min:1',
             'active' => 'boolean',
             'employees' => 'array',
@@ -88,7 +91,7 @@ class ServiceController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'required|string',
-            'price' => 'required|integer|min:0',
+            'price' => 'required|numeric|min:0',
             'duration' => 'required|integer|min:1',
             'active' => 'boolean',
             'employees' => 'array',

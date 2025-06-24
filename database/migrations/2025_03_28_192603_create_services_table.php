@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('business_id')->constrained('businesses');
             $table->string('name');
             $table->text('description');
-            $table->integer('price');
+            $table->decimal('price', 8, 2); // 8 digits total, 2 decimal places
             $table->integer('duration'); // in minutes
             $table->boolean('active')->default(true);
             $table->timestamps();
