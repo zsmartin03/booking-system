@@ -3,6 +3,7 @@
 return [
     // Navigation
     'dashboard' => 'Dashboard',
+    'welcome_user' => 'Welcome, :name!',
     'profile' => 'Profile',
     'logout' => 'Logout',
     'login' => 'Login',

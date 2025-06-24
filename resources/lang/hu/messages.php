@@ -3,6 +3,7 @@
 return [
     // Navigation
     'dashboard' => 'Vezérlőpult',
+    'welcome_user' => 'Üdvözöljük, :name!',
     'profile' => 'Profil',
     'logout' => 'Kijelentkezés',
     'login' => 'Bejelentkezés',

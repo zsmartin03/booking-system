@@ -97,7 +97,8 @@
                                     <tr
                                         class="border-b border-frappe-surface1/20 hover:bg-frappe-surface0/20 transition-colors">
                                         @if (!$selectedBusiness)
-                                            <td class="py-3 px-4 text-frappe-text">{{ $booking->service->business->name }}</td>
+                                            <td class="py-3 px-4 text-frappe-text">
+                                                {{ $booking->service->business->name }}</td>
                                         @endif
                                         <td class="py-3 px-4 text-frappe-text">{{ $booking->service->name }}</td>
                                         <td class="py-3 px-4 text-frappe-text">{{ $booking->employee->name }}</td>
