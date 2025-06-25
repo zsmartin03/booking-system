@@ -63,11 +63,11 @@
 
                         <div class="flex flex-col sm:flex-row gap-4 sm:gap-6">
                             <button type="submit"
-                                class="frosted-button text-white px-6 py-3 rounded-lg font-medium hover:transform hover:-translate-y-1 transition-all w-full sm:w-auto">
+                                class="frosted-button text-white px-6 py-3 rounded-lg font-medium transition-all w-full sm:w-auto">
                                 {{ __('messages.create') }}
                             </button>
                             <a href="{{ route('businesses.index') }}"
-                                class="bg-gray-500/20 backdrop-blur-sm border border-gray-400/30 text-gray-300 px-6 py-3 rounded-lg font-medium hover:bg-gray-500/30 transition-all inline-flex items-center justify-center gap-2 w-full sm:w-auto">
+                                class="bg-gradient-to-r from-gray-500/20 to-gray-600/20 backdrop-blur-sm border border-gray-400/30 text-gray-300 px-6 py-3 rounded-lg font-medium hover:from-gray-500/30 hover:to-gray-600/30 transition-all inline-flex items-center justify-center gap-2 w-full sm:w-auto">
                                 {{ __('messages.cancel') }}
                             </a>
                         </div>

@@ -52,7 +52,7 @@
 
                 <div class="flex flex-col sm:flex-row gap-4 sm:gap-6">
                     <button type="submit"
-                        class="frosted-button text-white px-6 py-3 rounded-lg font-medium hover:transform hover:-translate-y-1 transition-all inline-flex items-center justify-center gap-2 w-full sm:w-auto">
+                        class="frosted-button text-white px-6 py-3 rounded-lg font-medium transition-all inline-flex items-center justify-center gap-2 w-full sm:w-auto">
                         <x-heroicon-o-pencil class="w-4 h-4" /> {{ __('Update Employee') }}
                     </button>
                     <a href="{{ route('employees.index', ['business_id' => $employee->business_id]) }}"

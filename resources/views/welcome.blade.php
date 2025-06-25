@@ -17,23 +17,20 @@
 
     <style>
         html {
-            background: linear-gradient(135deg, #8839ef, #7c3aed, #6366f1);
             overscroll-behavior: none;
-            background-attachment: fixed;
-            overflow-x: hidden;
-        }
-
-        body {
-            background: linear-gradient(135deg, #8839ef, #7c3aed, #6366f1);
-            background-attachment: fixed;
-            overflow-x: hidden;
-            overflow-y: auto;
-            position: relative;
         }
 
         .wave-container {
             position: relative;
-            width: 100%;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #8839ef, #7c3aed, #6366f1);
+        }
+
+        body {
+            background: linear-gradient(135deg, #8839ef, #7c3aed, #6366f1);
+            min-height: 100vh;
+            overflow-x: hidden;
+            overflow-y: auto;
         }
 
         .wave-container::before {
@@ -46,20 +43,6 @@
             transform: translate(-50%, -50%) rotate(-15deg);
             border-radius: 100% 50%;
             background: rgba(137, 180, 250, 0.15);
-            z-index: -2;
-            pointer-events: none;
-        }
-
-        .wave-container::after {
-            content: '';
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            width: 180%;
-            height: 350px;
-            transform: translate(-50%, -50%) rotate(-15deg);
-            border-radius: 100% 50%;
-            background: rgba(166, 209, 137, 0.1);
             z-index: -1;
             pointer-events: none;
         }
@@ -71,6 +54,12 @@
             box-shadow: 0 8px 32px rgba(30, 30, 46, 0.2);
         }
 
+        .nav-frosted {
+            background: rgba(49, 50, 68, 0.8);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(186, 194, 222, 0.15);
+        }
+
         .frosted-card {
             background: rgba(30, 30, 46, 0.7);
             backdrop-filter: blur(15px);
@@ -79,17 +68,38 @@
         }
 
         .frosted-button {
-            background: rgba(137, 180, 250, 0.25);
+            background: linear-gradient(135deg, rgba(137, 180, 250, 0.25), rgba(137, 180, 250, 0.35));
             backdrop-filter: blur(8px);
             border: 1px solid rgba(137, 180, 250, 0.35);
             transition: all 0.3s ease;
-            color: #cdd6f4;
         }
 
         .frosted-button:hover {
-            background: rgba(137, 180, 250, 0.4);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(137, 180, 250, 0.15);
+            background: linear-gradient(135deg, rgba(137, 180, 250, 0.4), rgba(137, 180, 250, 0.5));
+        }
+
+        .frosted-button-login {
+            background: linear-gradient(135deg, rgba(137, 180, 250, 0.2), rgba(137, 180, 250, 0.3));
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(137, 180, 250, 0.3);
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .frosted-button-login:hover {
+            background: linear-gradient(135deg, rgba(137, 180, 250, 0.35), rgba(137, 180, 250, 0.45));
+        }
+
+        .frosted-button-register {
+            background: linear-gradient(135deg, rgba(166, 209, 137, 0.25), rgba(166, 209, 137, 0.35));
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(166, 209, 137, 0.35);
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .frosted-button-register:hover {
+            background: linear-gradient(135deg, rgba(166, 209, 137, 0.4), rgba(166, 209, 137, 0.5));
         }
 
         .content-layer {
@@ -99,10 +109,10 @@
     </style>
 </head>
 
-<body class="min-h-screen font-sans text-frappe-text antialiased wave-container">
+<body class="min-h-screen bg-frappe-crust font-sans text-frappe-text antialiased wave-container">
     <div class="flex flex-col min-h-screen content-layer">
         <!-- Header -->
-        <header class="frosted-glass shadow-sm">
+        <header class="nav-frosted shadow-sm">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
                 <div class="text-2xl font-bold text-frappe-lavender">
                     {{ config('app.name', 'Booking System') }}
@@ -111,8 +121,12 @@
                     <!-- Language Switcher -->
                     <x-language-switcher />
                     <a href="{{ route('login') }}"
-                        class="frosted-button text-white px-6 py-3 rounded-lg hover:transform hover:-translate-y-1 transition-all inline-flex items-center gap-2">
+                        class="frosted-button-login text-white px-4 py-2 rounded-lg transition-all inline-flex items-center gap-2">
                         {{ __('messages.login') }}
+                    </a>
+                    <a href="{{ route('register') }}"
+                        class="frosted-button-register text-white px-4 py-2 rounded-lg transition-all inline-flex items-center gap-2">
+                        {{ __('messages.register') }}
                     </a>
                 </div>
             </div>
@@ -145,7 +159,7 @@
 
                             <div class="flex justify-center">
                                 <a href="{{ route('businesses.show', $business->id) }}"
-                                    class="frosted-button text-white px-4 py-2 rounded-lg hover:transform hover:-translate-y-1 transition-all inline-flex items-center gap-2">
+                                    class="frosted-button text-white px-4 py-2 rounded-lg transition-all inline-flex items-center gap-2">
                                     <x-heroicon-o-eye class="w-4 h-4" />
                                     {{ __('messages.view') }}
                                 </a>

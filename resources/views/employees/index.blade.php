@@ -8,7 +8,7 @@
     <div class="py-6 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="mb-4">
             <a href="{{ route('employees.create', ['business_id' => $business->id]) }}"
-                class="frosted-button text-white px-4 py-2 rounded-lg hover:transform hover:-translate-y-1 transition-all inline-flex items-center gap-2">
+                class="frosted-button text-white px-4 py-2 rounded-lg transition-all inline-flex items-center gap-2">
                 <x-heroicon-o-plus class="w-5 h-5" /> {{ __('messages.create_employee') }}
             </a>
         </div>
@@ -53,25 +53,25 @@
                                     <td class="py-3 px-4">
                                         <div class="flex flex-wrap gap-2 justify-center">
                                             <a href="{{ route('employee-working-hours.index', ['employee_id' => $employee->id]) }}"
-                                                class="action-button text-white px-4 py-2 rounded-lg text-sm flex items-center gap-2 hover:transform hover:-translate-y-1 transition-all"
+                                                class="action-button text-white px-4 py-2 rounded-lg text-sm flex items-center gap-2 transition-all"
                                                 title="{{ __('Working Hours') }}">
                                                 <x-heroicon-o-clock class="w-4 h-4" />
                                                 {{ __('Hours') }}
                                             </a>
                                             <a href="{{ route('availability-exceptions.index', ['employee_id' => $employee->id]) }}"
-                                                class="inline-flex items-center gap-2 bg-gradient-to-r from-orange-500/20 to-red-500/20 backdrop-blur-sm border border-orange-400/30 text-orange-300 px-4 py-2 rounded-lg text-sm hover:from-orange-500/30 hover:to-red-500/30 hover:transform hover:-translate-y-1 transition-all"
+                                                class="inline-flex items-center gap-2 bg-gradient-to-r from-orange-500/20 to-red-500/20 backdrop-blur-sm border border-orange-400/30 text-orange-300 px-4 py-2 rounded-lg text-sm hover:from-orange-500/30 hover:to-red-500/30 transition-all"
                                                 title="{{ __('Availability Exceptions') }}">
                                                 <x-heroicon-o-calendar-days class="w-4 h-4" />
                                                 {{ __('Exceptions') }}
                                             </a>
                                             <a href="{{ route('employees.edit', $employee->id) }}"
-                                                class="edit-button text-white px-4 py-2 rounded-lg text-sm flex items-center gap-2 hover:transform hover:-translate-y-1 transition-all"
+                                                class="edit-button text-white px-4 py-2 rounded-lg text-sm flex items-center gap-2 transition-all"
                                                 title="{{ __('Edit') }}">
                                                 <x-heroicon-o-pencil class="w-4 h-4" />
                                                 {{ __('Edit') }}
                                             </a>
                                             <button
-                                                class="delete-button text-white px-4 py-2 rounded-lg text-sm flex items-center gap-2 hover:transform hover:-translate-y-1 transition-all"
+                                                class="delete-button text-white px-4 py-2 rounded-lg text-sm flex items-center gap-2 transition-all"
                                                 onclick="showDeleteModal({{ $employee->id }}, '{{ addslashes($employee->name) }}')"
                                                 title="{{ __('Delete') }}">
                                                 <x-heroicon-o-trash class="w-4 h-4" />
@@ -112,19 +112,19 @@
 
                             <div class="flex flex-wrap gap-2 justify-center sm:justify-start">
                                 <a href="{{ route('employee-working-hours.index', ['employee_id' => $employee->id]) }}"
-                                    class="action-button text-white px-4 py-2 rounded-lg flex items-center gap-2 text-sm hover:transform hover:-translate-y-1 transition-all">
+                                    class="action-button text-white px-4 py-2 rounded-lg flex items-center gap-2 text-sm transition-all">
                                     <x-heroicon-o-clock class="w-4 h-4" /> {{ __('Hours') }}
                                 </a>
                                 <a href="{{ route('availability-exceptions.index', ['employee_id' => $employee->id]) }}"
-                                    class="inline-flex items-center gap-2 bg-gradient-to-r from-orange-500/20 to-red-500/20 backdrop-blur-sm border border-orange-400/30 text-orange-300 px-4 py-2 rounded-lg text-sm hover:from-orange-500/30 hover:to-red-500/30 hover:transform hover:-translate-y-1 transition-all">
+                                    class="inline-flex items-center gap-2 bg-gradient-to-r from-orange-500/20 to-red-500/20 backdrop-blur-sm border border-orange-400/30 text-orange-300 px-4 py-2 rounded-lg text-sm hover:from-orange-500/30 hover:to-red-500/30 transition-all">
                                     <x-heroicon-o-calendar-days class="w-4 h-4" /> {{ __('Exceptions') }}
                                 </a>
                                 <a href="{{ route('employees.edit', $employee->id) }}"
-                                    class="edit-button text-white px-4 py-2 rounded-lg flex items-center gap-2 text-sm hover:transform hover:-translate-y-1 transition-all">
+                                    class="edit-button text-white px-4 py-2 rounded-lg flex items-center gap-2 text-sm transition-all">
                                     <x-heroicon-o-pencil class="w-4 h-4" /> {{ __('Edit') }}
                                 </a>
                                 <button
-                                    class="delete-button text-white px-4 py-2 rounded-lg flex items-center gap-2 text-sm hover:transform hover:-translate-y-1 transition-all"
+                                    class="delete-button text-white px-4 py-2 rounded-lg flex items-center gap-2 text-sm transition-all"
                                     onclick="showDeleteModal({{ $employee->id }}, '{{ addslashes($employee->name) }}')"
                                     title="{{ __('Delete') }}">
                                     <x-heroicon-o-trash class="w-4 h-4" /> {{ __('Delete') }}

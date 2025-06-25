@@ -9,18 +9,16 @@
             <!-- Email Address -->
             <div>
                 <x-input-label for="email" :value="__('messages.email')" class="text-frappe-text" />
-                <x-text-input id="email"
-                    class="block mt-1 w-full bg-frappe-surface0 border-frappe-surface1 text-frappe-text focus:ring-frappe-blue focus:border-frappe-blue"
-                    type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
+                <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')"
+                    required autofocus autocomplete="username" />
                 <x-input-error :messages="$errors->get('email')" class="mt-2 text-frappe-red text-sm" />
             </div>
 
             <!-- Password -->
             <div class="mt-4">
                 <x-input-label for="password" :value="__('messages.password')" class="text-frappe-text" />
-                <x-text-input id="password"
-                    class="block mt-1 w-full bg-frappe-surface0 border-frappe-surface1 text-frappe-text focus:ring-frappe-blue focus:border-frappe-blue"
-                    type="password" name="password" required autocomplete="current-password" />
+                <x-text-input id="password" class="block mt-1 w-full" type="password" name="password" required
+                    autocomplete="current-password" />
                 <x-input-error :messages="$errors->get('password')" class="mt-2 text-frappe-red text-sm" />
             </div>
 
@@ -33,7 +31,7 @@
                     <span class="ms-2 text-sm text-frappe-text">{{ __('messages.remember_me') }}</span>
                 </label>
             </div>
-            <x-primary-button class="bg-frappe-blue hover:bg-frappe-sapphire mt-4">
+            <x-primary-button class="mt-4">
                 {{ __('messages.log_in') }}
             </x-primary-button>
         </form>

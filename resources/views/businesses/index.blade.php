@@ -9,7 +9,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="mb-6">
                 <a href="{{ route('businesses.create') }}"
-                    class="frosted-button text-white px-6 py-3 rounded-lg font-medium inline-flex items-center gap-2">
+                    class="bg-gradient-to-r from-green-500/80 to-emerald-500/80 text-green-50 backdrop-blur-sm border border-green-400/40 rounded-lg hover:from-green-600 hover:to-emerald-600 transition-all px-6 py-3 font-medium inline-flex items-center gap-2 shadow-lg">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                     </svg>
@@ -50,32 +50,32 @@
                                 <!-- Action buttons -->
                                 <div class="mt-4 flex flex-wrap gap-2 justify-center sm:justify-start">
                                     <a href="{{ route('business-working-hours.index', ['business_id' => $business->id]) }}"
-                                        class="inline-flex items-center gap-2 bg-gradient-to-r from-green-500/20 to-teal-500/20 backdrop-blur-sm border border-green-400/30 text-green-300 px-4 py-2 rounded-lg text-sm hover:from-green-500/30 hover:to-teal-500/30 hover:transform hover:-translate-y-1 transition-all"
+                                        class="inline-flex items-center gap-2 bg-gradient-to-r from-green-500/20 to-teal-500/20 backdrop-blur-sm border border-green-400/30 text-green-300 px-4 py-2 rounded-lg text-sm hover:from-green-500/30 hover:to-teal-500/30 transition-all"
                                         title="{{ __('messages.working_hours') }}">
                                         <x-heroicon-o-clock class="w-4 h-4" />
                                         <span class="hidden sm:inline">{{ __('messages.working_hours') }}</span>
                                         <span class="sm:hidden">{{ __('messages.working_hours') }}</span>
                                     </a>
                                     <a href="{{ route('services.index', ['business_id' => $business->id]) }}"
-                                        class="inline-flex items-center gap-2 bg-gradient-to-r from-yellow-500/20 to-orange-500/20 backdrop-blur-sm border border-yellow-400/30 text-yellow-300 px-4 py-2 rounded-lg text-sm hover:from-yellow-500/30 hover:to-orange-500/30 hover:transform hover:-translate-y-1 transition-all"
+                                        class="inline-flex items-center gap-2 bg-gradient-to-r from-yellow-500/20 to-orange-500/20 backdrop-blur-sm border border-yellow-400/30 text-yellow-300 px-4 py-2 rounded-lg text-sm hover:from-yellow-500/30 hover:to-orange-500/30 transition-all"
                                         title="{{ __('messages.services') }}">
                                         <x-heroicon-o-briefcase class="w-4 h-4" />
                                         {{ __('messages.services') }}
                                     </a>
                                     <a href="{{ route('employees.index', ['business_id' => $business->id]) }}"
-                                        class="inline-flex items-center gap-2 bg-gradient-to-r from-purple-500/20 to-indigo-500/20 backdrop-blur-sm border border-purple-400/30 text-purple-300 px-4 py-2 rounded-lg hover:from-purple-500/30 hover:to-indigo-500/30 hover:transform hover:-translate-y-1 transition-all"
+                                        class="inline-flex items-center gap-2 bg-gradient-to-r from-purple-500/20 to-indigo-500/20 backdrop-blur-sm border border-purple-400/30 text-purple-300 px-4 py-2 rounded-lg hover:from-purple-500/30 hover:to-indigo-500/30 transition-all"
                                         title="{{ __('messages.employees') }}">
                                         <x-heroicon-o-users class="w-4 h-4" />
                                         {{ __('messages.employees') }}
                                     </a>
                                     <a href="{{ route('settings.index', ['business_id' => $business->id]) }}"
-                                        class="inline-flex items-center gap-2 bg-gradient-to-r from-cyan-500/20 to-blue-500/20 backdrop-blur-sm border border-cyan-400/30 text-cyan-300 px-4 py-2 rounded-lg text-sm hover:from-cyan-500/30 hover:to-blue-500/30 hover:transform hover:-translate-y-1 transition-all"
+                                        class="inline-flex items-center gap-2 bg-gradient-to-r from-cyan-500/20 to-blue-500/20 backdrop-blur-sm border border-cyan-400/30 text-cyan-300 px-4 py-2 rounded-lg text-sm hover:from-cyan-500/30 hover:to-blue-500/30 transition-all"
                                         title="{{ __('messages.settings') }}">
                                         <x-heroicon-o-cog-6-tooth class="w-4 h-4" />
                                         {{ __('messages.settings') }}
                                     </a>
                                     <a href="{{ route('businesses.edit', $business->id) }}"
-                                        class="edit-button text-white px-4 py-2 rounded-lg inline-flex items-center gap-2 text-sm hover:transform hover:-translate-y-1 transition-all"
+                                        class="edit-button text-white px-4 py-2 rounded-lg inline-flex items-center gap-2 text-sm transition-all"
                                         title="{{ __('messages.edit') }}">
                                         <x-heroicon-o-pencil class="w-4 h-4" />
                                         <span class="hidden sm:inline">{{ __('messages.edit') }}</span>

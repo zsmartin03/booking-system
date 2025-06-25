@@ -8,7 +8,7 @@
     <div class="py-6 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="mb-4">
             <a href="{{ route('employee-working-hours.create', ['employee_id' => $employee->id]) }}"
-                class="action-button text-white px-4 py-2 rounded-lg inline-flex items-center gap-2">
+                class="bg-gradient-to-r from-orange-400/80 to-peach-500/80 text-orange-50 backdrop-blur-sm border border-orange-400/40 rounded-lg hover:from-orange-500 hover:to-peach-600 transition-all px-4 py-2 inline-flex items-center gap-2 shadow-lg">
                 <x-heroicon-o-plus class="w-5 h-5" /> {{ __('messages.add_working_hour') }}
             </a>
         </div>
@@ -47,11 +47,11 @@
                                     <td class="py-3 px-4">
                                         <div class="flex gap-2 justify-center">
                                             <a href="{{ route('employee-working-hours.edit', $hour->id) }}"
-                                                class="edit-button text-white px-6 py-2 rounded-lg flex items-center gap-2 text-sm hover:transform hover:-translate-y-1 transition-all">
+                                                class="edit-button text-white px-6 py-2 rounded-lg flex items-center gap-2 text-sm transition-all">
                                                 <x-heroicon-o-pencil class="w-4 h-4" /> {{ __('messages.edit') }}
                                             </a>
                                             <button
-                                                class="delete-button text-white px-6 py-2 rounded-lg flex items-center gap-2 text-sm hover:transform hover:-translate-y-1 transition-all"
+                                                class="delete-button text-white px-6 py-2 rounded-lg flex items-center gap-2 text-sm transition-all"
                                                 onclick="showDeleteModal({{ $hour->id }}, '{{ __('messages.' . $hour->day_of_week) }} {{ $hour->start_time }}-{{ $hour->end_time }}')"
                                                 title="{{ __('messages.delete') }}">
                                                 <x-heroicon-o-trash class="w-4 h-4" /> {{ __('messages.delete') }}
@@ -84,11 +84,11 @@
 
                             <div class="flex gap-2 justify-center sm:justify-start">
                                 <a href="{{ route('employee-working-hours.edit', $hour->id) }}"
-                                    class="edit-button text-white px-6 py-2 rounded-lg flex items-center gap-2 text-sm hover:transform hover:-translate-y-1 transition-all">
+                                    class="edit-button text-white px-6 py-2 rounded-lg flex items-center gap-2 text-sm transition-all">
                                     <x-heroicon-o-pencil class="w-4 h-4" /> {{ __('messages.edit') }}
                                 </a>
                                 <button
-                                    class="delete-button text-white px-6 py-2 rounded-lg flex items-center gap-2 text-sm hover:transform hover:-translate-y-1 transition-all"
+                                    class="delete-button text-white px-6 py-2 rounded-lg flex items-center gap-2 text-sm transition-all"
                                     onclick="showDeleteModal({{ $hour->id }}, '{{ __('messages.' . $hour->day_of_week) }} {{ $hour->start_time }}-{{ $hour->end_time }}')"
                                     title="{{ __('messages.delete') }}">
                                     <x-heroicon-o-trash class="w-4 h-4" /> {{ __('messages.delete') }}

@@ -18,15 +18,14 @@
             <!-- Email Address Input -->
             <div class="mb-4">
                 <x-input-label for="email" :value="__('Email')" class="text-frappe-text" />
-                <x-text-input id="email"
-                    class="block mt-1 w-full bg-frappe-surface0 border-frappe-surface1 text-frappe-text focus:ring-frappe-blue focus:border-frappe-blue"
-                    type="email" name="email" :value="old('email')" required autofocus />
+                <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')"
+                    required autofocus />
                 <x-input-error :messages="$errors->get('email')" class="mt-2 text-frappe-red text-sm" />
             </div>
 
             <!-- Submit Button -->
             <div class="flex items-center justify-end mt-4">
-                <x-primary-button class="bg-frappe-blue hover:bg-frappe-sapphire">
+                <x-primary-button>
                     {{ __('Send Password Reset Link') }}
                 </x-primary-button>
             </div>

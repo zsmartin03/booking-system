@@ -79,6 +79,30 @@
             border: 1px solid rgba(186, 194, 222, 0.1);
             box-shadow: 0 12px 40px rgba(30, 30, 46, 0.3);
         }
+
+        .frosted-button-login {
+            background: linear-gradient(135deg, rgba(137, 180, 250, 0.2), rgba(137, 180, 250, 0.3));
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(137, 180, 250, 0.3);
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .frosted-button-login:hover {
+            background: linear-gradient(135deg, rgba(137, 180, 250, 0.35), rgba(137, 180, 250, 0.45));
+        }
+
+        .frosted-button-register {
+            background: linear-gradient(135deg, rgba(166, 209, 137, 0.25), rgba(166, 209, 137, 0.35));
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(166, 209, 137, 0.35);
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .frosted-button-register:hover {
+            background: linear-gradient(135deg, rgba(166, 209, 137, 0.4), rgba(166, 209, 137, 0.5));
+        }
     </style>
 </head>
 

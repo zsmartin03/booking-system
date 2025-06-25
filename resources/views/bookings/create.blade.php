@@ -111,12 +111,12 @@
                     x-init="loadSchedule()">
                     <div class="flex flex-col sm:flex-row justify-between items-center mb-4 gap-4">
                         <button @click="previousWeek()"
-                            class="frosted-button px-4 py-2 text-white rounded-lg hover:transform hover:-translate-y-1 transition-all w-full sm:w-auto">
+                            class="frosted-button px-4 py-2 text-white rounded-lg transition-all w-full sm:w-auto">
                             ← {{ __('messages.previous_week') }}
                         </button>
                         <h3 class="text-lg font-semibold text-frappe-text text-center" x-text="weekLabel"></h3>
                         <button @click="nextWeek()"
-                            class="frosted-button px-4 py-2 text-white rounded-lg hover:transform hover:-translate-y-1 transition-all w-full sm:w-auto">
+                            class="frosted-button px-4 py-2 text-white rounded-lg transition-all w-full sm:w-auto">
                             {{ __('messages.next_week') }} →
                         </button>
                     </div>
@@ -271,7 +271,7 @@
 
                                 <div class="flex flex-col sm:flex-row gap-2">
                                     <button type="button" @click="submitBooking()"
-                                        class="frosted-button px-6 py-3 text-white rounded-lg hover:transform hover:-translate-y-1 transition-all w-full sm:w-auto"
+                                        class="frosted-button px-6 py-3 text-white rounded-lg transition-all w-full sm:w-auto"
                                         :disabled="!selectedEmployeeId">
                                         {{ __('messages.confirm_booking') }}
                                     </button>

@@ -8,7 +8,7 @@
     <div class="py-6 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="mb-4">
             <a href="{{ route('services.create', ['business_id' => $business->id]) }}"
-                class="frosted-button text-white px-4 py-2 rounded-lg hover:transform hover:-translate-y-1 transition-all inline-flex items-center gap-2">
+                class="bg-gradient-to-r from-indigo-500/80 to-lavender-500/80 text-indigo-50 backdrop-blur-sm border border-indigo-400/40 rounded-lg hover:from-indigo-600 hover:to-lavender-600 transition-all px-4 py-2 inline-flex items-center gap-2 shadow-lg">
                 <x-heroicon-o-plus class="w-5 h-5" /> {{ __('messages.create_service') }}
             </a>
         </div>
@@ -57,11 +57,11 @@
                                     <td class="py-3 px-4">
                                         <div class="flex gap-2 justify-center">
                                             <a href="{{ route('services.edit', $service->id) }}"
-                                                class="edit-button text-white px-6 py-2 rounded-lg flex items-center gap-2 text-sm hover:transform hover:-translate-y-1 transition-all">
+                                                class="edit-button text-white px-6 py-2 rounded-lg flex items-center gap-2 text-sm transition-all">
                                                 <x-heroicon-o-pencil class="w-4 h-4" /> {{ __('messages.edit') }}
                                             </a>
                                             <button
-                                                class="delete-button text-white px-6 py-2 rounded-lg flex items-center gap-2 text-sm hover:transform hover:-translate-y-1 transition-all"
+                                                class="delete-button text-white px-6 py-2 rounded-lg flex items-center gap-2 text-sm transition-all"
                                                 onclick="showDeleteModal({{ $service->id }}, '{{ addslashes($service->name) }}')"
                                                 title="{{ __('messages.delete') }}">
                                                 <x-heroicon-o-trash class="w-4 h-4" /> {{ __('messages.delete') }}
@@ -111,11 +111,11 @@
 
                             <div class="flex gap-2 pt-2 justify-center sm:justify-start">
                                 <a href="{{ route('services.edit', $service->id) }}"
-                                    class="edit-button text-white px-6 py-2 rounded-lg flex items-center gap-2 text-sm hover:transform hover:-translate-y-1 transition-all">
+                                    class="edit-button text-white px-6 py-2 rounded-lg flex items-center gap-2 text-sm transition-all">
                                     <x-heroicon-o-pencil class="w-4 h-4" /> {{ __('messages.edit') }}
                                 </a>
                                 <button
-                                    class="delete-button text-white px-6 py-2 rounded-lg flex items-center gap-2 text-sm hover:transform hover:-translate-y-1 transition-all"
+                                    class="delete-button text-white px-6 py-2 rounded-lg flex items-center gap-2 text-sm transition-all"
                                     onclick="showDeleteModal({{ $service->id }}, '{{ addslashes($service->name) }}')"
                                     title="{{ __('messages.delete') }}">
                                     <x-heroicon-o-trash class="w-4 h-4" /> {{ __('messages.delete') }}

@@ -28,8 +28,7 @@
                                 <!-- Name -->
                                 <div>
                                     <x-input-label for="name" :value="__('messages.name')" class="text-frappe-subtext1" />
-                                    <x-text-input id="name" name="name" type="text"
-                                        class="block mt-1 w-full bg-frappe-surface1 border-frappe-surface2 text-frappe-text"
+                                    <x-text-input id="name" name="name" type="text" class="block mt-1 w-full"
                                         :value="old('name', $user->name)" required autofocus />
                                     <x-input-error :messages="$errors->get('name')" class="mt-1 text-frappe-red" />
                                 </div>
@@ -37,8 +36,7 @@
                                 <!-- Email -->
                                 <div>
                                     <x-input-label for="email" :value="__('Email')" class="text-frappe-subtext1" />
-                                    <x-text-input id="email" name="email" type="email"
-                                        class="block mt-1 w-full bg-frappe-surface1 border-frappe-surface2 text-frappe-text"
+                                    <x-text-input id="email" name="email" type="email" class="block mt-1 w-full"
                                         :value="old('email', $user->email)" required />
                                     <x-input-error :messages="$errors->get('email')" class="mt-1 text-frappe-red" />
                                 </div>
@@ -47,13 +45,12 @@
                                 <div>
                                     <x-input-label for="phone_number" :value="__('Phone Number')" class="text-frappe-subtext1" />
                                     <x-text-input id="phone_number" name="phone_number" type="tel"
-                                        class="block mt-1 w-full bg-frappe-surface1 border-frappe-surface2 text-frappe-text"
-                                        :value="old('phone_number', $user->phone_number)" />
+                                        class="block mt-1 w-full" :value="old('phone_number', $user->phone_number)" />
                                     <x-input-error :messages="$errors->get('phone_number')" class="mt-1 text-frappe-red" />
                                 </div>
 
                                 <div class="flex items-center justify-end">
-                                    <x-primary-button class="bg-frappe-blue hover:bg-frappe-sapphire">
+                                    <x-primary-button>
                                         {{ __('Save Profile') }}
                                     </x-primary-button>
                                 </div>
@@ -74,8 +71,7 @@
                                     <x-input-label for="current_password" :value="__('Current Password')"
                                         class="text-frappe-subtext1" />
                                     <x-text-input id="current_password" name="current_password" type="password"
-                                        class="block mt-1 w-full bg-frappe-surface1 border-frappe-surface2 text-frappe-text"
-                                        required />
+                                        class="block mt-1 w-full" required />
                                     <x-input-error :messages="$errors->get('current_password')" class="mt-1 text-frappe-red" />
                                 </div>
 
@@ -83,8 +79,7 @@
                                 <div>
                                     <x-input-label for="password" :value="__('New Password')" class="text-frappe-subtext1" />
                                     <x-text-input id="password" name="password" type="password"
-                                        class="block mt-1 w-full bg-frappe-surface1 border-frappe-surface2 text-frappe-text"
-                                        required />
+                                        class="block mt-1 w-full" required />
                                     <x-input-error :messages="$errors->get('password')" class="mt-1 text-frappe-red" />
                                 </div>
 
@@ -93,16 +88,14 @@
                                     <x-input-label for="password_confirmation" :value="__('Confirm Password')"
                                         class="text-frappe-subtext1" />
                                     <x-text-input id="password_confirmation" name="password_confirmation"
-                                        type="password"
-                                        class="block mt-1 w-full bg-frappe-surface1 border-frappe-surface2 text-frappe-text"
-                                        required />
+                                        type="password" class="block mt-1 w-full" required />
                                     <x-input-error :messages="$errors->get('password_confirmation')" class="mt-1 text-frappe-red" />
                                 </div>
 
                                 <div class="flex items-center justify-end">
-                                    <x-primary-button class="bg-frappe-green hover:bg-frappe-teal">
+                                    <x-save-button>
                                         {{ __('Update Password') }}
-                                    </x-primary-button>
+                                    </x-save-button>
                                 </div>
                             </div>
                         </form>

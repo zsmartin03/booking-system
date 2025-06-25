@@ -69,7 +69,7 @@
                 @if (in_array(auth()->user()->role, ['client', 'provider', 'admin']))
                     <div class="mt-6 text-center sm:text-left">
                         <a href="{{ route('bookings.create', ['business_id' => $business->id]) }}"
-                            class="frosted-button text-white px-6 py-3 rounded-lg hover:transform hover:-translate-y-1 transition-all inline-flex items-center gap-2">
+                            class="frosted-button text-white px-6 py-3 rounded-lg transition-all inline-flex items-center gap-2">
                             <x-heroicon-o-calendar class="w-5 h-5" /> {{ __('messages.book_now') }}
                         </a>
                     </div>
@@ -77,7 +77,7 @@
             @else
                 <div class="mt-6 text-center sm:text-left">
                     <a href="{{ route('login') }}"
-                        class="frosted-button text-white px-6 py-3 rounded-lg hover:transform hover:-translate-y-1 transition-all inline-flex items-center gap-2">
+                        class="frosted-button text-white px-6 py-3 rounded-lg transition-all inline-flex items-center gap-2">
                         <x-heroicon-o-calendar class="w-5 h-5" /> {{ __('messages.book_now') }}
                     </a>
                     <p class="text-frappe-subtext1 text-sm mt-2">{{ __('messages.please_sign_in_to_book') }}</p>
