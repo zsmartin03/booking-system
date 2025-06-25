@@ -9,7 +9,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="mb-6">
                 <a href="{{ route('businesses.create') }}"
-                    class="bg-gradient-to-r from-green-500/80 to-emerald-500/80 text-green-50 backdrop-blur-sm border border-green-400/40 rounded-lg hover:from-green-600 hover:to-emerald-600 transition-all px-6 py-3 font-medium inline-flex items-center gap-2 shadow-lg">
+                    class="frosted-button text-white px-6 py-3 rounded-lg font-medium inline-flex items-center gap-2">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                     </svg>
@@ -81,7 +81,7 @@
                                         <span class="hidden sm:inline">{{ __('messages.edit') }}</span>
                                     </a>
                                     <button
-                                        class="delete-button text-white px-4 py-2 rounded-lg inline-flex items-center gap-2 text-sm hover:transform hover:-translate-y-1 transition-all"
+                                        class="delete-button text-white px-4 py-2 rounded-lg inline-flex items-center gap-2 text-sm transition-all"
                                         onclick="showDeleteModal({{ $business->id }}, '{{ addslashes($business->name) }}')"
                                         title="{{ __('messages.delete') }}">
                                         <x-heroicon-o-trash class="w-4 h-4" />

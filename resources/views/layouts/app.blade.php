@@ -64,26 +64,36 @@
         }
 
         .frosted-button {
-            background: linear-gradient(135deg, rgba(137, 180, 250, 0.25), rgba(137, 180, 250, 0.35));
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(137, 180, 250, 0.35);
-            transition: all 0.3s ease;
+            background: linear-gradient(to right, rgba(137, 180, 250, 0.20), rgba(99, 102, 241, 0.20)) !important;
+            backdrop-filter: blur(6px) !important;
+            border: 1px solid rgba(137, 180, 250, 0.30) !important;
+            color: #89b4fa !important;
+            padding: 0.5rem 1rem !important;
+            /* px-4 py-2 */
+            border-radius: 0.5rem !important;
+            /* rounded-lg */
+            font-size: 0.875rem !important;
+            /* text-sm */
+            transition: all 0.3s ease !important;
         }
 
         .frosted-button:hover {
-            background: linear-gradient(135deg, rgba(137, 180, 250, 0.4), rgba(137, 180, 250, 0.5));
+            background: linear-gradient(to right, rgba(137, 180, 250, 0.30), rgba(99, 102, 241, 0.30)) !important;
         }
 
         .frosted-button-login {
-            background: linear-gradient(135deg, rgba(137, 180, 250, 0.2), rgba(137, 180, 250, 0.3));
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(137, 180, 250, 0.3);
-            color: white;
-            transition: all 0.3s ease;
+            background: linear-gradient(to right, rgba(137, 180, 250, 0.16), rgba(99, 102, 241, 0.16)) !important;
+            backdrop-filter: blur(6px) !important;
+            border: 1px solid rgba(137, 180, 250, 0.24) !important;
+            color: #cdd6f4 !important;
+            padding: 0.5rem 1rem !important;
+            border-radius: 0.5rem !important;
+            font-size: 0.875rem !important;
+            transition: all 0.3s ease !important;
         }
 
         .frosted-button-login:hover {
-            background: linear-gradient(135deg, rgba(137, 180, 250, 0.35), rgba(137, 180, 250, 0.45));
+            background: linear-gradient(to right, rgba(137, 180, 250, 0.35), rgba(99, 102, 241, 0.35)) !important;
         }
 
         .frosted-button-register {
@@ -226,52 +236,66 @@
 
         /* Standardized button styles */
         .edit-button {
-            background: linear-gradient(135deg, rgba(137, 180, 250, 0.25), rgba(137, 180, 250, 0.35)) !important;
-            backdrop-filter: blur(8px) !important;
-            border: 1px solid rgba(137, 180, 250, 0.35) !important;
-            color: white !important;
+            background: linear-gradient(to right, rgba(137, 180, 250, 0.20), rgba(99, 102, 241, 0.20)) !important;
+            backdrop-filter: blur(6px) !important;
+            border: 1px solid rgba(137, 180, 250, 0.30) !important;
+            color: #89b4fa !important;
+            padding: 0.5rem 1rem !important;
+            /* px-4 py-2 */
+            border-radius: 0.5rem !important;
+            /* rounded-lg */
+            font-size: 0.875rem !important;
+            /* text-sm */
             transition: all 0.3s ease !important;
         }
 
         .edit-button:hover {
-            background: linear-gradient(135deg, rgba(137, 180, 250, 0.4), rgba(137, 180, 250, 0.5)) !important;
+            background: linear-gradient(to right, rgba(137, 180, 250, 0.30), rgba(99, 102, 241, 0.30)) !important;
         }
 
         .delete-button {
-            background: linear-gradient(135deg, rgba(243, 139, 168, 0.25), rgba(243, 139, 168, 0.35)) !important;
-            backdrop-filter: blur(8px) !important;
-            border: 1px solid rgba(243, 139, 168, 0.35) !important;
-            color: white !important;
+            background: linear-gradient(to right, rgba(243, 139, 168, 0.20), rgba(245, 85, 85, 0.20)) !important;
+            backdrop-filter: blur(6px) !important;
+            border: 1px solid rgba(243, 139, 168, 0.30) !important;
+            color: #f38ba8 !important;
+            padding: 0.5rem 1rem !important;
+            border-radius: 0.5rem !important;
+            font-size: 0.875rem !important;
             transition: all 0.3s ease !important;
         }
 
         .delete-button:hover {
-            background: linear-gradient(135deg, rgba(243, 139, 168, 0.4), rgba(243, 139, 168, 0.5)) !important;
-            box-shadow: 0 8px 25px rgba(243, 139, 168, 0.15) !important;
+            background: linear-gradient(to right, rgba(243, 139, 168, 0.30), rgba(245, 85, 85, 0.30)) !important;
         }
 
         .save-button {
-            background: linear-gradient(135deg, rgba(166, 209, 137, 0.25), rgba(166, 209, 137, 0.35)) !important;
-            backdrop-filter: blur(8px) !important;
-            border: 1px solid rgba(166, 209, 137, 0.35) !important;
-            color: white !important;
+            background: linear-gradient(to right, rgba(166, 209, 137, 0.20), rgba(166, 209, 137, 0.20)) !important;
+            backdrop-filter: blur(6px) !important;
+            border: 1px solid rgba(166, 209, 137, 0.30) !important;
+            color: #a6d189 !important;
+            padding: 0.5rem 1rem !important;
+            border-radius: 0.5rem !important;
+            font-size: 0.875rem !important;
             transition: all 0.3s ease !important;
         }
 
         .save-button:hover {
-            background: linear-gradient(135deg, rgba(166, 209, 137, 0.4), rgba(166, 209, 137, 0.5)) !important;
+            background: linear-gradient(to right, rgba(166, 209, 137, 0.30), rgba(166, 209, 137, 0.30)) !important;
         }
 
         .action-button {
-            background: linear-gradient(135deg, rgba(137, 180, 250, 0.25), rgba(137, 180, 250, 0.35)) !important;
-            backdrop-filter: blur(8px) !important;
-            border: 1px solid rgba(137, 180, 250, 0.35) !important;
-            color: white !important;
+            background: linear-gradient(to right, rgba(137, 180, 250, 0.20), rgba(137, 180, 250, 0.20)) !important;
+            backdrop-filter: blur(6px) !important;
+            border: 1px solid rgba(137, 180, 250, 0.30) !important;
+            color: #89b4fa !important;
+            padding: 0.5rem 1rem !important;
+            border-radius: 0.5rem !important;
+            font-size: 0.875rem !important;
             transition: all 0.3s ease !important;
         }
 
         .action-button:hover {
-            background: linear-gradient(135deg, rgba(137, 180, 250, 0.4), rgba(137, 180, 250, 0.5)) !important;
+            background: linear-gradient(to right, rgba(137, 180, 250, 0.30), rgba(137, 180, 250, 0.30)) !important;
         }
 
         /* Additional gradient button styles */
@@ -365,6 +389,35 @@
 
         textarea {
             resize: vertical !important;
+        }
+
+        /* Employee card styles */
+        .employee-card {
+            background: linear-gradient(to right, rgba(166, 209, 137, 0.12), rgba(137, 180, 250, 0.10)) !important;
+            backdrop-filter: blur(6px) !important;
+            border: 1px solid rgba(186, 194, 222, 0.18) !important;
+            color: #a6d189 !important;
+            transition: all 0.3s ease !important;
+            cursor: pointer;
+            border-radius: 0.5rem !important;
+            box-shadow: 0 2px 8px 0 rgba(30, 30, 46, 0.06);
+        }
+
+        .employee-card.selected {
+            background: linear-gradient(to right, rgba(137, 180, 250, 0.22), rgba(137, 180, 250, 0.32)) !important;
+            border: 1.5px solid rgba(137, 180, 250, 0.40) !important;
+            color: #89b4fa !important;
+            box-shadow: 0 4px 16px 0 rgba(137, 180, 250, 0.10);
+        }
+
+        .employee-card.unavailable {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .employee-card:hover:not(.selected):not(.unavailable) {
+            background: linear-gradient(to right, rgba(166, 209, 137, 0.18), rgba(137, 180, 250, 0.18)) !important;
+            border-color: rgba(166, 209, 137, 0.28) !important;
         }
     </style>
 </head>

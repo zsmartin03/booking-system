@@ -62,27 +62,28 @@
                                 class="max-w-full h-32 mx-auto rounded shadow-lg">
                         </div>
                     @endif
-                </div>
-            </div>
 
-            @auth
-                @if (in_array(auth()->user()->role, ['client', 'provider', 'admin']))
-                    <div class="mt-6 text-center sm:text-left">
-                        <a href="{{ route('bookings.create', ['business_id' => $business->id]) }}"
-                            class="frosted-button text-white px-6 py-3 rounded-lg transition-all inline-flex items-center gap-2">
-                            <x-heroicon-o-calendar class="w-5 h-5" /> {{ __('messages.book_now') }}
-                        </a>
-                    </div>
-                @endif
-            @else
-                <div class="mt-6 text-center sm:text-left">
-                    <a href="{{ route('login') }}"
-                        class="frosted-button text-white px-6 py-3 rounded-lg transition-all inline-flex items-center gap-2">
-                        <x-heroicon-o-calendar class="w-5 h-5" /> {{ __('messages.book_now') }}
-                    </a>
-                    <p class="text-frappe-subtext1 text-sm mt-2">{{ __('messages.please_sign_in_to_book') }}</p>
+                    {{-- Move the book_now button here, inside the card --}}
+                    @auth
+                        @if (in_array(auth()->user()->role, ['client', 'provider', 'admin']))
+                            <div class="mt-6 text-center sm:text-left">
+                                <a href="{{ route('bookings.create', ['business_id' => $business->id]) }}"
+                                    class="frosted-button text-white px-6 py-3 rounded-lg transition-all inline-flex items-center gap-2">
+                                    <x-heroicon-o-calendar class="w-5 h-5" /> {{ __('messages.book_now') }}
+                                </a>
+                            </div>
+                        @endif
+                    @else
+                        <div class="mt-6 text-center sm:text-left">
+                            <a href="{{ route('login') }}"
+                                class="frosted-button text-white px-6 py-3 rounded-lg transition-all inline-flex items-center gap-2">
+                                <x-heroicon-o-calendar class="w-5 h-5" /> {{ __('messages.book_now') }}
+                            </a>
+                            <p class="text-frappe-subtext1 text-sm mt-2">{{ __('messages.please_sign_in_to_book') }}</p>
+                        </div>
+                    @endauth
                 </div>
-            @endauth
+            </div> <!-- End .frosted-card -->
         </div>
     </div>
 </x-app-layout>

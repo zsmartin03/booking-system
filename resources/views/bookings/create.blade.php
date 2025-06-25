@@ -229,17 +229,18 @@
                             </div>
                         @endif
 
-                        <!-- Employee Selection (new) -->
+                        <!-- Employee Selection -->
                         <div class="mb-4">
                             <span class="text-frappe-subtext1">{{ __('messages.choose_employee') }}: </span>
                             <div class="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-2">
                                 <template x-for="employee in availableEmployees" :key="employee.id">
-                                    <div class="p-3 border rounded-lg cursor-pointer transition-all relative backdrop-blur-sm"
-                                        :class="selectedEmployeeId === employee.id ?
-                                            'bg-frappe-blue/30 border-frappe-blue shadow-lg' :
-                                            'bg-frappe-surface0/50 border-frappe-surface1/30 hover:bg-frappe-surface1/50'"
+                                    <div class="employee-card p-3 transition-all relative"
+                                        :class="{
+                                            'selected': selectedEmployeeId === employee.id,
+                                            'unavailable': employee.available === false
+                                        }"
                                         @click="selectEmployee(employee.id)">
-                                        <div class="font-medium text-frappe-text" x-text="employee.name"></div>
+                                        <div class="font-medium" x-text="employee.name"></div>
                                         <div class="text-sm text-frappe-subtext1"
                                             x-text="employee.bio || '{{ __('messages.no_bio_available') }}'"></div>
                                         <div x-show="employee.available === false"

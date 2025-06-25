@@ -8,7 +8,7 @@
     <div class="py-6 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="mb-4">
             <a href="{{ route('employee-working-hours.create', ['employee_id' => $employee->id]) }}"
-                class="bg-gradient-to-r from-orange-400/80 to-peach-500/80 text-orange-50 backdrop-blur-sm border border-orange-400/40 rounded-lg hover:from-orange-500 hover:to-peach-600 transition-all px-4 py-2 inline-flex items-center gap-2 shadow-lg">
+                class="action-button text-white px-4 py-2 rounded-lg inline-flex items-center gap-2">
                 <x-heroicon-o-plus class="w-5 h-5" /> {{ __('messages.add_working_hour') }}
             </a>
         </div>
