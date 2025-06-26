@@ -31,7 +31,7 @@
                             <button type="submit"
                                 class="bg-gradient-to-r from-red-500/30 to-pink-500/30 backdrop-blur-sm border border-red-400/40 text-red-300 rounded-lg hover:from-red-500/40 hover:to-pink-500/40 transition-all px-6 py-2 flex items-center gap-2 shadow-lg">
                                 <x-heroicon-o-arrow-right-on-rectangle class="w-5 h-5" />
-                                {{ __('messages.logout') }}
+                                  {{ __('messages.logout') }}
                             </button>
                         </form>
                     </div>

@@ -107,7 +107,7 @@
                 </div>
 
                 <!-- Interval-based Timetable -->
-                <div class="frosted-card rounded-xl shadow-lg p-4 sm:p-6" x-data="intervalTimetable()"
+                <div class="frosted-card rounded-xl shadow-lg p-4 sm:p-6 min-h-[800px]" x-data="intervalTimetable()"
                     x-init="loadSchedule()">
                     <div class="flex flex-col sm:flex-row justify-between items-center mb-4 gap-4">
                         <button @click="previousWeek()"
@@ -200,6 +200,13 @@
                                             </div>
                                         </template>
                                     </div>
+                                    <!-- 30-minute interval lines -->
+                                    <template x-for="interval in Math.floor((endHour - startHour) * 2)"
+                                        :key="interval">
+                                        <div class="absolute left-0 w-full border-t border-gray-300/60 pointer-events-none"
+                                            :style="`top: ${(interval * 6) * slotHeight}px; z-index: 10;`">
+                                        </div>
+                                    </template>
                                 </div>
                             </div>
                         </template>
@@ -574,11 +581,28 @@
                                                         }
                                                     }
                                                 } else {
-                                                    // All employees are busy - mark as booked
-                                                    currentSlot.type = 'booked';
-                                                    currentSlot.available = false;
-                                                    currentSlot.datetime = timeKey;
-                                                    currentSlot.bookedEmployees = slot.employee_name || 'All employees booked';
+                                                    const slotTime = new Date(timeKey);
+                                                    const isWithinBookingWindow = this.isSlotWithinBookingWindow(
+                                                        dateString,
+                                                        slotTime.getHours(),
+                                                        slotTime.getMinutes()
+                                                    );
+
+                                                    if (!isWithinBookingWindow) {
+                                                        // Slot is outside booking advance window - mark as not available
+                                                        currentSlot.type = 'not_available';
+                                                        currentSlot.datetime = timeKey;
+                                                        currentSlot.available = false;
+                                                        currentSlot.restrictionReason = this.getRestrictionReason(dateString,
+                                                            slotTime.getHours(), slotTime.getMinutes());
+                                                    } else {
+                                                        // All employees are busy - mark as booked
+                                                        currentSlot.type = 'booked';
+                                                        currentSlot.available = false;
+                                                        currentSlot.datetime = timeKey;
+                                                        currentSlot.bookedEmployees = slot.employee_name ||
+                                                            'All employees booked';
+                                                    }
                                                 }
                                             }
                                         });

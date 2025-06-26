@@ -64,9 +64,9 @@
         }
 
         .frosted-button {
-            background: linear-gradient(to right, rgba(137, 180, 250, 0.20), rgba(99, 102, 241, 0.20)) !important;
+            background: linear-gradient(to right, rgba(137, 180, 250, 0.20), rgba(99, 102, 241, 0.70)) !important;
             backdrop-filter: blur(6px) !important;
-            border: 1px solid rgba(137, 180, 250, 0.30) !important;
+            border: 1px solid rgba(137, 180, 250, 0.70) !important;
             color: #89b4fa !important;
             padding: 0.5rem 1rem !important;
             /* px-4 py-2 */
@@ -78,7 +78,7 @@
         }
 
         .frosted-button:hover {
-            background: linear-gradient(to right, rgba(137, 180, 250, 0.30), rgba(99, 102, 241, 0.30)) !important;
+            background: linear-gradient(to right, rgba(137, 180, 250, 0.30), rgba(99, 102, 241, 0.80)) !important;
         }
 
         .frosted-button-login {
