@@ -80,7 +80,7 @@
             <!-- Hamburger -->
             <div class="-mr-2 flex items-center sm:hidden">
                 <button @click="open = ! open"
-                    class="inline-flex items-center justify-center p-2 rounded-md text-frappe-subtext1 hover:text-frappe-text hover:bg-frappe-surface1 focus:outline-none transition duration-150">
+                    class="inline-flex items-center justify-center p-2 rounded-md text-frappe-text hover:text-frappe-text hover:bg-frappe-surface1 focus:outline-none transition duration-150">
                     <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
                         <path :class="{ 'hidden': open, 'inline-flex': !open }" class="inline-flex"
                             stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -94,11 +94,11 @@
     </div>
 
     <!-- Responsive Navigation Menu -->
-    <div :class="{ 'block': open, 'hidden': !open }" class="hidden sm:hidden nav-frosted">
+    <div :class="{ 'block': open, 'hidden': !open }" class="hidden sm:hidden nav">
         <!-- Language Switcher for Mobile -->
         <div class="pt-2 pb-3 border-b border-frappe-surface1">
-            <div class="px-4">
-                <x-language-switcher />
+            <div class="px-4 flex justify-end">
+                <x-language-switcher alignment="right" />
             </div>
         </div>
 
@@ -111,13 +111,8 @@
             </div>
 
             <!-- Responsive Settings Options -->
-            <div class="pt-4 pb-1 border-t border-frappe-surface1">
-                <div class="px-4">
-                    <div class="font-medium text-base text-frappe-text">{{ Auth::user()->name }}</div>
-                    <div class="font-medium text-sm text-frappe-subtext1">{{ Auth::user()->email }}</div>
-                </div>
-
-                <div class="mt-3 space-y-1">
+            <div class="pb-1 border-t border-frappe-surface1">
+                <div class="space-y-1">
                     <x-responsive-nav-link :href="route('profile.edit')" class="text-frappe-text hover:bg-frappe-surface1">
                         {{ __('messages.profile') }}
                     </x-responsive-nav-link>

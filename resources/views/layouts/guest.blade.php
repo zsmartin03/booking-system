@@ -16,10 +16,21 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <style>
+        html {
+            overscroll-behavior: none;
+        }
+
         .wave-container {
             position: relative;
             min-height: 100vh;
             background: linear-gradient(135deg, #8839ef, #7c3aed, #6366f1);
+        }
+
+        body {
+            background: linear-gradient(135deg, #8839ef, #7c3aed, #6366f1);
+            min-height: 100vh;
+            overflow-x: hidden;
+            overflow-y: auto;
         }
 
         .wave-container::before {
@@ -36,43 +47,6 @@
             pointer-events: none;
         }
 
-        .wave-container::after {
-            content: '';
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            width: 180%;
-            height: 350px;
-            transform: translate(-50%, -50%) rotate(-15deg);
-            border-radius: 100% 50%;
-            background: rgba(166, 209, 137, 0.1);
-            z-index: -2;
-            pointer-events: none;
-        }
-
-        body {
-            background: linear-gradient(135deg, #8839ef, #7c3aed, #6366f1);
-            background-attachment: fixed;
-            background-repeat: no-repeat;
-            background-size: 100% 100%;
-            min-height: 100vh;
-            overflow-y: auto;
-            overflow-x: hidden;
-        }
-
-        html {
-            overscroll-behavior: none;
-            background: linear-gradient(135deg, #8839ef, #7c3aed, #6366f1);
-            background-attachment: fixed;
-            background-repeat: no-repeat;
-            background-size: 100% 100%;
-        }
-
-        .content-layer {
-            position: relative;
-            z-index: 10;
-        }
-
         .frosted-card {
             background: rgba(30, 30, 46, 0.7);
             backdrop-filter: blur(15px);
@@ -81,15 +55,18 @@
         }
 
         .frosted-button-login {
-            background: linear-gradient(135deg, rgba(137, 180, 250, 0.2), rgba(137, 180, 250, 0.3));
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(137, 180, 250, 0.3);
-            color: white;
-            transition: all 0.3s ease;
+            background: linear-gradient(to right, rgba(137, 180, 250, 0.16), rgba(99, 102, 241, 0.16)) !important;
+            backdrop-filter: blur(6px) !important;
+            border: 1px solid rgba(137, 180, 250, 0.24) !important;
+            color: #cdd6f4 !important;
+            padding: 0.5rem 1rem !important;
+            border-radius: 0.5rem !important;
+            font-size: 0.875rem !important;
+            transition: all 0.3s ease !important;
         }
 
         .frosted-button-login:hover {
-            background: linear-gradient(135deg, rgba(137, 180, 250, 0.35), rgba(137, 180, 250, 0.45));
+            background: linear-gradient(to right, rgba(137, 180, 250, 0.35), rgba(99, 102, 241, 0.35)) !important;
         }
 
         .frosted-button-register {
@@ -103,18 +80,40 @@
         .frosted-button-register:hover {
             background: linear-gradient(135deg, rgba(166, 209, 137, 0.4), rgba(166, 209, 137, 0.5));
         }
+
+        /* Add missing styles from app.blade.php */
+        .nav-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .nav-frosted {
+            background: rgba(49, 50, 68, 0.8);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(186, 194, 222, 0.15);
+        }
+
+        .dropdown-menu {
+            z-index: 10000 !important;
+        }
+
+        .main-content {
+            margin-top: 64px;
+        }
     </style>
 </head>
 
 <body class="min-h-screen bg-frappe-crust font-sans text-frappe-text antialiased wave-container">
-    <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 content-layer">
-        <!-- Language Switcher for Guest Layout -->
-        <div class="absolute top-4 right-4">
-            <x-language-switcher />
-        </div>
-
-        <div class="w-full sm:max-w-md px-6 py-8">
-            {{ $slot }}
+    <div class="min-h-screen flex flex-col content-layer">
+        @include('layouts.navigation')
+        <div class="main-content flex flex-col sm:justify-center items-center pt-6 sm:pt-0">
+            <div class="w-full sm:max-w-md px-6 py-8">
+                {{ $slot }}
+            </div>
         </div>
     </div>
 
