@@ -93,9 +93,9 @@
                                 </div>
 
                                 <div class="flex items-center justify-end">
-                                    <x-save-button>
+                                    <x-primary-button>
                                         {{ __('Update Password') }}
-                                    </x-save-button>
+                                    </x-primary-button>
                                 </div>
                             </div>
                         </form>

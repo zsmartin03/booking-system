@@ -6,7 +6,17 @@
                 <!-- Logo -->
                 <div class="shrink-0">
                     <a href="{{ auth()->check() ? route('dashboard') : route('home') }}" class="flex items-center">
-                        <x-application-logo class="block h-9 w-auto fill-current text-frappe-lavender" />
+                        <!-- Booking icon: calendar -->
+                        <svg class="block h-9 w-auto text-frappe-lavender" fill="none" viewBox="0 0 40 40"
+                            stroke="currentColor" stroke-width="1.5">
+                            <rect x="6" y="10" width="28" height="22" rx="5" fill="rgba(139,92,246,0.10)"
+                                stroke="currentColor" />
+                            <rect x="6" y="10" width="28" height="5" rx="2" fill="currentColor"
+                                class="fill-frappe-lavender" />
+                            <circle cx="13" cy="16" r="1.8" fill="currentColor" />
+                            <circle cx="20" cy="16" r="1.8" fill="currentColor" />
+                            <circle cx="27" cy="16" r="1.8" fill="currentColor" />
+                        </svg>
                         <span class="ml-2 text-xl font-semibold text-frappe-lavender hidden md:inline">
                             {{ config('app.name', 'BookingSystem') }}
                         </span>

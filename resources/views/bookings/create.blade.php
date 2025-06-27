@@ -6,52 +6,80 @@
     </x-slot>
 
     <div class="py-6 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <!-- Business Status Messages -->
+        <!-- Business Status Messages (compact summary) -->
         @if ($selectedBusiness && $businessSettings)
-            @if ($businessSettings['holiday_mode'])
-                <div class="mb-6 p-4 bg-orange-500/20 border border-orange-400/30 text-orange-300 rounded-lg">
-                    <div class="flex items-center gap-2">
-                        <x-heroicon-o-exclamation-triangle class="w-5 h-5" />
-                        <span class="font-semibold">{{ __('messages.holiday_mode') }}</span>
-                    </div>
-                    <p class="mt-1 text-sm">{{ __('messages.this_business_not_accepting_bookings') }}</p>
-                </div>
-            @endif
-
-            @if ($businessSettings['maintenance_mode'])
-                <div class="mb-6 p-4 bg-red-500/20 border border-red-400/30 text-red-300 rounded-lg">
-                    <div class="flex items-center gap-2">
-                        <x-heroicon-o-wrench-screwdriver class="w-5 h-5" />
-                        <span class="font-semibold">{{ __('messages.maintenance_mode') }}</span>
-                    </div>
-                    <p class="mt-1 text-sm">
-                        {{ __('messages.business_under_maintenance') }}</p>
-                </div>
-            @endif
-
-            @if ($businessSettings['booking_confirmation_required'])
-                <div class="mb-6 p-4 bg-blue-500/20 border border-blue-400/30 text-blue-300 rounded-lg">
-                    <div class="flex items-center gap-2">
-                        <x-heroicon-o-clock class="w-5 h-5" />
-                        <span class="font-semibold">{{ __('messages.booking_confirmation_required') }}</span>
-                    </div>
-                    <p class="mt-1 text-sm">{{ __('messages.booking_pending_confirmation') }}
-                    </p>
-                </div>
-            @endif
-
-            @if ($businessSettings['booking_advance_hours'] > 0 || $businessSettings['booking_advance_days'] > 0)
-                <div class="mb-6 p-4 bg-frappe-blue/20 border border-frappe-blue/30 text-frappe-blue rounded-lg">
-                    <div class="flex items-center gap-2">
-                        <x-heroicon-o-information-circle class="w-5 h-5" />
-                        <span class="font-semibold">{{ __('messages.booking_restrictions') }}</span>
-                    </div>
-                    <p class="mt-1 text-sm">
-                        {{ __('messages.booking_advance_restrictions', [
+            @php
+                $statusMessages = [];
+                if ($businessSettings['holiday_mode']) {
+                    $statusMessages[] = [
+                        'icon' => 'exclamation-triangle',
+                        'color' => 'orange-400',
+                        'bg' => 'bg-orange-500/20',
+                        'border' => 'border-orange-400/30',
+                        'text' => 'text-orange-300',
+                        'title' => __('messages.holiday_mode'),
+                        'desc' => __('messages.this_business_not_accepting_bookings'),
+                    ];
+                }
+                if ($businessSettings['maintenance_mode']) {
+                    $statusMessages[] = [
+                        'icon' => 'wrench-screwdriver',
+                        'color' => 'red-400',
+                        'bg' => 'bg-red-500/20',
+                        'border' => 'border-red-400/30',
+                        'text' => 'text-red-300',
+                        'title' => __('messages.maintenance_mode'),
+                        'desc' => __('messages.business_under_maintenance'),
+                    ];
+                }
+                if ($businessSettings['booking_confirmation_required']) {
+                    $statusMessages[] = [
+                        'icon' => 'clock',
+                        'color' => 'blue-400',
+                        'bg' => 'bg-blue-500/20',
+                        'border' => 'border-blue-400/30',
+                        'text' => 'text-blue-300',
+                        'title' => __('messages.booking_confirmation_required'),
+                        'desc' => __('messages.booking_pending_confirmation'),
+                    ];
+                }
+                if ($businessSettings['booking_advance_hours'] > 0 || $businessSettings['booking_advance_days'] > 0) {
+                    $statusMessages[] = [
+                        'icon' => 'information-circle',
+                        'color' => 'frappe-blue',
+                        'bg' => 'bg-frappe-blue/20',
+                        'border' => 'border-frappe-blue/30',
+                        'text' => 'text-frappe-blue',
+                        'title' => __('messages.booking_restrictions'),
+                        'desc' => __('messages.booking_advance_restrictions', [
                             'hours' => $businessSettings['booking_advance_hours'],
                             'days' => $businessSettings['booking_advance_days'],
-                        ]) }}
-                    </p>
+                        ]),
+                    ];
+                }
+            @endphp
+            @if (count($statusMessages) > 0)
+                <div x-data="{ open: false }" class="mb-6">
+                    <button @click="open = !open" type="button"
+                        class="frosted-card inline-flex items-center gap-2 px-4 py-2 rounded-lg text-frappe-blue font-semibold shadow transition-all border border-frappe-blue/20">
+                        <x-heroicon-o-exclamation-circle class="w-5 h-5 text-yellow-300" />
+                        <svg :class="{ 'rotate-180': open }" class="w-4 h-4 ml-1 transition-transform" fill="none"
+                            stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </button>
+                    <div x-show="open" x-transition class="mt-3 space-y-3">
+                        @foreach ($statusMessages as $msg)
+                            <div
+                                class="frosted-card flex items-start gap-3 p-3 rounded-lg border {{ $msg['border'] }} {{ $msg['text'] }} shadow-sm">
+                                <x-dynamic-component :component="'heroicon-o-' . $msg['icon']" class="w-6 h-6 text-{{ $msg['color'] }} mt-1" />
+                                <div>
+                                    <div class="font-semibold">{{ $msg['title'] }}</div>
+                                    <div class="text-sm opacity-80">{{ $msg['desc'] }}</div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
                 </div>
             @endif
         @endif

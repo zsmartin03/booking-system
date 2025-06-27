@@ -388,7 +388,9 @@ return [
     'invalid_date_selected' => 'Invalid date selected. Please try again.',
 
     // Update booking status
+
     'update_status' => 'Update Status',
+    'update_status_button' => 'Update Status',
     'notes' => 'Notes',
 
     // Service create/edit form

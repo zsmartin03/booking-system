@@ -387,7 +387,9 @@ return [
     'invalid_date_selected' => 'Érvénytelen dátumot választott. Kérjük, próbálja újra.',
 
     // Update booking status
+
     'update_status' => 'Állapot frissítése',
+    'update_status_button' => 'Állapot frissítése',
     'notes' => 'Megjegyzések',
 
     // Booking status values
