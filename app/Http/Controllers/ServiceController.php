@@ -19,7 +19,6 @@ class ServiceController extends Controller
 
         $services = $business->services()->with('employees')->get();
 
-        // Get business settings for currency display
         $businessSettings = \App\Models\Setting::getBusinessSettings($business->id);
 
         return view('services.index', compact('business', 'services', 'businessSettings'));
@@ -58,7 +57,6 @@ class ServiceController extends Controller
         $service = Service::create($validated);
 
         if (isset($validated['employees'])) {
-            // Verify all employees belong to the same business
             $businessEmployees = $business->employees()->whereIn('id', $validated['employees'])->pluck('id');
             $service->employees()->sync($businessEmployees);
         }
@@ -101,7 +99,6 @@ class ServiceController extends Controller
         $service->update($validated);
 
         if (isset($validated['employees'])) {
-            // Verify all employees belong to the same business
             $businessEmployees = $business->employees()->whereIn('id', $validated['employees'])->pluck('id');
             $service->employees()->sync($businessEmployees);
         } else {

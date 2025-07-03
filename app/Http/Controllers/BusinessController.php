@@ -15,12 +15,10 @@ class BusinessController extends Controller
     {
         $user = Auth::user();
 
-        // Only providers and admins can view their businesses
         if (!in_array($user->role, ['provider', 'admin'])) {
             abort(403, 'Unauthorized action.');
         }
 
-        // Admins see all businesses, providers see their own
         $businesses = $user->role === 'admin'
             ? Business::all()
             : Business::where('user_id', $user->id)->get();

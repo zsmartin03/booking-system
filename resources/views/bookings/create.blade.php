@@ -374,19 +374,17 @@
                                 const slotDateTime = new Date(dateString + 'T' + String(hour).padStart(2, '0') + ':' + String(minute)
                                     .padStart(2, '0'));
 
-                                // Check minimum advance hours
                                 const minAdvanceMs = this.bookingAdvanceHours * 60 * 60 * 1000;
                                 const timeDiffMs = slotDateTime.getTime() - now.getTime();
 
                                 if (timeDiffMs < minAdvanceMs) {
-                                    return false; // Too soon
+                                    return false;
                                 }
 
-                                // Check maximum advance days
                                 const maxAdvanceMs = this.bookingAdvanceDays * 24 * 60 * 60 * 1000;
 
                                 if (timeDiffMs > maxAdvanceMs) {
-                                    return false; // Too far in advance
+                                    return false;
                                 }
 
                                 return true;
@@ -525,7 +523,6 @@
                                             }
                                         });
 
-                                        // Determine working hours range
                                         const workingTimes = new Set();
                                         Object.values(timeSlots).forEach(slot => {
                                             const slotTime = new Date(slot.time);
@@ -535,14 +532,12 @@
                                             }
                                         });
 
-                                        // Mark working hours
                                         workingTimes.forEach(index => {
                                             if (daySlots[index].type === 'not_available') {
                                                 daySlots[index].type = 'working';
                                             }
                                         });
 
-                                        // Process time slots for availability
                                         Object.entries(timeSlots).forEach(([timeKey, slot]) => {
                                             const slotTime = new Date(timeKey);
                                             const slotIndex = this.getSlotIndex(slotTime.getHours(), slotTime.getMinutes());
@@ -559,14 +554,12 @@
                                                     );
 
                                                     if (!isWithinBookingWindow) {
-                                                        // Slot is outside booking advance window - mark as not available
                                                         currentSlot.type = 'not_available';
                                                         currentSlot.datetime = timeKey;
                                                         currentSlot.available = false;
                                                         currentSlot.restrictionReason = this.getRestrictionReason(dateString,
                                                             slotTime.getHours(), slotTime.getMinutes());
                                                     } else {
-                                                        // Employee is available at this time and within booking window
                                                         currentSlot.type = 'available';
                                                         currentSlot.datetime = timeKey;
                                                         currentSlot.available = true;
@@ -574,7 +567,6 @@
                                                         currentSlot.availableMinutes = slot.available_minutes;
                                                     }
 
-                                                    // Handle all employees data if available
                                                     if (slot.all_employees && isWithinBookingWindow) {
                                                         // Filter employees who are available AND have enough time for full service
                                                         const availableEmployees = slot.all_employees.filter(emp => emp
@@ -711,18 +703,14 @@
 
                             handleSlotClick(slot, dateString, slotIndex) {
 
-                                // Clear hover effects first to get the real slot type
                                 this.clearHoverEffects();
 
-                                // Get the actual slot after clearing hover effects
                                 const daySlots = this.getDaySlots(dateString);
                                 const actualSlot = daySlots[slotIndex];
 
-                                // Allow clicking on available slots, hover previews, and selected slots
                                 const clickableTypes = ['available', 'hover_preview', 'selected'];
                                 const originalType = slot.originalType || slot.type;
 
-                                // Don't allow clicking on slots that would cause conflicts, are restricted, or have booking restrictions
                                 if (slot.type === 'hover_conflict' || originalType === 'hover_conflict' ||
                                     slot.restrictionReason || actualSlot.restrictionReason) {
                                     return;
@@ -732,7 +720,6 @@
                                     return;
                                 }
 
-                                // Additional check: verify the full service duration doesn't conflict
                                 const slotsNeeded = this.serviceSlotCount;
                                 for (let i = 0; i < slotsNeeded; i++) {
                                     const checkIndex = slotIndex + i;
@@ -746,20 +733,14 @@
                                     }
                                 }
 
-                                // Use the actual slot data after hover clearing
                                 const targetSlot = actualSlot.type === 'available' ? actualSlot : slot;
 
-                                // Check if slot has employee data
                                 if (!targetSlot.employeeData || Object.keys(targetSlot.employeeData).length === 0) {
                                     return;
                                 }
 
                                 this.clearSelection();
 
-                                // Mark the clicked slot as selected
-                                // slotsNeeded already declared above
-
-                                // Store original types for restoration
                                 const originalSlotTypes = [];
                                 for (let i = 0; i < slotsNeeded; i++) {
                                     const selectIndex = slotIndex + i;
@@ -785,18 +766,15 @@
                             },
 
                             handleSlotHover(slot, dateString, slotIndex, isEntering) {
-                                // Clear any previous hover effects
                                 this.clearHoverEffects();
 
                                 if (!isEntering) return;
 
-                                // Don't allow hover effects on restricted slots
                                 if (slot.type === 'restricted') return;
 
                                 const slotsNeeded = this.serviceSlotCount;
                                 const daySlots = this.getDaySlots(dateString);
 
-                                // Check if we can fit the full service duration
                                 let canFitService = true;
                                 let hasConflict = false;
 
@@ -808,7 +786,6 @@
                                     }
 
                                     const checkSlot = daySlots[checkIndex];
-                                    // Allow hovering over selected slots, but check for conflicts with booked/unavailable/restricted
                                     if (checkSlot.type === 'booked' || checkSlot.type === 'not_available' || checkSlot.type ===
                                         'restricted') {
                                         hasConflict = true;
@@ -816,18 +793,15 @@
                                 }
 
                                 if (canFitService) {
-                                    // Apply hover effects to show service duration
                                     for (let i = 0; i < slotsNeeded; i++) {
                                         const hoverIndex = slotIndex + i;
                                         if (hoverIndex < daySlots.length) {
                                             const hoverSlot = daySlots[hoverIndex];
 
-                                            // Store original type for restoration
                                             if (!hoverSlot.originalType) {
                                                 hoverSlot.originalType = hoverSlot.type;
                                             }
 
-                                            // Apply hover effect based on conflict
                                             if (hasConflict) {
                                                 hoverSlot.type = 'hover_conflict';
                                             } else {
@@ -839,7 +813,6 @@
                             },
 
                             clearHoverEffects() {
-                                // Restore original types for all slots that have hover effects
                                 Object.values(this.schedule).forEach(daySlots => {
                                     daySlots.forEach(slot => {
                                         if (slot.originalType && (slot.type === 'hover_preview' || slot.type ===
@@ -856,7 +829,6 @@
                             },
 
                             clearSelection() {
-                                // Clear hover effects first
                                 this.clearHoverEffects();
 
                                 if (this.selectedSlotPosition) {

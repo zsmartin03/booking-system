@@ -62,7 +62,6 @@ class Service extends Model
      */
     public static function formatPrice($price, $currency)
     {
-        // Define currencies that use symbols and should be placed before the price
         $symbolCurrencies = [
             'USD' => '$',
             'EUR' => '€',
@@ -74,7 +73,6 @@ class Service extends Model
             'RUB' => '₽',
         ];
 
-        // Define currencies that use text and should be placed after the price
         $textCurrencies = [
             'HUF' => 'Ft',
             'CZK' => 'Kč',
@@ -91,7 +89,6 @@ class Service extends Model
         } elseif (isset($textCurrencies[$currency])) {
             return $formattedPrice . ' ' . $textCurrencies[$currency];
         } else {
-            // Default: use currency code after price
             return $formattedPrice . ' ' . $currency;
         }
     }

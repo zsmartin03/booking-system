@@ -49,7 +49,6 @@
             ],
 
             init() {
-                // Get language from localStorage or use current app locale
                 const savedLocale = localStorage.getItem('language') || '{{ app()->getLocale() }}';
                 this.setCurrentLanguage(savedLocale);
             },
@@ -71,10 +70,8 @@
 
             async switchLanguage(code) {
                 try {
-                    // Save to localStorage
                     localStorage.setItem('language', code);
 
-                    // Make AJAX request to switch language on server
                     const response = await fetch('/locale', {
                         method: 'POST',
                         headers: {
@@ -88,11 +85,9 @@
                     });
 
                     if (response.ok) {
-                        // Update current language display
                         this.setCurrentLanguage(code);
                         this.close();
 
-                        // Reload page to apply new language
                         window.location.reload();
                     } else {
                         console.error('Failed to switch language');

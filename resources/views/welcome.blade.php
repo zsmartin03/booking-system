@@ -203,7 +203,6 @@
     </div>
 
     <script>
-        // Initialize language from localStorage on page load
         document.addEventListener('DOMContentLoaded', function() {
             const savedLanguage = localStorage.getItem('language');
             const currentLanguage = '{{ app()->getLocale() }}';

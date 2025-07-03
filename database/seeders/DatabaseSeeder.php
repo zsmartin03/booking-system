@@ -19,7 +19,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // Admin User
         $admin = User::create([
             'name' => 'Admin',
             'email' => 'admin@example.com',
@@ -29,7 +28,6 @@ class DatabaseSeeder extends Seeder
             'phone_number' => '1234567890',
         ]);
 
-        // Service Providers
         $providers = [
             [
                 'name' => 'Provider',
@@ -70,7 +68,6 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
-        // Businesses with their services
         $businessData = [
             [
                 'provider_index' => 0,
@@ -185,17 +182,14 @@ class DatabaseSeeder extends Seeder
             ]
         ];
 
-        // Create businesses, services, and employees
         foreach ($businessData as $data) {
             $business = Business::create([
                 'user_id' => $providerUsers[$data['provider_index']]->id,
                 ...$data['business']
             ]);
 
-            // Create business working hours (Monday to Friday, 9 AM to 6 PM)
             $workDays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
 
-            // Some businesses also work weekends
             if (in_array($business->name, ['Hair Salon', 'Beauty Spa'])) {
                 $workDays[] = 'saturday';
             }
@@ -209,7 +203,6 @@ class DatabaseSeeder extends Seeder
                 ]);
             }
 
-            // Create business settings
             $defaultSettings = [
                 'booking_advance_hours' => 2,
                 'booking_advance_days' => 30,
@@ -219,13 +212,12 @@ class DatabaseSeeder extends Seeder
                 'booking_confirmation_required' => false,
             ];
 
-            // Add some variation for different businesses
             if ($business->name === 'Dental Clinic') {
-                $defaultSettings['booking_advance_hours'] = 24; // Dental requires 24 hours notice
+                $defaultSettings['booking_advance_hours'] = 24;
                 $defaultSettings['booking_confirmation_required'] = true;
             } elseif ($business->name === 'Auto Repair Shop') {
-                $defaultSettings['booking_advance_hours'] = 4; // Auto repair needs less notice
-                $defaultSettings['booking_advance_days'] = 14; // But less advance booking
+                $defaultSettings['booking_advance_hours'] = 4;
+                $defaultSettings['booking_advance_days'] = 14;
             }
 
             foreach ($defaultSettings as $key => $value) {
@@ -236,7 +228,6 @@ class DatabaseSeeder extends Seeder
                 ]);
             }
 
-            // Create services
             $services = [];
             foreach ($data['services'] as $serviceData) {
                 $services[] = Service::create([
@@ -246,7 +237,6 @@ class DatabaseSeeder extends Seeder
                 ]);
             }
 
-            // Create employees
             foreach ($data['employees'] as $index => $employeeData) {
                 $employeeUser = User::create([
                     'name' => $employeeData['name'],
@@ -266,7 +256,6 @@ class DatabaseSeeder extends Seeder
                     'active' => true,
                 ]);
 
-                // Create employee working hours (same as business for now)
                 foreach ($workDays as $day) {
                     EmployeeWorkingHour::create([
                         'employee_id' => $employee->id,
@@ -276,14 +265,12 @@ class DatabaseSeeder extends Seeder
                     ]);
                 }
 
-                // Assign all services to all employees (you can modify this logic)
                 foreach ($services as $service) {
                     $service->employees()->attach($employee->id);
                 }
             }
         }
 
-        // Create some client users
         $clients = [
             ['name' => 'Client', 'email' => 'client@example.com', 'phone' => '7890123456'],
             ['name' => 'Client Two', 'email' => 'client2@example.com', 'phone' => '8901234567'],

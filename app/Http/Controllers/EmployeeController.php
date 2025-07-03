@@ -53,7 +53,6 @@ class EmployeeController extends Controller
 
         $validated['business_id'] = $business->id;
 
-        // Create a user for the employee
         $employeeUser = \App\Models\User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],

@@ -16,15 +16,13 @@ return Application::configure(basePath: dirname(__DIR__))
             'role' => \App\Http\Middleware\CheckRole::class,
         ]);
 
-        // Add locale middleware to web group
         $middleware->web(append: [
             \App\Http\Middleware\SetLocale::class,
         ]);
 
-        // Trust all proxies
+        // !!!!!!!!!!!!!
         $middleware->trustProxies(at: '*');
 
-        // Trust all headers
         $middleware->trustProxies(
             headers: Request::HEADER_X_FORWARDED_FOR |
                 Request::HEADER_X_FORWARDED_HOST |

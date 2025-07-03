@@ -19,14 +19,12 @@ class SettingController extends Controller
         $businessId = $request->business_id;
 
         if (!$businessId) {
-            // If no business specified, redirect to businesses list
             return redirect()->route('businesses.index')
                 ->with('error', 'Please select a business to manage settings.');
         }
 
         $business = Business::findOrFail($businessId);
 
-        // Check if user owns this business (for providers) or is admin
         if (Auth::user()->role === 'provider' && $business->user_id !== Auth::id()) {
             abort(403, 'Unauthorized access to business settings.');
         }
@@ -45,7 +43,6 @@ class SettingController extends Controller
         $businessId = $request->input('business_id');
         $business = Business::findOrFail($businessId);
 
-        // Check if user owns this business (for providers) or is admin
         if (Auth::user()->role === 'provider' && $business->user_id !== Auth::id()) {
             abort(403, 'Unauthorized access to business settings.');
         }
@@ -81,7 +78,6 @@ class SettingController extends Controller
             }
         }
 
-        // Clear all business settings cache to ensure changes take effect immediately
         Setting::clearBusinessCache($businessId);
 
         return redirect()->route('settings.index', ['business_id' => $businessId])
@@ -96,12 +92,10 @@ class SettingController extends Controller
         $businessId = $request->input('business_id');
         $business = Business::findOrFail($businessId);
 
-        // Check if user owns this business (for providers) or is admin
         if (Auth::user()->role === 'provider' && $business->user_id !== Auth::id()) {
             abort(403, 'Unauthorized access to business settings.');
         }
 
-        // Delete all settings for this business (will fall back to defaults)
         Setting::where('business_id', $businessId)->delete();
         Setting::clearBusinessCache($businessId);
 

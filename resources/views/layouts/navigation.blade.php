@@ -66,11 +66,11 @@
                 @else
                     <div class="flex items-center gap-4">
                         <a href="{{ route('login') }}"
-                            class="inline-flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors duration-150 focus:outline-none text-frappe-text hover:text-frappe-lavender hover:bg-frappe-surface1">
-                            {{ __('messages.login') }}
+                            class="frosted-button-login inline-flex items-center px-3 py-2 text-white rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-frappe-blue focus:ring-offset-2">
+                            {{ __('messages.log_in') }}
                         </a>
                         <a href="{{ route('register') }}"
-                            class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md transition-colors duration-150 focus:outline-none bg-frappe-blue text-white hover:bg-frappe-sapphire">
+                            class="frosted-button-register inline-flex items-center px-3 py-2 text-white rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-frappe-green focus:ring-offset-2">
                             {{ __('messages.register') }}
                         </a>
                     </div>

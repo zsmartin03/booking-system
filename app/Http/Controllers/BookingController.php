@@ -23,7 +23,6 @@ class BookingController extends Controller
         $employees = $selectedService ? $selectedService->employees()->where('active', true)->get() : collect();
         $selectedEmployee = $request->employee_id ? Employee::find($request->employee_id) : null;
 
-        // Get business settings if a business is selected
         $businessSettings = $selectedBusiness ? Setting::getBusinessSettings($selectedBusiness->id) : null;
 
         return view('bookings.create', compact(
@@ -51,15 +50,12 @@ class BookingController extends Controller
         $employee = Employee::findOrFail($validated['employee_id']);
         $business = Business::findOrFail($validated['business_id']);
 
-        // Get business settings
         $settings = Setting::getBusinessSettings($business->id);
 
-        // Check if business is in holiday mode
         if ($settings['holiday_mode']) {
             return back()->withErrors(['general' => __('messages.this_business_not_accepting_bookings')])->withInput();
         }
 
-        // Check if business is in maintenance mode
         if ($settings['maintenance_mode']) {
             return back()->withErrors(['general' => __('messages.business_under_maintenance')])->withInput();
         }
@@ -72,7 +68,6 @@ class BookingController extends Controller
         $end = $start->copy()->addMinutes((int) $service->duration);
         $now = Carbon::now();
 
-        // Check minimum advance booking time
         $minAdvanceHours = (int) $settings['booking_advance_hours'];
         $minBookingTime = $now->copy()->addHours($minAdvanceHours);
 
@@ -80,7 +75,6 @@ class BookingController extends Controller
             return back()->withErrors(['start_time' => "Bookings must be made at least {$minAdvanceHours} hours in advance."])->withInput();
         }
 
-        // Check maximum advance booking time
         $maxAdvanceDays = (int) $settings['booking_advance_days'];
         $maxBookingTime = $now->copy()->addDays($maxAdvanceDays);
 
@@ -88,7 +82,6 @@ class BookingController extends Controller
             return back()->withErrors(['start_time' => "Bookings cannot be made more than {$maxAdvanceDays} days in advance."])->withInput();
         }
 
-        // Check for overlapping bookings
         $overlap = Booking::where('employee_id', $validated['employee_id'])
             ->where('status', '!=', 'cancelled')
             ->where(function ($q) use ($start, $end) {
@@ -101,7 +94,6 @@ class BookingController extends Controller
             return back()->withErrors(['start_time' => 'This time slot is already booked.'])->withInput();
         }
 
-        // Add buffer time validation
         $bufferMinutes = (int) $settings['booking_buffer_minutes'];
         if ($bufferMinutes > 0) {
             $bufferStart = $start->copy()->subMinutes($bufferMinutes);
@@ -135,7 +127,6 @@ class BookingController extends Controller
         }
 
         try {
-            // Determine initial booking status based on settings
             $initialStatus = $settings['booking_confirmation_required'] ? 'pending' : 'confirmed';
 
             $booking = Booking::create([
@@ -168,14 +159,12 @@ class BookingController extends Controller
             ? Carbon::parse($request->week_start)->startOfWeek()
             : now()->startOfWeek();
 
-        // Get employees who can provide this service
         $employees = $employeeId
             ? Employee::where('id', $employeeId)->where('active', true)->get()
             : $service->employees()->where('active', true)->get();
 
         $slots = [];
 
-        // Use 5-minute intervals for slot generation
         $interval = 5;
 
         foreach (range(0, 6) as $offset) {
@@ -240,7 +229,6 @@ class BookingController extends Controller
                                     ->where('end_time', '>', $current);
                             })->exists();
 
-                        // Initialize time slot if it doesn't exist
                         if (!isset($timeSlots[$timeKey])) {
                             $timeSlots[$timeKey] = [
                                 'time' => $timeKey,
@@ -256,12 +244,11 @@ class BookingController extends Controller
                             ->orderBy('start_time')
                             ->first();
 
-                        $availableUntil = $effectiveEndTime; // Use effective end time
+                        $availableUntil = $effectiveEndTime;
                         if ($nextBooking) {
                             $availableUntil = min($availableUntil, Carbon::parse($nextBooking->start_time));
                         }
 
-                        // Check for unavailable exceptions that might cut availability short
                         $nextUnavailableException = $employee->availabilityExceptions()
                             ->where('date', $date->toDateString())
                             ->where('type', 'unavailable')
@@ -292,7 +279,7 @@ class BookingController extends Controller
                     }
                 }
 
-                // Process 'available' type exceptions (employee available outside regular hours)
+                // Process 'available' type exceptions
                 foreach ($availableExceptions as $exception) {
                     $startTime = Carbon::parse($date->toDateString() . ' ' . $exception->start_time);
 
@@ -318,7 +305,6 @@ class BookingController extends Controller
                                     ->where('end_time', '>', $current);
                             })->exists();
 
-                        // Initialize time slot if it doesn't exist
                         if (!isset($timeSlots[$timeKey])) {
                             $timeSlots[$timeKey] = [
                                 'time' => $timeKey,
@@ -393,12 +379,11 @@ class BookingController extends Controller
                         'service_end_time' => Carbon::parse($timeSlot['time'])->addMinutes((int) $service->duration)->format('Y-m-d\TH:i'),
                         'available_minutes' => $maxAvailableMinutes,
                         'has_full_service_time' => $hasAnyFullServiceTime,
-                        'all_employees' => $timeSlot['employees'] // Include all employee data for frontend
+                        'all_employees' => $timeSlot['employees']
                     ];
                 }
             }
 
-            // Sort slots by time
             if (isset($slots[$dateString])) {
                 usort($slots[$dateString], function ($a, $b) {
                     return strcmp($a['time'], $b['time']);
@@ -412,10 +397,8 @@ class BookingController extends Controller
     public function index(Request $request)
     {
         $user = Auth::user();
-        // Always show only the current user's own bookings
         $bookings = Booking::where('client_id', $user->id)->with(['service.business', 'employee', 'client'])->latest()->paginate(20);
 
-        // Load business settings for each booking
         $businessSettingsCache = [];
         foreach ($bookings as $booking) {
             $businessId = $booking->service->business->id;
@@ -431,12 +414,10 @@ class BookingController extends Controller
     {
         $user = Auth::user();
 
-        // Only allow admins and providers
         if (!in_array($user->role, ['admin', 'provider'])) {
             abort(403);
         }
 
-        // Get businesses based on user role
         if ($user->role === 'admin') {
             $businesses = Business::with('services')->get();
         } else {
@@ -446,7 +427,6 @@ class BookingController extends Controller
         $selectedBusiness = null;
         $businessSettings = null;
 
-        // If a business is selected, filter by that business
         if ($request->business_id) {
             $selectedBusiness = $businesses->where('id', $request->business_id)->first();
             if ($selectedBusiness) {
@@ -454,14 +434,11 @@ class BookingController extends Controller
             }
         }
 
-        // Get bookings - either for selected business or all businesses the user has access to
         if ($selectedBusiness) {
-            // Show bookings for selected business only
             $bookings = Booking::whereHas('service', function ($q) use ($selectedBusiness) {
                 $q->where('business_id', $selectedBusiness->id);
             })->with(['service.business', 'employee', 'client'])->latest()->paginate(20);
         } else {
-            // Show bookings for all businesses the user has access to
             if ($user->role === 'admin') {
                 $bookings = Booking::with(['service.business', 'employee', 'client'])->latest()->paginate(20);
             } else {
@@ -478,7 +455,6 @@ class BookingController extends Controller
             $businessSettings = Setting::getBusinessSettings($selectedBusiness->id);
         }
 
-        // Load business settings for each booking if showing multiple businesses
         if (!$selectedBusiness && $bookings->count() > 0) {
             $businessSettingsCache = [];
             foreach ($bookings as $booking) {
@@ -524,7 +500,6 @@ class BookingController extends Controller
         $booking->status = $validated['status'];
         $booking->save();
 
-        // If updating from manage page, redirect back to manage with business context
         if ($request->has('from_manage')) {
             return redirect()->route('bookings.manage', ['business_id' => $booking->service->business_id])
                 ->with('success', 'Booking status updated.');

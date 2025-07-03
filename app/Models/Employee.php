@@ -61,7 +61,6 @@ class Employee extends Model
     {
         $dayOfWeek = strtolower($date->format('l'));
 
-        // Check for availability exceptions first
         $exception = $this->availabilityExceptions()
             ->where('date', $date->toDateString())
             ->where('start_time', '<=', $time)
@@ -72,7 +71,6 @@ class Employee extends Model
             return $exception->type === 'available';
         }
 
-        // Check regular working hours
         $workingHours = $this->getWorkingHoursForDay($dayOfWeek);
 
         foreach ($workingHours as $hours) {
