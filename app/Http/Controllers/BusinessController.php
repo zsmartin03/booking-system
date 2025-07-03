@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Business;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -11,7 +12,7 @@ class BusinessController extends Controller
     /**
      * Display a listing of the businesses for the current provider/admin.
      */
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
 
@@ -19,20 +20,52 @@ class BusinessController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        $businesses = $user->role === 'admin'
-            ? Business::all()
-            : Business::where('user_id', $user->id)->get();
+        $query = Business::with('categories');
 
-        return view('businesses.index', compact('businesses'));
+        if ($user->role === 'admin') {
+        } else {
+            $query->where('user_id', $user->id);
+        }
+
+        if ($request->filled('search')) {
+            $query->where('name', 'like', '%' . $request->search . '%');
+        }
+
+        if ($request->filled('category')) {
+            $query->whereHas('categories', function ($q) use ($request) {
+                $q->where('slug', $request->category)
+                    ->orWhere('description', 'like', '%' . $request->category . '%');
+            });
+        }
+
+        $businesses = $query->get();
+        $categories = Category::orderBy('name')->get();
+
+        return view('businesses.index', compact('businesses', 'categories'));
     }
 
     /**
      * Display a public listing of all businesses (for clients/guests).
      */
-    public function publicIndex()
+    public function publicIndex(Request $request)
     {
-        $businesses = Business::all();
-        return view('businesses.public_index', compact('businesses'));
+        $query = Business::with('categories');
+
+        if ($request->filled('search')) {
+            $query->where('name', 'like', '%' . $request->search . '%');
+        }
+
+        if ($request->filled('category')) {
+            $query->whereHas('categories', function ($q) use ($request) {
+                $q->where('slug', $request->category)
+                    ->orWhere('description', 'like', '%' . $request->category . '%');
+            });
+        }
+
+        $businesses = $query->get();
+        $categories = Category::orderBy('name')->get();
+
+        return view('businesses.public_index', compact('businesses', 'categories'));
     }
 
     /**
@@ -44,7 +77,9 @@ class BusinessController extends Controller
         if (!in_array($user->role, ['provider', 'admin'])) {
             abort(403, 'Unauthorized action.');
         }
-        return view('businesses.create');
+
+        $categories = Category::orderBy('name')->get();
+        return view('businesses.create', compact('categories'));
     }
 
     /**
@@ -65,11 +100,17 @@ class BusinessController extends Controller
             'email' => 'required|email',
             'website' => 'nullable|url',
             'logo' => 'nullable|string',
+            'categories' => 'array',
+            'categories.*' => 'exists:categories,id'
         ]);
 
         $validated['user_id'] = $user->id;
 
         $business = Business::create($validated);
+
+        if (isset($validated['categories'])) {
+            $business->categories()->attach($validated['categories']);
+        }
 
         return redirect()->route('businesses.index')->with('success', 'Business created successfully.');
     }
@@ -79,8 +120,21 @@ class BusinessController extends Controller
      */
     public function show(string $id)
     {
-        $business = Business::findOrFail($id);
-        return view('businesses.show', compact('business'));
+        $business = Business::with(['categories', 'services'])->findOrFail($id);
+
+        $relatedBusinesses = collect();
+        if ($business->categories->count() > 0) {
+            $categoryIds = $business->categories->pluck('id');
+            $relatedBusinesses = Business::with('categories')
+                ->whereHas('categories', function ($query) use ($categoryIds) {
+                    $query->whereIn('category_id', $categoryIds);
+                })
+                ->where('id', '!=', $business->id)
+                ->limit(6)
+                ->get();
+        }
+
+        return view('businesses.show', compact('business', 'relatedBusinesses'));
     }
 
     /**
@@ -89,13 +143,14 @@ class BusinessController extends Controller
     public function edit(string $id)
     {
         $user = Auth::user();
-        $business = Business::findOrFail($id);
+        $business = Business::with('categories')->findOrFail($id);
 
         if ($user->role !== 'admin' && $business->user_id !== $user->id) {
             abort(403, 'Unauthorized action.');
         }
 
-        return view('businesses.edit', compact('business'));
+        $categories = Category::orderBy('name')->get();
+        return view('businesses.edit', compact('business', 'categories'));
     }
 
     /**
@@ -118,9 +173,18 @@ class BusinessController extends Controller
             'email' => 'required|email',
             'website' => 'nullable|url',
             'logo' => 'nullable|string',
+            'categories' => 'array',
+            'categories.*' => 'exists:categories,id'
         ]);
 
         $business->update($validated);
+
+        // Sync categories
+        if (isset($validated['categories'])) {
+            $business->categories()->sync($validated['categories']);
+        } else {
+            $business->categories()->detach();
+        }
 
         return redirect()->route('businesses.index')->with('success', 'Business updated successfully.');
     }

@@ -173,20 +173,22 @@
     <div id="deleteModal"
         class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 backdrop-blur-sm z-50 hidden">
         <div class="frosted-modal p-6 rounded-2xl shadow-2xl w-full max-w-md mx-4">
-            <h3 class="text-xl font-semibold mb-4 text-frappe-red">{{ __('Delete Availability Exception') }}</h3>
-            <p class="mb-6 text-frappe-text opacity-90">{{ __('Are you sure you want to delete') }} <span
+            <h3 class="text-xl font-semibold mb-4 text-frappe-red">{{ __('messages.delete_availability_exception') }}
+            </h3>
+            <p class="mb-6 text-frappe-text opacity-90">{{ __('messages.are_you_sure_delete') }} <span
                     id="modalExceptionInfo" class="font-bold text-frappe-lavender"></span>?</p>
+            <p class="mb-6 text-frappe-subtext1 text-sm">{{ __('messages.this_action_cannot_be_undone') }}</p>
             <form id="deleteForm" method="POST">
                 @csrf
                 @method('DELETE')
                 <div class="flex justify-end gap-3">
                     <button type="button" onclick="hideDeleteModal()"
                         class="px-6 py-2 bg-gradient-to-r from-gray-500/20 to-gray-600/20 backdrop-blur-sm border border-gray-400/30 text-gray-300 rounded-lg hover:from-gray-500/30 hover:to-gray-600/30 transition-all">
-                        {{ __('Cancel') }}
+                        {{ __('messages.cancel') }}
                     </button>
                     <button type="submit"
                         class="px-6 py-2 bg-gradient-to-r from-red-500/30 to-pink-500/30 backdrop-blur-sm border border-red-400/40 text-red-300 rounded-lg hover:from-red-500/40 hover:to-pink-500/40 transition-all">
-                        {{ __('Delete') }}
+                        {{ __('messages.delete') }}
                     </button>
                 </div>
             </form>

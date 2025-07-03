@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Business;
 use App\Models\BusinessWorkingHour;
+use App\Models\Category;
 use App\Models\Employee;
 use App\Models\EmployeeWorkingHour;
 use App\Models\Service;
@@ -19,6 +20,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+        $this->call(CategorySeeder::class);
+
         $admin = User::create([
             'name' => 'Admin',
             'email' => 'admin@example.com',
@@ -187,6 +190,27 @@ class DatabaseSeeder extends Seeder
                 'user_id' => $providerUsers[$data['provider_index']]->id,
                 ...$data['business']
             ]);
+
+            $categories = Category::all();
+            switch ($business->name) {
+                case 'Hair Salon':
+                case 'Beauty Spa':
+                    $business->categories()->attach($categories->where('slug', 'beauty-wellness')->first()->id);
+                    break;
+                case 'Dental Clinic':
+                    $business->categories()->attach($categories->where('slug', 'health-medical')->first()->id);
+                    break;
+                case 'Auto Repair Shop':
+                    $business->categories()->attach($categories->where('slug', 'automotive')->first()->id);
+                    break;
+                case 'Fitness Gym':
+                    $business->categories()->attach($categories->where('slug', 'fitness-sports')->first()->id);
+                    break;
+                default:
+                    $randomCategories = $categories->random(rand(1, 2));
+                    $business->categories()->attach($randomCategories->pluck('id')->toArray());
+                    break;
+            }
 
             $workDays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
 

@@ -114,10 +114,49 @@ return [
     'exceptions' => 'Exceptions',
     'hours' => 'Hours',
 
+    // Search and filter
+    'search_by_name' => 'Search by name',
+    'enter_business_name' => 'Enter business name...',
+    'filter_by_category' => 'Filter by category',
+    'all_categories' => 'All categories',
+    'clear_filters' => 'Clear filters',
+    'results' => 'results',
+    'showing_businesses_matching' => 'Showing businesses matching ":search"',
+    'showing_businesses_in_category' => 'Showing businesses in category ":category"',
+    'showing_businesses_matching_in_category' => 'Showing businesses matching ":search" in category ":category"',
+    'categories' => 'Categories',
+    'services' => 'Services',
+    'similar_businesses' => 'Similar Businesses',
+
+    // Category management
+    'categories' => 'Categories',
+    'manage_categories' => 'Manage Categories',
+    'create_category' => 'Create Category',
+    'edit_category' => 'Edit Category',
+    'search_categories' => 'Search categories...',
+    'selected_categories' => 'Selected categories',
+    'no_categories_selected' => 'No categories selected',
+    'no_categories_found' => 'No categories found',
+    'confirm_delete_category' => 'Are you sure you want to delete this category?',
+    'choose_color_for_badge' => 'Choose a color for the category badge',
+    'color' => 'Color',
+    'slug' => 'Slug',
+    'preview' => 'Preview',
+    'statistics' => 'Statistics',
+    'url_friendly_slug_auto_generated' => 'URL-friendly version of the name (auto-generated)',
+    'businesses_count' => 'Businesses Count',
+    'view_public_listing' => 'View Public Listing',
+    'businesses_in_this_category' => 'Businesses in this category',
+    'no_businesses_in_category_yet' => 'No businesses in this category yet.',
+    'search_by_name_or_description' => 'Search by name or description...',
+    'category_used_by_businesses' => 'This category is used by :count businesses',
+
     // Confirmation messages
     'delete_business' => 'Delete Business',
     'delete_service' => 'Delete Service',
     'delete_employee' => 'Delete Employee',
+    'delete_category' => 'Delete Category',
+    'delete_availability_exception' => 'Delete Availability Exception',
     'are_you_sure_delete' => 'Are you sure you want to delete',
     'this_action_cannot_be_undone' => 'This action cannot be undone.',
 
@@ -178,6 +217,7 @@ return [
     'required' => 'Required',
     'optional' => 'Optional',
     'business_logo' => 'Business Logo',
+    'categories' => 'Categories',
 
     // Authentication
     'password' => 'Password',

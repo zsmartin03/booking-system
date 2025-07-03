@@ -109,6 +109,7 @@
             <h3 class="text-xl font-semibold mb-4 text-frappe-red">{{ __('messages.delete_working_hour') }}</h3>
             <p class="mb-6 text-frappe-text opacity-90">{{ __('messages.are_you_sure_delete') }} <span
                     id="modalWorkingHour" class="font-bold text-frappe-lavender"></span>?</p>
+            <p class="mb-6 text-frappe-subtext1 text-sm">{{ __('messages.this_action_cannot_be_undone') }}</p>
             <form id="deleteForm" method="POST">
                 @csrf
                 @method('DELETE')

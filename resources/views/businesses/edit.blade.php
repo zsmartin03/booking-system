@@ -62,14 +62,203 @@
                             <x-input-error :messages="$errors->get('logo')" class="mt-2" />
                         </div>
 
-                        <div>
-                            <x-primary-button class="bg-frappe-blue hover:bg-frappe-sapphire">
+                        <div class="mb-4">
+                            <x-input-label for="categories" :value="__('messages.categories')" />
+
+                            <!-- Category Search Input -->
+                            <div class="relative mt-2">
+                                <input type="text" id="categorySearch"
+                                    placeholder="{{ __('messages.search_categories') }}"
+                                    class="w-full px-3 py-2 bg-frappe-surface1 border border-frappe-surface2 rounded-lg text-frappe-text placeholder-frappe-subtext1 focus:outline-none focus:ring-2 focus:ring-frappe-blue focus:border-transparent">
+
+                                <!-- Dropdown -->
+                                <div id="categoryDropdown"
+                                    class="absolute z-10 w-full mt-1 bg-frappe-mantle/90 backdrop-blur-sm border border-frappe-surface2/50 rounded-lg shadow-2xl hidden max-h-60 overflow-y-auto frosted-card">
+                                    @foreach ($categories as $category)
+                                        <div class="category-option px-4 py-3 hover:bg-frappe-surface0/30 cursor-pointer transition-all duration-200 border-b border-frappe-surface2/30 last:border-b-0"
+                                            data-id="{{ $category->id }}" data-name="{{ $category->name }}"
+                                            data-slug="{{ $category->slug }}" data-color="{{ $category->color }}"
+                                            data-badge-classes="{{ $category->badge_classes }}"
+                                            data-badge-styles="{{ $category->badge_styles }}"
+                                            data-badge-hover-styles="{{ $category->badge_hover_styles }}">
+                                            <div class="flex items-center justify-between">
+                                                <div class="flex-1">
+                                                    <div class="font-medium text-frappe-text">{{ $category->name }}
+                                                    </div>
+                                                    @if ($category->description)
+                                                        <div class="text-xs text-frappe-subtext1 opacity-70 mt-1">
+                                                            {{ $category->description }}
+                                                        </div>
+                                                    @endif
+                                                </div>
+                                                <div class="ml-3">
+                                                    <span class="{{ $category->badge_classes }}"
+                                                        style="{{ $category->badge_styles }}">{{ $category->name }}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+
+                            <!-- Selected Categories Display -->
+                            <div class="mt-3">
+                                <div class="text-sm text-frappe-subtext1 mb-2">
+                                    {{ __('messages.selected_categories') }}:
+                                </div>
+                                <div id="selectedCategories"
+                                    class="flex flex-wrap gap-2 min-h-[2rem] p-3 bg-frappe-surface0/30 backdrop-blur-sm border border-frappe-surface2/50 rounded-lg">
+                                    <div id="noCategoriesText" class="text-sm text-frappe-subtext1 opacity-60">
+                                        {{ __('messages.no_categories_selected') }}</div>
+                                </div>
+                            </div>
+
+                            <!-- Hidden inputs for form submission -->
+                            <div id="hiddenInputs"></div>
+
+                            <x-input-error :messages="$errors->get('categories')" class="mt-2" />
+                        </div>
+
+                        <div class="flex flex-col sm:flex-row gap-4 sm:gap-6">
+                            <button type="submit"
+                                class="frosted-button text-white px-6 py-3 rounded-lg font-medium transition-all w-full sm:w-auto">
                                 {{ __('messages.update_business') }}
-                            </x-primary-button>
+                            </button>
+                            <a href="{{ route('businesses.index') }}"
+                                class="frosted-button-cancel px-6 py-3 rounded-lg font-medium transition-all w-full sm:w-auto inline-flex items-center justify-center gap-2">
+                                {{ __('messages.cancel') }}
+                            </a>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const categorySearch = document.getElementById('categorySearch');
+            const categoryDropdown = document.getElementById('categoryDropdown');
+            const selectedCategories = document.getElementById('selectedCategories');
+            const hiddenInputs = document.getElementById('hiddenInputs');
+            const noCategoriesText = document.getElementById('noCategoriesText');
+            const categoryOptions = document.querySelectorAll('.category-option');
+
+            let selectedCategoryIds = @json(old('categories', $business->categories->pluck('id')->toArray()));
+
+            if (selectedCategoryIds.length > 0) {
+                selectedCategoryIds.forEach(categoryId => {
+                    const option = document.querySelector(`[data-id="${categoryId}"]`);
+                    if (option) {
+                        addCategory(categoryId.toString(), option.dataset.name, option.dataset.color);
+                    }
+                });
+            }
+
+            categorySearch.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                let hasVisibleOptions = false;
+
+                categoryOptions.forEach(option => {
+                    const name = option.dataset.name.toLowerCase();
+                    const description = option.querySelector('.text-xs')?.textContent
+                        .toLowerCase() || '';
+                    const isVisible = name.includes(searchTerm) || description.includes(searchTerm);
+                    option.style.display = isVisible ? 'block' : 'none';
+                    if (isVisible) hasVisibleOptions = true;
+                });
+
+                categoryDropdown.classList.toggle('hidden', !hasVisibleOptions);
+            });
+
+            categorySearch.addEventListener('focus', function() {
+                categoryOptions.forEach(option => {
+                    option.style.display = 'block';
+                });
+                categoryDropdown.classList.remove('hidden');
+            });
+
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('#categorySearch') && !e.target.closest('#categoryDropdown')) {
+                    categoryDropdown.classList.add('hidden');
+                }
+            });
+
+            categoryOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    const categoryId = this.dataset.id;
+                    const categoryName = this.dataset.name;
+                    const categoryColor = this.dataset.color;
+
+                    if (!selectedCategoryIds.includes(categoryId) && !selectedCategoryIds.includes(
+                            parseInt(categoryId))) {
+                        addCategory(categoryId, categoryName, categoryColor);
+                        categorySearch.value = '';
+                        categoryDropdown.classList.add('hidden');
+                    }
+                });
+            });
+
+            function addCategory(categoryId, categoryName, categoryColor = '#8B5CF6') {
+                selectedCategoryIds.push(categoryId);
+
+                const categoryOption = document.querySelector(`[data-id="${categoryId}"]`);
+                const badgeClasses = categoryOption ? categoryOption.dataset.badgeClasses ||
+                    'inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium transition-all cursor-pointer border' :
+                    'inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium transition-all cursor-pointer border';
+                const badgeStyles = categoryOption ? categoryOption.dataset.badgeStyles || '' : '';
+                const badgeHoverStyles = categoryOption ? categoryOption.dataset.badgeHoverStyles || '' : '';
+
+                const badge = document.createElement('div');
+                badge.className = badgeClasses;
+                badge.style.cssText = badgeStyles;
+                badge.innerHTML = `
+                    <span>${categoryName}</span>
+                    <button type="button" class="hover:opacity-70 transition-colors" onclick="removeCategory('${categoryId}')">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                `;
+                badge.dataset.categoryId = categoryId;
+
+                if (badgeHoverStyles) {
+                    badge.addEventListener('mouseenter', function() {
+                        this.style.cssText = badgeHoverStyles + '; color: ' + categoryColor +
+                            '; border-color: ' + categoryColor + '50;';
+                    });
+                    badge.addEventListener('mouseleave', function() {
+                        this.style.cssText = badgeStyles;
+                    });
+                }
+
+                const hiddenInput = document.createElement('input');
+                hiddenInput.type = 'hidden';
+                hiddenInput.name = 'categories[]';
+                hiddenInput.value = categoryId;
+                hiddenInput.dataset.categoryId = categoryId;
+
+                selectedCategories.appendChild(badge);
+                hiddenInputs.appendChild(hiddenInput);
+
+                updateNoCategoriesText();
+            }
+
+            window.removeCategory = function(categoryId) {
+                selectedCategoryIds = selectedCategoryIds.filter(id => id != categoryId);
+
+                const badge = document.querySelector(`[data-category-id="${categoryId}"]`);
+                if (badge) badge.remove();
+
+                const hiddenInput = document.querySelector(`input[data-category-id="${categoryId}"]`);
+                if (hiddenInput) hiddenInput.remove();
+
+                updateNoCategoriesText();
+            };
+
+            function updateNoCategoriesText() {
+                noCategoriesText.style.display = selectedCategoryIds.length === 0 ? 'block' : 'none';
+            }
+        });
+    </script>
 </x-app-layout>

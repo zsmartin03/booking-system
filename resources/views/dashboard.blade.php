@@ -31,7 +31,7 @@
                             <button type="submit"
                                 class="bg-gradient-to-r from-red-500/30 to-pink-500/30 backdrop-blur-sm border border-red-400/40 text-red-300 rounded-lg hover:from-red-500/40 hover:to-pink-500/40 transition-all px-6 py-2 flex items-center gap-2 shadow-lg">
                                 <x-heroicon-o-arrow-right-on-rectangle class="w-5 h-5" />
-                                  {{ __('messages.logout') }}
+                                {{ __('messages.logout') }}
                             </button>
                         </form>
                     </div>
@@ -83,6 +83,20 @@
                         <a href="{{ route('bookings.manage') }}"
                             class="mt-4 bg-gradient-to-r from-pink-500/30 to-rose-500/30 backdrop-blur-sm border border-pink-400/40 text-pink-300 rounded-lg hover:from-pink-500/40 hover:to-rose-500/40 transition-all px-6 py-3 flex items-center gap-2 text-lg shadow-lg">
                             <x-heroicon-o-cog-6-tooth class="w-6 h-6" />
+                            {{ __('messages.manage') }}
+                        </a>
+                    </div>
+                @endif
+
+                <!-- Manage Categories (admin only) -->
+                @if (auth()->user()->role === 'admin')
+                    <div
+                        class="frosted-card rounded-xl p-8 flex flex-col items-center justify-center shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-105 min-h-[200px]">
+                        <x-heroicon-o-tag class="w-12 h-12 text-frappe-yellow mb-4" />
+                        <div class="text-frappe-text text-xl mb-2">{{ __('messages.manage_categories') }}</div>
+                        <a href="{{ route('categories.index') }}"
+                            class="mt-4 bg-gradient-to-r from-yellow-500/30 to-amber-500/30 backdrop-blur-sm border border-yellow-400/40 text-yellow-300 rounded-lg hover:from-yellow-500/40 hover:to-amber-500/40 transition-all px-6 py-3 flex items-center gap-2 text-lg shadow-lg">
+                            <x-heroicon-o-cog-8-tooth class="w-6 h-6" />
                             {{ __('messages.manage') }}
                         </a>
                     </div>

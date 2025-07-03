@@ -81,6 +81,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/settings/reset', [SettingController::class, 'reset'])->name('settings.reset');
     });
 
+    // Admin-only routes
+    Route::middleware('role:admin')->group(function () {
+        Route::resource('categories', \App\Http\Controllers\CategoryController::class);
+    });
+
     Route::get('/bookings/create', [BookingController::class, 'create'])->name('bookings.create');
     Route::post('/bookings', [BookingController::class, 'store'])->name('bookings.store');
     Route::get('/bookings/manage', [BookingController::class, 'manage'])->name('bookings.manage');

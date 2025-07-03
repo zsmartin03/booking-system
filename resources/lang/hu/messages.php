@@ -114,10 +114,48 @@ return [
     'exceptions' => 'Kivételek',
     'hours' => 'Órák',
 
+    // Search and filter
+    'search_by_name' => 'Keresés név szerint',
+    'enter_business_name' => 'Adja meg a vállalkozás nevét...',
+    'filter_by_category' => 'Szűrés kategória szerint',
+    'all_categories' => 'Minden kategória',
+    'clear_filters' => 'Szűrők törlése',
+    'results' => 'találat',
+    'showing_businesses_matching' => 'Találatok a következőre: ":search"',
+    'showing_businesses_in_category' => 'Showing businesses in category ":category"',
+    'showing_businesses_in_category' => 'Vállalkozások a(z) ":category" kategóriában',
+    'categories' => 'Kategóriák',
+    'services' => 'Szolgáltatások',
+    'similar_businesses' => 'Hasonló vállalkozások',
+
+    // Category management
+    'manage_categories' => 'Kategóriák kezelése',
+    'create_category' => 'Kategória létrehozása',
+    'edit_category' => 'Kategória szerkesztése',
+    'search_categories' => 'Kategóriák keresése...',
+    'selected_categories' => 'Kiválasztott kategóriák',
+    'no_categories_selected' => 'Nincs kiválasztott kategória',
+    'no_categories_found' => 'Nem található kategória',
+    'confirm_delete_category' => 'Biztosan törölni szeretnéd ezt a kategóriát?',
+    'choose_color_for_badge' => 'Válassz színt a kategóriacímkéhez',
+    'color' => 'Szín',
+    'slug' => 'Slug (URL azonosító)',
+    'preview' => 'Előnézet',
+    'statistics' => 'Statisztika',
+    'url_friendly_slug_auto_generated' => 'URL-barát azonosító a név alapján (automatikusan generálva)',
+    'businesses_count' => 'Vállalkozások száma',
+    'view_public_listing' => 'Nyilvános lista megtekintése',
+    'businesses_in_this_category' => 'Vállalkozások ebben a kategóriában',
+    'no_businesses_in_category_yet' => 'Még nincs vállalkozás ebben a kategóriában.',
+    'search_by_name_or_description' => 'Keresés név vagy leírás alapján...',
+    'category_used_by_businesses' => 'Ezt a kategóriát :count vállalkozás használja',
+
     // Confirmation messages
     'delete_business' => 'Vállalkozás törlése',
     'delete_service' => 'Szolgáltatás törlése',
     'delete_employee' => 'Alkalmazott törlése',
+    'delete_category' => 'Kategória törlése',
+    'delete_availability_exception' => 'Elérhetőségi kivétel törlése',
     'are_you_sure_delete' => 'Biztos benne, hogy törölni szeretné',
     'this_action_cannot_be_undone' => 'Ez a művelet nem vonható vissza.',
 
@@ -147,6 +185,7 @@ return [
     'required' => 'Kötelező',
     'optional' => 'Opcionális',
     'business_logo' => 'Vállalkozás logója',
+    'categories' => 'Kategóriák',
 
     // Authentication
     'password' => 'Jelszó',
