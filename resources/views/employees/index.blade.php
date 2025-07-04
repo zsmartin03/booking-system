@@ -54,28 +54,28 @@
                                         <div class="flex flex-wrap gap-2 justify-center">
                                             <a href="{{ route('employee-working-hours.index', ['employee_id' => $employee->id]) }}"
                                                 class="action-button text-white px-4 py-2 rounded-lg text-sm flex items-center gap-2 transition-all"
-                                                title="{{ __('Working Hours') }}">
+                                                title="{{ __('messages.working_hours') }}">
                                                 <x-heroicon-o-clock class="w-4 h-4" />
-                                                {{ __('Hours') }}
+                                                {{ __('messages.hours') }}
                                             </a>
                                             <a href="{{ route('availability-exceptions.index', ['employee_id' => $employee->id]) }}"
                                                 class="inline-flex items-center gap-2 bg-gradient-to-r from-orange-500/20 to-red-500/20 backdrop-blur-sm border border-orange-400/30 text-orange-300 px-4 py-2 rounded-lg text-sm hover:from-orange-500/30 hover:to-red-500/30 transition-all"
-                                                title="{{ __('Availability Exceptions') }}">
+                                                title="{{ __('messages.availability_exceptions') }}">
                                                 <x-heroicon-o-calendar-days class="w-4 h-4" />
-                                                {{ __('Exceptions') }}
+                                                {{ __('messages.exceptions') }}
                                             </a>
                                             <a href="{{ route('employees.edit', $employee->id) }}"
                                                 class="edit-button text-white px-4 py-2 rounded-lg text-sm flex items-center gap-2 transition-all"
-                                                title="{{ __('Edit') }}">
+                                                title="{{ __('messages.edit') }}">
                                                 <x-heroicon-o-pencil class="w-4 h-4" />
-                                                {{ __('Edit') }}
+                                                {{ __('messages.edit') }}
                                             </a>
                                             <button
                                                 class="delete-button text-white px-4 py-2 rounded-lg text-sm flex items-center gap-2 transition-all"
                                                 onclick="showDeleteModal({{ $employee->id }}, '{{ addslashes($employee->name) }}')"
-                                                title="{{ __('Delete') }}">
+                                                title="{{ __('messages.delete') }}">
                                                 <x-heroicon-o-trash class="w-4 h-4" />
-                                                {{ __('Delete') }}
+                                                {{ __('messages.delete') }}
                                             </button>
                                         </div>
                                     </td>
@@ -83,7 +83,7 @@
                             @empty
                                 <tr>
                                     <td colspan="4" class="py-8 text-center text-frappe-subtext1">
-                                        {{ __('No employees set.') }}</td>
+                                        {{ __('messages.no_employees_set') }}</td>
                                 </tr>
                             @endforelse
                         </tbody>
@@ -103,31 +103,31 @@
                                 </div>
                                 @if ($employee->active)
                                     <span
-                                        class="inline-flex px-2 py-1 text-xs font-medium rounded-full bg-green-500/20 text-green-300">{{ __('Active') }}</span>
+                                        class="inline-flex px-2 py-1 text-xs font-medium rounded-full bg-green-500/20 text-green-300">{{ __('messages.active') }}</span>
                                 @else
                                     <span
-                                        class="inline-flex px-2 py-1 text-xs font-medium rounded-full bg-red-500/20 text-red-300">{{ __('Inactive') }}</span>
+                                        class="inline-flex px-2 py-1 text-xs font-medium rounded-full bg-red-500/20 text-red-300">{{ __('messages.inactive') }}</span>
                                 @endif
                             </div>
 
                             <div class="flex flex-wrap gap-2 justify-center sm:justify-start">
                                 <a href="{{ route('employee-working-hours.index', ['employee_id' => $employee->id]) }}"
                                     class="action-button text-white px-4 py-2 rounded-lg flex items-center gap-2 text-sm transition-all">
-                                    <x-heroicon-o-clock class="w-4 h-4" /> {{ __('Hours') }}
+                                    <x-heroicon-o-clock class="w-4 h-4" /> {{ __('messages.hours') }}
                                 </a>
                                 <a href="{{ route('availability-exceptions.index', ['employee_id' => $employee->id]) }}"
                                     class="inline-flex items-center gap-2 bg-gradient-to-r from-orange-500/20 to-red-500/20 backdrop-blur-sm border border-orange-400/30 text-orange-300 px-4 py-2 rounded-lg text-sm hover:from-orange-500/30 hover:to-red-500/30 transition-all">
-                                    <x-heroicon-o-calendar-days class="w-4 h-4" /> {{ __('Exceptions') }}
+                                    <x-heroicon-o-calendar-days class="w-4 h-4" /> {{ __('messages.exceptions') }}
                                 </a>
                                 <a href="{{ route('employees.edit', $employee->id) }}"
                                     class="edit-button text-white px-4 py-2 rounded-lg flex items-center gap-2 text-sm transition-all">
-                                    <x-heroicon-o-pencil class="w-4 h-4" /> {{ __('Edit') }}
+                                    <x-heroicon-o-pencil class="w-4 h-4" /> {{ __('messages.edit') }}
                                 </a>
                                 <button
                                     class="delete-button text-white px-4 py-2 rounded-lg flex items-center gap-2 text-sm transition-all"
                                     onclick="showDeleteModal({{ $employee->id }}, '{{ addslashes($employee->name) }}')"
-                                    title="{{ __('Delete') }}">
-                                    <x-heroicon-o-trash class="w-4 h-4" /> {{ __('Delete') }}
+                                    title="{{ __('messages.delete') }}">
+                                    <x-heroicon-o-trash class="w-4 h-4" /> {{ __('messages.delete') }}
                                 </button>
                             </div>
                         </div>
@@ -151,11 +151,11 @@
                 <div class="flex justify-end gap-3">
                     <button type="button" onclick="hideDeleteModal()"
                         class="px-6 py-2 bg-gradient-to-r from-gray-500/20 to-gray-600/20 backdrop-blur-sm border border-gray-400/30 text-gray-300 rounded-lg hover:from-gray-500/30 hover:to-gray-600/30 transition-all">
-                        {{ __('Cancel') }}
+                        {{ __('messages.cancel') }}
                     </button>
                     <button type="submit"
                         class="px-6 py-2 bg-gradient-to-r from-red-500/30 to-pink-500/30 backdrop-blur-sm border border-red-400/40 text-red-300 rounded-lg hover:from-red-500/40 hover:to-pink-500/40 transition-all">
-                        {{ __('Delete') }}
+                        {{ __('messages.delete') }}
                     </button>
                 </div>
             </form>

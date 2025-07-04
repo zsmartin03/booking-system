@@ -37,7 +37,8 @@
                             </div>
 
                             <div class="bg-frappe-surface0/30 rounded-lg p-3">
-                                <div class="text-sm text-frappe-subtext1 mb-1">{{ __('Businesses Count') }}</div>
+                                <div class="text-sm text-frappe-subtext1 mb-1">{{ __('messages.businesses_count') }}
+                                </div>
                                 <div class="text-frappe-text">{{ $category->businesses->count() }}</div>
                             </div>
                         </div>
@@ -54,7 +55,7 @@
                         <a href="{{ route('businesses.public.index', ['category' => $category->slug]) }}"
                             class="inline-flex items-center gap-2 bg-gradient-to-r from-blue-500/20 to-indigo-500/20 backdrop-blur-sm border border-blue-400/30 text-blue-300 px-4 py-2 rounded-lg text-sm hover:from-blue-500/30 hover:to-indigo-500/30 transition-all">
                             <x-heroicon-o-eye class="w-4 h-4" />
-                            {{ __('View Public Listing') }}
+                            {{ __('messages.view_public_listing') }}
                         </a>
 
                         <a href="{{ route('categories.index') }}"
@@ -71,7 +72,7 @@
                 <div class="frosted-card overflow-hidden shadow-lg sm:rounded-xl mt-6">
                     <div class="p-4 sm:p-6">
                         <h3 class="text-xl font-semibold text-frappe-text mb-4">
-                            {{ __('Businesses in this category') }} ({{ $category->businesses->count() }})
+                            {{ __('messages.businesses_in_this_category') }} ({{ $category->businesses->count() }})
                         </h3>
                         <div class="divide-y divide-frappe-surface2/30">
                             @foreach ($category->businesses as $business)
@@ -106,7 +107,8 @@
             @else
                 <div class="frosted-card overflow-hidden shadow-lg sm:rounded-xl mt-6">
                     <div class="p-6 text-center">
-                        <p class="text-frappe-subtext1 opacity-80">{{ __('No businesses in this category yet.') }}</p>
+                        <p class="text-frappe-subtext1 opacity-80">{{ __('messages.no_businesses_in_category_yet') }}
+                        </p>
                     </div>
                 </div>
             @endif

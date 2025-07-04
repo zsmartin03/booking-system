@@ -10,6 +10,14 @@ return [
     'register' => 'Regisztráció',
     'home' => 'Főoldal',
 
+    // Profile
+    'phone_number' => 'Telefonszám',
+    'save_profile' => 'Profil mentése',
+    'update_password' => 'Jelszó frissítése',
+    'current_password' => 'Jelenlegi Jelszó',
+    'new_password' => 'Új Jelszó',
+    'confirm_new_password' => 'Új Jelszó megerősítése',
+
     // Business Management
     'businesses' => 'Vállalkozások',
     'manage_businesses' => 'Vállalkozások kezelése',
@@ -34,8 +42,10 @@ return [
 
     // Employees
     'employees' => 'Alkalmazottak',
+    'add_employee' => 'Alkalmazott hozzáadása',
     'manage_employees' => 'Alkalmazottak kezelése',
     'create_employee' => 'Alkalmazott felvétele',
+    'update_employee' => 'Alkalmazott frissítése',
     'edit_employee' => 'Alkalmazott szerkesztése',
     'employee_name' => 'Alkalmazott neve',
     'first_name' => 'Keresztnév',
@@ -181,6 +191,7 @@ return [
     'sms_notifications' => 'SMS értesítések',
     'send_sms_notifications' => 'SMS értesítések küldése foglalásokról (SMS szolgáltatás szükséges)',
     'availability_exceptions' => 'Elérhetőségi kivételek',
+    'add_availability_exception_for' => 'Elérhetőségi kivétel hozzáadása ehhez:',
     // Form labels
     'required' => 'Kötelező',
     'optional' => 'Opcionális',
@@ -196,11 +207,21 @@ return [
     'dont_have_account' => 'Nincs még fiókja? Regisztráljon',
     'already_have_account' => 'Már van fiókja? Jelentkezzen be',
     'verify_email' => 'E-mail megerősítése',
+    'password_reset_instruction' => 'Add meg az email címedet, és küldünk egy linket a jelszó visszaállításához.',
+    'send_password_reset_link' => 'Jelszó visszaállító link küldése',
+    'please_confirm_your_password' => 'Kérlek, erősítsd meg a jelszavad!.',
     'log_in' => 'Bejelentkezés',
     'sign_out' => 'Kijelentkezés',
     'i_want_to' => 'Szeretnék',
     'book_services' => 'Szolgáltatásokat foglalni',
     'provide_services' => 'Szolgáltatásokat nyújtani',
+    'i_want_to' => 'Szeretnék',
+    'book_services' => 'Szolgáltatásokat foglalni',
+    'provide_services' => 'Szolgáltatásokat nyújtani',
+    'email_verification_prompt' => 'Köszönjük a regisztrációt! Kérlek, erősítsd meg az emailed a kiküldött linken. Nem kaptad meg? Szívesen küldünk egy másikat.',
+    'new_verification_link_sent' => 'Új megerősítő linket küldtünk a regisztrációkor megadott email-címedre.',
+    'verification_email_resend' => 'Megerősítő e-mail újraküldése',
+
 
     // Messages
     'success' => 'Sikeres',
@@ -220,7 +241,7 @@ return [
     // Language
     'language' => 'Nyelv',
     'select_language' => 'Nyelv kiválasztása',
-    'english' => 'Angol',
+    'english' => 'English',
     'hungarian' => 'Magyar',
     // Welcome page
     'welcome_title' => 'Üdvözöljük a BookingSystem-ben',
@@ -263,6 +284,10 @@ return [
     'note' => 'Megjegyzés',
     'date' => 'Dátum',
     'time' => 'Idő',
+    'note_optional' => 'Megjegyzés (opcionális)',
+    'note_placeholder' => 'pl.: Szabadság, Különleges esemény, Túlóra...',
+    'update_exception' => 'Kivétel frissítése',
+
 
     // Settings page labels and descriptions
     'minimum_hours_in_advance' => 'Minimum órák előre',
@@ -404,6 +429,13 @@ return [
     'add_availability_exception' => 'Elérhetőségi kivétel hozzáadása',
     'edit_availability_exception' => 'Elérhetőségi kivétel szerkesztése',
     'no_availability_exceptions' => 'Nincsenek beállított elérhetőségi kivételek.',
+    'exception_type' => 'Kivétel típusa',
+    'select_type' => 'Típus kiválasztása',
+    'available_override_regular_hours' => 'Elérhető (felülírja a normál munkaidőt)',
+    'unavailable_block_time_off' => 'Nem elérhető (szabadság felülírása)',
+    'available_description' => 'A munkavállaló ezen idő alatt elérhető lesz, még akkor is, ha egyébként nem dolgozik.',
+    'unavailable_description' => 'A munkavállaló ezen idő alatt nem lesz elérhető, még akkor sem, ha egyébként dolgozna.',
+
 
     // Day of week label
     'day_of_week' => 'Hét napja',

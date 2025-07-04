@@ -21,19 +21,19 @@
 
             <!-- Role -->
             <div class="mt-4">
-                <x-input-label for="role" :value="__('I want to')" class="text-frappe-text" />
+                <x-input-label for="role" :value="__('messages.i_want_to')" class="text-frappe-text" />
                 <div class="mt-1 grid grid-cols-2 gap-2">
                     <label class="flex items-center space-x-2">
                         <input type="radio" name="role" value="client"
                             class="h-4 w-4 text-frappe-blue focus:ring-frappe-blue border-frappe-surface1"
                             {{ old('role', 'client') === 'client' ? 'checked' : '' }}>
-                        <span class="text-sm text-frappe-text">Book services</span>
+                        <span class="text-sm text-frappe-text">{{ __('messages.book_services') }}</span>
                     </label>
                     <label class="flex items-center space-x-2">
                         <input type="radio" name="role" value="provider"
                             class="h-4 w-4 text-frappe-blue focus:ring-frappe-blue border-frappe-surface1"
                             {{ old('role') === 'provider' ? 'checked' : '' }}>
-                        <span class="text-sm text-frappe-text">Offer services</span>
+                        <span class="text-sm text-frappe-text">{{ __('messages.provide_services') }}</span>
                     </label>
                 </div>
                 <x-input-error :messages="$errors->get('role')" class="mt-2 text-frappe-red text-sm" />
@@ -41,7 +41,7 @@
 
             <!-- Password -->
             <div class="mt-4">
-                <x-input-label for="password" :value="__('Password')" class="text-frappe-text" />
+                <x-input-label for="password" :value="__('messages.password')" class="text-frappe-text" />
                 <x-text-input id="password" class="block mt-1 w-full" type="password" name="password" required
                     autocomplete="new-password" />
                 <x-input-error :messages="$errors->get('password')" class="mt-2 text-frappe-red text-sm" />
@@ -57,11 +57,11 @@
 
             <div class="flex items-center justify-between mt-6">
                 <a class="text-sm text-frappe-blue hover:text-frappe-sapphire" href="{{ route('login') }}">
-                    {{ __('Already registered?') }}
+                    {{ __('messages.already_have_account') }}
                 </a>
 
                 <x-register-button>
-                    {{ __('Register') }}
+                    {{ __('messages.register') }}
                 </x-register-button>
             </div>
         </form>

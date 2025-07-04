@@ -5,10 +5,19 @@ return [
     'dashboard' => 'Dashboard',
     'welcome_user' => 'Welcome, :name!',
     'profile' => 'Profile',
-    'logout' => 'Logout',
+    'log ' => 'Logout',
     'login' => 'Login',
     'register' => 'Register',
     'home' => 'Home',
+
+    // Profile
+    'phone_number' => 'Phone Number',
+    'save_profile' => 'Save Profile',
+    'update_password' => 'Update Password',
+    'current_password' => 'Current Password',
+    'new_password' => 'New Password',
+    'confirm_new_password' => 'Confirm New Password',
+
 
     // Business Management
     'businesses' => 'Businesses',
@@ -34,7 +43,9 @@ return [
 
     // Employees
     'employees' => 'Employees',
+    'add_employee' => 'Add Employee',
     'manage_employees' => 'Manage Employees',
+    'update_employee' => 'Update Employee',
     'create_employee' => 'Create Employee',
     'edit_employee' => 'Edit Employee',
     'employee_name' => 'Employee Name',
@@ -182,6 +193,7 @@ return [
     'sms_notifications' => 'SMS Notifications',
     'send_sms_notifications' => 'Send SMS notifications for bookings (requires SMS service)',
     'availability_exceptions' => 'Availability Exceptions',
+    'add_availability_exception_for' => 'Add Availability Exception for',
 
     // Settings page labels and descriptions
     'minimum_hours_in_advance' => 'Minimum Hours in Advance',
@@ -228,11 +240,21 @@ return [
     'dont_have_account' => 'Don\'t have an account? Register',
     'already_have_account' => 'Already have an account? Sign In',
     'verify_email' => 'Verify Email',
+    'password_reset_instruction' => 'Enter your email address below, and we’ll send you a link to reset your password.',
+    'send_password_reset_link' => 'Send Password Reset Link',
+    'please_confirm_your_password' => 'Please confirm your password before continuing.',
     'log_in' => 'Log in',
     'sign_out' => 'Sign Out',
     'i_want_to' => 'I want to',
     'book_services' => 'Book Services',
     'provide_services' => 'Provide Services',
+    'i_want_to' => 'I want to',
+    'book_services' => 'Book Services',
+    'provide_services' => 'Provide Services',
+    'email_verification_prompt' => 'Thanks for signing up! Please verify your email by clicking the link we just sent. Didn’t get it? We’ll gladly send another.',
+    'new_verification_link_sent' => 'A new verification link has been sent to the email address you provided during registration.',
+    'verification_email_resend' => 'Resend Verification Email',
+
 
     // Messages
     'success' => 'Success',
@@ -253,7 +275,7 @@ return [
     'language' => 'Language',
     'select_language' => 'Select Language',
     'english' => 'English',
-    'hungarian' => 'Hungarian',
+    'hungarian' => 'Magyar',
     // Welcome page
     'welcome_title' => 'Welcome to BookingSystem',
     'welcome_subtitle' => 'Your professional booking management solution',
@@ -295,6 +317,8 @@ return [
     'note' => 'Note',
     'date' => 'Date',
     'time' => 'Time',
+    'note_optional' => 'Note (Optional)',
+    'note_placeholder' => 'e.g., Vacation, Special event, Overtime...',
 
     // Table headers and common terms
     'day' => 'Day',
@@ -405,7 +429,15 @@ return [
     // Additional terms for availability exceptions
     'add_availability_exception' => 'Add Availability Exception',
     'edit_availability_exception' => 'Edit Availability Exception',
-    'no_availability_exceptions' => 'Nincsenek beállított elérhetőségi kivételek.',
+    'no_availability_exceptions' => 'No availability exceptions found',
+    'exception_type' => 'Exception Type',
+    'select_type' => 'Select Type',
+    'available_override_regular_hours' => 'Available (Override regular hours)',
+    'unavailable_block_time_off' => 'Unavailable (Block time off)',
+    'available_description' => 'Employee will be available during this time even if normally not working',
+    'unavailable_description' => 'Employee will not be available during this time even if normally working',
+    'update_exception' => 'Update Exception',
+
 
     // Day of week label
     'day_of_week' => 'Day of Week',

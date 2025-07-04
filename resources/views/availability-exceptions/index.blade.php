@@ -34,7 +34,7 @@
                                 </th>
                                 <th class="text-left py-3 px-4 font-medium text-frappe-text">{{ __('messages.note') }}
                                 </th>
-                                <th class="py-3 px-4 font-medium text-frappe-text">{{ __('Actions') }}</th>
+                                <th class="py-3 px-4 font-medium text-frappe-text">{{ __('messages.actions') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -75,13 +75,13 @@
                                         <div class="flex gap-2">
                                             <a href="{{ route('availability-exceptions.edit', $exception->id) }}"
                                                 class="edit-button text-white px-3 py-1 rounded-lg flex items-center gap-1 text-sm">
-                                                <x-heroicon-o-pencil class="w-4 h-4" /> {{ __('Edit') }}
+                                                <x-heroicon-o-pencil class="w-4 h-4" /> {{ __('messages.edit') }}
                                             </a>
                                             <button
                                                 class="delete-button text-white px-3 py-1 rounded-lg flex items-center gap-1 text-sm"
                                                 onclick="showDeleteModal({{ $exception->id }}, '{{ \Carbon\Carbon::parse($exception->date)->format('M d, Y') }} {{ \Carbon\Carbon::parse($exception->start_time)->format('H:i') }}-{{ \Carbon\Carbon::parse($exception->end_time)->format('H:i') }}')"
-                                                title="{{ __('Delete') }}">
-                                                <x-heroicon-o-trash class="w-4 h-4" /> {{ __('Delete') }}
+                                                title="{{ __('messages.delete') }}">
+                                                <x-heroicon-o-trash class="w-4 h-4" /> {{ __('messages.delete') }}
                                             </button>
                                         </div>
                                     </td>
@@ -121,23 +121,24 @@
                                     <span
                                         class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-frappe-green/20 text-frappe-green">
                                         <x-heroicon-o-check-circle class="w-3 h-3 mr-1" />
-                                        {{ __('Available') }}
+                                        {{ __('messages.available') }}
                                     </span>
                                 @else
                                     <span
                                         class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-frappe-red/20 text-frappe-red">
                                         <x-heroicon-o-x-circle class="w-3 h-3 mr-1" />
-                                        {{ __('Unavailable') }}
+                                        {{ __('messages.unavailable') }}
                                     </span>
                                 @endif
                             </div>
 
                             <div class="text-sm text-frappe-subtext1">
-                                <div><strong>{{ __('Time:') }}</strong>
+                                <div><strong>{{ __('messages.time') }}:</strong>
                                     {{ \Carbon\Carbon::parse($exception->start_time)->format('H:i') }} -
                                     {{ \Carbon\Carbon::parse($exception->end_time)->format('H:i') }}</div>
                                 @if ($exception->note)
-                                    <div class="mt-1"><strong>{{ __('Note:') }}</strong> {{ $exception->note }}
+                                    <div class="mt-1"><strong>{{ __('messages.note') }}:</strong>
+                                        {{ $exception->note }}
                                     </div>
                                 @endif
                             </div>
@@ -145,13 +146,13 @@
                             <div class="flex gap-2 pt-2">
                                 <a href="{{ route('availability-exceptions.edit', $exception->id) }}"
                                     class="edit-button text-white px-4 py-2 rounded-lg flex items-center gap-1 text-sm">
-                                    <x-heroicon-o-pencil class="w-4 h-4" /> {{ __('Edit') }}
+                                    <x-heroicon-o-pencil class="w-4 h-4" /> {{ __('messages.edit') }}
                                 </a>
                                 <button
                                     class="delete-button text-white px-4 py-2 rounded-lg flex items-center gap-1 text-sm"
                                     onclick="showDeleteModal({{ $exception->id }}, '{{ \Carbon\Carbon::parse($exception->date)->format('M d, Y') }} {{ \Carbon\Carbon::parse($exception->start_time)->format('H:i') }}-{{ \Carbon\Carbon::parse($exception->end_time)->format('H:i') }}')"
-                                    title="{{ __('Delete') }}">
-                                    <x-heroicon-o-trash class="w-4 h-4" /> {{ __('Delete') }}
+                                    title="{{ __('messages.delete') }}">
+                                    <x-heroicon-o-trash class="w-4 h-4" /> {{ __('messages.delete') }}
                                 </button>
                             </div>
                         </div>
@@ -171,7 +172,7 @@
 
     <!-- Delete Modal -->
     <div id="deleteModal"
-        class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 backdrop-blur-sm z-50 hidden">
+        class="fixed inset-0 items-center justify-center bg-black bg-opacity-60 backdrop-blur-sm z-50 hidden">
         <div class="frosted-modal p-6 rounded-2xl shadow-2xl w-full max-w-md mx-4">
             <h3 class="text-xl font-semibold mb-4 text-frappe-red">{{ __('messages.delete_availability_exception') }}
             </h3>
@@ -199,11 +200,15 @@
         function showDeleteModal(exceptionId, exceptionInfo) {
             document.getElementById('modalExceptionInfo').textContent = exceptionInfo;
             document.getElementById('deleteForm').action = "{{ url('/availability-exceptions') }}/" + exceptionId;
-            document.getElementById('deleteModal').classList.remove('hidden');
+            const modal = document.getElementById('deleteModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
         }
 
         function hideDeleteModal() {
-            document.getElementById('deleteModal').classList.add('hidden');
+            const modal = document.getElementById('deleteModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
         }
     </script>
 </x-app-layout>

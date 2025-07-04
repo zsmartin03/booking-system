@@ -35,7 +35,7 @@
 
                                 <!-- Email -->
                                 <div>
-                                    <x-input-label for="email" :value="__('Email')" class="text-frappe-subtext1" />
+                                    <x-input-label for="email" :value="__('messages.email')" class="text-frappe-subtext1" />
                                     <x-text-input id="email" name="email" type="email" class="block mt-1 w-full"
                                         :value="old('email', $user->email)" required />
                                     <x-input-error :messages="$errors->get('email')" class="mt-1 text-frappe-red" />
@@ -43,7 +43,7 @@
 
                                 <!-- Phone Number -->
                                 <div>
-                                    <x-input-label for="phone_number" :value="__('Phone Number')" class="text-frappe-subtext1" />
+                                    <x-input-label for="phone_number" :value="__('messages.phone')" class="text-frappe-subtext1" />
                                     <x-text-input id="phone_number" name="phone_number" type="tel"
                                         class="block mt-1 w-full" :value="old('phone_number', $user->phone_number)" />
                                     <x-input-error :messages="$errors->get('phone_number')" class="mt-1 text-frappe-red" />
@@ -51,7 +51,7 @@
 
                                 <div class="flex items-center justify-end">
                                     <x-primary-button>
-                                        {{ __('Save Profile') }}
+                                        {{ __('messages.save_profile') }}
                                     </x-primary-button>
                                 </div>
                             </div>
@@ -60,7 +60,7 @@
 
                     <!-- Password Update Form -->
                     <div class="border-t border-frappe-surface1 pt-8">
-                        <h3 class="text-lg font-medium text-frappe-blue mb-4">{{ __('Update Password') }}</h3>
+                        <h3 class="text-lg font-medium text-frappe-blue mb-4">{{ __('messages.update_password') }}</h3>
 
                         <form method="POST" action="{{ route('profile.update-password') }}">
                             @csrf
@@ -68,7 +68,7 @@
                             <div class="space-y-4">
                                 <!-- Current Password -->
                                 <div>
-                                    <x-input-label for="current_password" :value="__('Current Password')"
+                                    <x-input-label for="current_password" :value="__('messages.current_password')"
                                         class="text-frappe-subtext1" />
                                     <x-text-input id="current_password" name="current_password" type="password"
                                         class="block mt-1 w-full" required />
@@ -77,7 +77,7 @@
 
                                 <!-- New Password -->
                                 <div>
-                                    <x-input-label for="password" :value="__('New Password')" class="text-frappe-subtext1" />
+                                    <x-input-label for="password" :value="__('messages.new_password')" class="text-frappe-subtext1" />
                                     <x-text-input id="password" name="password" type="password"
                                         class="block mt-1 w-full" required />
                                     <x-input-error :messages="$errors->get('password')" class="mt-1 text-frappe-red" />
@@ -85,7 +85,7 @@
 
                                 <!-- Confirm Password -->
                                 <div>
-                                    <x-input-label for="password_confirmation" :value="__('Confirm Password')"
+                                    <x-input-label for="password_confirmation" :value="__('messages.confirm_new_password')"
                                         class="text-frappe-subtext1" />
                                     <x-text-input id="password_confirmation" name="password_confirmation"
                                         type="password" class="block mt-1 w-full" required />
@@ -94,7 +94,7 @@
 
                                 <div class="flex items-center justify-end">
                                     <x-primary-button>
-                                        {{ __('Update Password') }}
+                                        {{ __('messages.update_password') }}
                                     </x-primary-button>
                                 </div>
                             </div>

@@ -1,12 +1,12 @@
 <x-guest-layout>
     <div class="frosted-card rounded-xl shadow-lg p-6 max-w-md mx-auto">
         <div class="mb-4 text-sm text-frappe-subtext1">
-            {{ __('Thanks for signing up! Before getting started, could you verify your email address by clicking on the link we just emailed to you? If you didn\'t receive the email, we will gladly send you another.') }}
+            {{ __('messages.email_verification_prompt') }}
         </div>
 
         @if (session('status') == 'verification-link-sent')
             <div class="mb-4 font-medium text-sm text-frappe-green">
-                {{ __('A new verification link has been sent to the email address you provided during registration.') }}
+                {{ __('messages.new_verification_link_sent') }}
             </div>
         @endif
 
@@ -16,7 +16,7 @@
 
                 <div>
                     <x-primary-button>
-                        {{ __('Resend Verification Email') }}
+                        {{ __('messages.verification_email_resend') }}
                     </x-primary-button>
                 </div>
             </form>
@@ -26,7 +26,7 @@
 
                 <button type="submit"
                     class="underline text-sm text-frappe-subtext1 hover:text-frappe-text rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-frappe-blue">
-                    {{ __('Log Out') }}
+                    {{ __('messages.logout') }}
                 </button>
             </form>
         </div>

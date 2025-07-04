@@ -67,7 +67,7 @@
                             @empty
                                 <tr>
                                     <td colspan="8" class="text-center text-frappe-subtext1 py-8">
-                                        {{ __('No bookings found.') }}</td>
+                                        {{ __('messages.no_bookings_found') }}</td>
                                 </tr>
                             @endforelse
                         </tbody>
@@ -113,7 +113,7 @@
                         </div>
                     </div>
                 @empty
-                    <div class="p-8 text-center text-frappe-subtext1">{{ __('No bookings found.') }}</div>
+                    <div class="p-8 text-center text-frappe-subtext1">{{ __('messages.no_bookings_found') }}</div>
                 @endforelse
             </div>
             <div class="mt-4">
