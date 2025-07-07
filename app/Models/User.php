@@ -72,4 +72,29 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(Notification::class);
     }
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
+
+    public function reviewVotes()
+    {
+        return $this->hasMany(ReviewVote::class);
+    }
+
+    public function reviewResponses()
+    {
+        return $this->hasMany(ReviewResponse::class);
+    }
+
+    public function hasBookingWithBusiness($businessId): bool
+    {
+        return $this->clientBookings()
+            ->whereHas('service', function ($query) use ($businessId) {
+                $query->where('business_id', $businessId);
+            })
+            ->where('status', '!=', 'cancelled')
+            ->exists();
+    }
 }

@@ -91,6 +91,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/bookings/manage', [BookingController::class, 'manage'])->name('bookings.manage');
 
     Route::resource('bookings', BookingController::class)->except(['create', 'store']);
+
+    // Review routes
+    Route::post('/businesses/{business}/reviews', [\App\Http\Controllers\ReviewController::class, 'store'])->name('reviews.store');
+    Route::put('/reviews/{review}', [\App\Http\Controllers\ReviewController::class, 'update'])->name('reviews.update');
+    Route::delete('/reviews/{review}', [\App\Http\Controllers\ReviewController::class, 'destroy'])->name('reviews.destroy');
+    Route::post('/reviews/{review}/vote', [\App\Http\Controllers\ReviewController::class, 'vote'])->name('reviews.vote');
+    Route::post('/reviews/{review}/respond', [\App\Http\Controllers\ReviewController::class, 'respond'])->name('reviews.respond');
+    Route::put('/review-responses/{reviewResponse}', [\App\Http\Controllers\ReviewController::class, 'updateResponse'])->name('review-responses.update');
+    Route::delete('/review-responses/{reviewResponse}', [\App\Http\Controllers\ReviewController::class, 'destroyResponse'])->name('review-responses.destroy');
 });
 
 // Public Business View

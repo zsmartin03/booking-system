@@ -30,6 +30,26 @@ return [
     'email' => 'E-mail',
     'website' => 'Weboldal',
 
+    // Reviews
+    'reviews' => 'Értékelések',
+    'write_review' => 'Értékelés írása',
+    'rating' => 'Értékelés',
+    'review_comment' => 'Vélemény',
+    'submit_review' => 'Értékelés küldése',
+    'verified_booking' => 'Ellenőrzött foglalás',
+    'no_reviews' => 'Még nincsenek értékelések',
+    'average_rating' => 'Átlagos értékelés',
+    'reviews_count' => 'Értékelések',
+    'helpful' => 'Hasznos',
+    'not_helpful' => 'Nem hasznos',
+    'business_response' => 'Vállalkozás válasza',
+    'respond_to_review' => 'Válasz az értékelésre',
+    'your_response' => 'Válasz',
+    'submit_response' => 'Válasz küldése',
+    'edit_response' => 'Válasz szerkesztése',
+    'star' => 'csillag',
+    'stars' => 'csillag',
+
     // Services
     'services' => 'Szolgáltatások',
     'manage_services' => 'Szolgáltatások kezelése',

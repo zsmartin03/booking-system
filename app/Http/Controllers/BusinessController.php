@@ -120,7 +120,23 @@ class BusinessController extends Controller
      */
     public function show(string $id)
     {
-        $business = Business::with(['categories', 'services'])->findOrFail($id);
+        $business = Business::with([
+            'categories',
+            'services',
+            'reviews' => function ($query) {
+                $query->with(['user', 'response.user', 'votes'])
+                    ->orderBy('created_at', 'desc');
+            }
+        ])->findOrFail($id);
+
+        // Separate user's review from other reviews if user is authenticated
+        $userReview = null;
+        $otherReviews = $business->reviews;
+
+        if (Auth::check()) {
+            $userReview = $business->reviews()->where('user_id', Auth::id())->with(['user', 'response.user', 'votes'])->first();
+            $otherReviews = $business->reviews()->where('user_id', '!=', Auth::id())->with(['user', 'response.user', 'votes'])->orderBy('created_at', 'desc')->get();
+        }
 
         $relatedBusinesses = collect();
         if ($business->categories->count() > 0) {
@@ -134,7 +150,7 @@ class BusinessController extends Controller
                 ->get();
         }
 
-        return view('businesses.show', compact('business', 'relatedBusinesses'));
+        return view('businesses.show', compact('business', 'relatedBusinesses', 'userReview', 'otherReviews'));
     }
 
     /**

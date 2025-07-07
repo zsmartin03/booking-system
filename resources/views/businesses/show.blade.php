@@ -149,11 +149,387 @@
                 </div>
             @endif
 
+            <!-- Reviews Section -->
+            <div class="frosted-card overflow-hidden shadow-lg sm:rounded-xl mt-6">
+                <div class="p-4 sm:p-6">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-xl font-semibold text-frappe-text">Reviews</h3>
+                        <div class="flex items-center gap-2">
+                            <div class="text-2xl font-bold text-frappe-text">
+                                {{ number_format($business->average_rating, 1) }}</div>
+                            <div class="flex items-center">
+                                @for ($i = 1; $i <= 5; $i++)
+                                    @if ($i <= floor($business->average_rating))
+                                        <x-heroicon-s-star class="w-5 h-5 text-yellow-400" />
+                                    @elseif ($i - 0.5 <= $business->average_rating)
+                                        <x-heroicon-s-star class="w-5 h-5 text-yellow-400" />
+                                    @else
+                                        <x-heroicon-o-star class="w-5 h-5 text-gray-300" />
+                                    @endif
+                                @endfor
+                            </div>
+                            <span class="text-frappe-subtext1 text-sm">({{ $business->reviews_count }} reviews)</span>
+                        </div>
+                    </div>
+
+                    @auth
+                        @if (auth()->user()->role === 'client' || auth()->user()->role === 'admin')
+                            @if (!$userReview)
+                                <!-- Write Review Form -->
+                                <div class="bg-frappe-surface0/30 rounded-lg p-4 mb-6 border border-frappe-surface2/30">
+                                    <h4 class="font-semibold text-frappe-text mb-4">Write a Review</h4>
+                                    <form id="reviewForm" onsubmit="submitReview(event)" autocomplete="off">
+                                        @csrf
+                                        <div class="mb-4">
+                                            <label class="block text-sm font-medium text-frappe-text mb-2">Rating</label>
+                                            <div class="flex items-center gap-1">
+                                                @for ($i = 1; $i <= 5; $i++)
+                                                    <button type="button" onclick="setRating({{ $i }})"
+                                                        onmouseover="hoverRating({{ $i }})"
+                                                        onmouseout="resetRating()"
+                                                        class="star-button text-gray-300 hover:text-yellow-400 transition-colors">
+                                                        <x-heroicon-s-star class="w-6 h-6" />
+                                                    </button>
+                                                @endfor
+                                            </div>
+                                            <input type="hidden" name="rating" id="rating" value=""
+                                                autocomplete="off">
+                                        </div>
+                                        <div class="mb-4">
+                                            <label for="comment"
+                                                class="block text-sm font-medium text-frappe-text mb-2">Comment</label>
+                                            <textarea name="comment" id="comment" rows="4"
+                                                class="w-full px-3 py-2 border border-frappe-surface2/30 rounded-md bg-frappe-surface0/50 text-frappe-text focus:outline-none focus:ring-2 focus:ring-frappe-blue/50"
+                                                placeholder="Share your experience..." autocomplete="off"></textarea>
+                                        </div>
+                                        <button type="submit"
+                                            class="frosted-button text-white px-4 py-2 rounded-lg transition-all">
+                                            Submit Review
+                                        </button>
+                                    </form>
+                                </div>
+                            @else
+                                <!-- User has already reviewed - show message -->
+                                <div class="bg-frappe-surface0/30 rounded-lg p-4 mb-6 border border-frappe-surface2/30">
+                                    <div class="flex items-center gap-2">
+                                        <x-heroicon-o-check-circle class="w-5 h-5 text-green-400" />
+                                        <span class="text-frappe-text font-medium">You have already reviewed this
+                                            business</span>
+                                    </div>
+                                    <p class="text-frappe-subtext1 text-sm mt-2">
+                                        You can edit or delete your review below using the edit and delete buttons.
+                                    </p>
+                                </div>
+                            @endif
+                        @endif
+                    @endauth
+
+                    <!-- Reviews List -->
+                    <div class="space-y-4" id="reviewsList">
+                        @auth
+                            @if ($userReview)
+                                <!-- User's Own Review (shown first) -->
+                                <div class="bg-frappe-surface0/30 rounded-lg p-4 border border-frappe-surface2/30 ring-2 ring-frappe-blue/30"
+                                    data-review-id="{{ $userReview->id }}">
+                                    <div class="flex items-start justify-between mb-3">
+                                        <div class="flex items-center gap-3">
+                                            <div
+                                                class="w-10 h-10 bg-frappe-blue/20 rounded-full flex items-center justify-center">
+                                                <span
+                                                    class="text-frappe-blue font-semibold">{{ substr($userReview->user->name, 0, 1) }}</span>
+                                            </div>
+                                            <div>
+                                                <div class="flex items-center gap-2">
+                                                    <span
+                                                        class="font-medium text-frappe-text">{{ $userReview->user->name }}</span>
+                                                    <span
+                                                        class="inline-flex items-center gap-1 bg-frappe-blue/20 text-frappe-blue px-2 py-1 rounded-full text-xs">
+                                                        <x-heroicon-s-user class="w-4 h-4" />
+                                                        Your Review
+                                                    </span>
+                                                    @if ($userReview->has_booking)
+                                                        <span
+                                                            class="inline-flex items-center gap-1 bg-green-500/20 text-green-400 px-2 py-1 rounded-full text-xs">
+                                                            <x-heroicon-s-check-badge class="w-4 h-4" />
+                                                            Verified Booking
+                                                        </span>
+                                                    @endif
+                                                </div>
+                                                <div class="flex items-center gap-1 mt-1">
+                                                    @for ($i = 1; $i <= 5; $i++)
+                                                        @if ($i <= $userReview->rating)
+                                                            <x-heroicon-s-star class="w-4 h-4 text-yellow-400" />
+                                                        @else
+                                                            <x-heroicon-o-star class="w-4 h-4 text-gray-300" />
+                                                        @endif
+                                                    @endfor
+                                                    <span
+                                                        class="text-frappe-subtext1 text-sm ml-2">{{ $userReview->created_at->diffForHumans() }}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @if (auth()->id() === $userReview->user_id)
+                                            <!-- Edit/Delete buttons for review owner -->
+                                            <div class="flex items-center gap-2">
+                                                <button onclick="editReview({{ $userReview->id }})"
+                                                    data-rating="{{ $userReview->rating }}"
+                                                    data-comment="{{ htmlspecialchars($userReview->comment, ENT_QUOTES, 'UTF-8') }}"
+                                                    class="edit-button text-white px-4 py-2 rounded-lg inline-flex items-center gap-2 text-sm transition-all"
+                                                    title="Edit Review">
+                                                    <x-heroicon-o-pencil class="w-4 h-4" />
+                                                    <span class="hidden sm:inline">Edit</span>
+                                                </button>
+                                                <button onclick="showDeleteReviewModal({{ $userReview->id }})"
+                                                    class="delete-button text-white px-4 py-2 rounded-lg inline-flex items-center gap-2 text-sm transition-all"
+                                                    title="Delete Review">
+                                                    <x-heroicon-o-trash class="w-4 h-4" />
+                                                    <span class="hidden sm:inline">Delete</span>
+                                                </button>
+                                            </div>
+                                        @endif
+                                    </div>
+
+                                    <!-- Review Content -->
+                                    <div class="review-content-{{ $userReview->id }}">
+                                        <p class="text-frappe-text mb-3">{{ $userReview->comment }}</p>
+                                    </div>
+
+                                    <!-- Edit Form (initially hidden) -->
+                                    <div class="review-edit-form-{{ $userReview->id }} hidden">
+                                        <form onsubmit="updateReview(event, {{ $userReview->id }})">
+                                            @csrf
+                                            <div class="mb-4">
+                                                <label
+                                                    class="block text-sm font-medium text-frappe-text mb-2">Rating</label>
+                                                <div class="flex items-center gap-1">
+                                                    @for ($i = 1; $i <= 5; $i++)
+                                                        <button type="button"
+                                                            onclick="setEditRating({{ $userReview->id }}, {{ $i }})"
+                                                            onmouseover="hoverEditRating({{ $userReview->id }}, {{ $i }})"
+                                                            onmouseout="resetEditRating({{ $userReview->id }})"
+                                                            class="edit-star-button-{{ $userReview->id }} text-gray-300 hover:text-yellow-400 transition-colors">
+                                                            <x-heroicon-s-star class="w-6 h-6" />
+                                                        </button>
+                                                    @endfor
+                                                </div>
+                                                <input type="hidden" name="rating"
+                                                    id="edit-rating-{{ $userReview->id }}"
+                                                    value="{{ $userReview->rating }}">
+                                            </div>
+                                            <div class="mb-4">
+                                                <label
+                                                    class="block text-sm font-medium text-frappe-text mb-2">Comment</label>
+                                                <textarea name="comment" id="edit-comment-{{ $userReview->id }}" rows="4"
+                                                    class="w-full px-3 py-2 border border-frappe-surface2/30 rounded-md bg-frappe-surface0/50 text-frappe-text focus:outline-none focus:ring-2 focus:ring-frappe-blue/50"
+                                                    placeholder="Share your experience...">{{ $userReview->comment }}</textarea>
+                                            </div>
+                                            <div class="flex gap-2">
+                                                <button type="submit"
+                                                    class="frosted-button text-white px-4 py-2 rounded-lg transition-all text-sm">
+                                                    Update Review
+                                                </button>
+                                                <button type="button" onclick="cancelEditReview({{ $userReview->id }})"
+                                                    class="bg-frappe-surface0/50 text-frappe-text px-4 py-2 rounded-lg hover:bg-frappe-surface1/50 transition-all text-sm">
+                                                    Cancel
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+
+                                    <!-- Business Response -->
+                                    @if ($userReview->response)
+                                        <div
+                                            class="response-content-{{ $userReview->response->id }} bg-frappe-surface1/30 rounded-lg p-3 border-l-4 border-frappe-blue mt-3">
+                                            <div class="flex items-center justify-between mb-2">
+                                                <div class="flex items-center gap-2">
+                                                    <x-heroicon-o-building-storefront class="w-4 h-4 text-frappe-blue" />
+                                                    <span class="text-sm font-medium text-frappe-blue">Response from
+                                                        {{ $business->name }}</span>
+                                                    <span
+                                                        class="text-frappe-subtext1 text-xs">{{ $userReview->response->created_at->diffForHumans() }}</span>
+                                                </div>
+                                                @if (auth()->check() && auth()->id() === $business->user_id)
+                                                    <div class="flex items-center gap-2">
+                                                        <button onclick="editResponse({{ $userReview->response->id }})"
+                                                            data-response="{{ htmlspecialchars($userReview->response->response, ENT_QUOTES, 'UTF-8') }}"
+                                                            class="edit-button text-white px-3 py-2 rounded-lg inline-flex items-center gap-2 text-sm transition-all"
+                                                            title="Edit Response">
+                                                            <x-heroicon-o-pencil class="w-4 h-4" />
+                                                            <span class="hidden sm:inline">Edit</span>
+                                                        </button>
+                                                        <button
+                                                            onclick="showDeleteResponseModal({{ $userReview->response->id }})"
+                                                            class="delete-button text-white px-3 py-2 rounded-lg inline-flex items-center gap-2 text-sm transition-all"
+                                                            title="Delete Response">
+                                                            <x-heroicon-o-trash class="w-4 h-4" />
+                                                            <span class="hidden sm:inline">Delete</span>
+                                                        </button>
+                                                    </div>
+                                                @endif
+                                            </div>
+                                            <p class="text-frappe-text text-sm">{{ $userReview->response->response }}</p>
+                                        </div>
+                                    @elseif (auth()->check() && auth()->id() === $business->user_id)
+                                        <!-- Response Form for Business Owner -->
+                                        <div
+                                            class="bg-frappe-surface1/30 rounded-lg p-3 border-l-4 border-frappe-blue mt-3">
+                                            <form onsubmit="submitResponse(event, {{ $userReview->id }})">
+                                                @csrf
+                                                <div class="mb-3">
+                                                    <label class="block text-sm font-medium text-frappe-text mb-2">Respond
+                                                        to this review</label>
+                                                    <textarea name="response" rows="3"
+                                                        class="w-full px-3 py-2 border border-frappe-surface2/30 rounded-md bg-frappe-surface0/50 text-frappe-text focus:outline-none focus:ring-2 focus:ring-frappe-blue/50"
+                                                        placeholder="Write your response..."></textarea>
+                                                </div>
+                                                <button type="submit"
+                                                    class="frosted-button text-white px-4 py-2 rounded-lg transition-all text-sm">
+                                                    Submit Response
+                                                </button>
+                                            </form>
+                                        </div>
+                                    @endif
+                                </div>
+                            @endif
+                        @endauth
+
+                        @if (isset($otherReviews) && $otherReviews->count() > 0)
+                            <!-- Other Reviews -->
+                            @foreach ($otherReviews as $review)
+                                <div class="bg-frappe-surface0/30 rounded-lg p-4 border border-frappe-surface2/30"
+                                    data-review-id="{{ $review->id }}">
+                                    <div class="flex items-start justify-between mb-3">
+                                        <div class="flex items-center gap-3">
+                                            <div
+                                                class="w-10 h-10 bg-frappe-blue/20 rounded-full flex items-center justify-center">
+                                                <span
+                                                    class="text-frappe-blue font-semibold">{{ substr($review->user->name, 0, 1) }}</span>
+                                            </div>
+                                            <div>
+                                                <div class="flex items-center gap-2">
+                                                    <span
+                                                        class="font-medium text-frappe-text">{{ $review->user->name }}</span>
+                                                    @if ($review->has_booking)
+                                                        <span
+                                                            class="inline-flex items-center gap-1 bg-green-500/20 text-green-400 px-2 py-1 rounded-full text-xs">
+                                                            <x-heroicon-s-check-badge class="w-4 h-4" />
+                                                            Verified Booking
+                                                        </span>
+                                                    @endif
+                                                </div>
+                                                <div class="flex items-center gap-1 mt-1">
+                                                    @for ($i = 1; $i <= 5; $i++)
+                                                        @if ($i <= $review->rating)
+                                                            <x-heroicon-s-star class="w-4 h-4 text-yellow-400" />
+                                                        @else
+                                                            <x-heroicon-o-star class="w-4 h-4 text-gray-300" />
+                                                        @endif
+                                                    @endfor
+                                                    <span
+                                                        class="text-frappe-subtext1 text-sm ml-2">{{ $review->created_at->diffForHumans() }}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <p class="text-frappe-text mb-3">{{ $review->comment }}</p>
+
+                                    <!-- Vote buttons -->
+                                    @auth
+                                        @if (auth()->id() !== $review->user_id)
+                                            <div class="flex items-center gap-4 mb-3">
+                                                <button onclick="voteReview({{ $review->id }}, true)"
+                                                    class="vote-button flex items-center gap-1 px-3 py-1 rounded-full text-sm transition-colors
+                                                               {{ $review->getUserVoteType(auth()->id()) === true ? 'bg-green-500/20 text-green-400' : 'bg-frappe-surface0/50 text-frappe-subtext1 hover:bg-green-500/10' }}">
+                                                    <x-heroicon-o-hand-thumb-up class="w-4 h-4" />
+                                                    <span class="upvote-count">{{ $review->upvotes()->count() }}</span>
+                                                </button>
+                                                <button onclick="voteReview({{ $review->id }}, false)"
+                                                    class="vote-button flex items-center gap-1 px-3 py-1 rounded-full text-sm transition-colors
+                                                               {{ $review->getUserVoteType(auth()->id()) === false ? 'bg-red-500/20 text-red-400' : 'bg-frappe-surface0/50 text-frappe-subtext1 hover:bg-red-500/10' }}">
+                                                    <x-heroicon-o-hand-thumb-down class="w-4 h-4" />
+                                                    <span
+                                                        class="downvote-count">{{ $review->downvotes()->count() }}</span>
+                                                </button>
+                                            </div>
+                                        @endif
+                                    @endauth
+
+                                    <!-- Business Response -->
+                                    @if ($review->response)
+                                        <div
+                                            class="response-content-{{ $review->response->id }} bg-frappe-surface1/30 rounded-lg p-3 border-l-4 border-frappe-blue">
+                                            <div class="flex items-center justify-between mb-2">
+                                                <div class="flex items-center gap-2">
+                                                    <x-heroicon-o-building-storefront
+                                                        class="w-4 h-4 text-frappe-blue" />
+                                                    <span class="text-sm font-medium text-frappe-blue">Response from
+                                                        {{ $business->name }}</span>
+                                                    <span
+                                                        class="text-frappe-subtext1 text-xs">{{ $review->response->created_at->diffForHumans() }}</span>
+                                                </div>
+                                                @if (auth()->check() && auth()->id() === $business->user_id)
+                                                    <div class="flex items-center gap-2">
+                                                        <button onclick="editResponse({{ $review->response->id }})"
+                                                            data-response="{{ htmlspecialchars($review->response->response, ENT_QUOTES, 'UTF-8') }}"
+                                                            class="edit-button text-white px-3 py-2 rounded-lg inline-flex items-center gap-2 text-sm transition-all"
+                                                            title="Edit Response">
+                                                            <x-heroicon-o-pencil class="w-4 h-4" />
+                                                            <span class="hidden sm:inline">Edit</span>
+                                                        </button>
+                                                        <button
+                                                            onclick="showDeleteResponseModal({{ $review->response->id }})"
+                                                            class="delete-button text-white px-3 py-2 rounded-lg inline-flex items-center gap-2 text-sm transition-all"
+                                                            title="Delete Response">
+                                                            <x-heroicon-o-trash class="w-4 h-4" />
+                                                            <span class="hidden sm:inline">Delete</span>
+                                                        </button>
+                                                    </div>
+                                                @endif
+                                            </div>
+                                            <p class="text-frappe-text text-sm">{{ $review->response->response }}</p>
+                                        </div>
+                                    @elseif (auth()->check() && auth()->id() === $business->user_id)
+                                        <!-- Response Form for Business Owner -->
+                                        <div
+                                            class="bg-frappe-surface1/30 rounded-lg p-3 border-l-4 border-frappe-blue">
+                                            <form onsubmit="submitResponse(event, {{ $review->id }})">
+                                                @csrf
+                                                <div class="mb-3">
+                                                    <label
+                                                        class="block text-sm font-medium text-frappe-text mb-2">Respond
+                                                        to this review</label>
+                                                    <textarea name="response" rows="3"
+                                                        class="w-full px-3 py-2 border border-frappe-surface2/30 rounded-md bg-frappe-surface0/50 text-frappe-text focus:outline-none focus:ring-2 focus:ring-frappe-blue/50"
+                                                        placeholder="Write your response..."></textarea>
+                                                </div>
+                                                <button type="submit"
+                                                    class="frosted-button text-white px-4 py-2 rounded-lg transition-all text-sm">
+                                                    Submit Response
+                                                </button>
+                                            </form>
+                                        </div>
+                                    @endif
+                                </div>
+                            @endforeach
+                        @endif
+
+                        @if ((!isset($userReview) || !$userReview) && (!isset($otherReviews) || $otherReviews->count() === 0))
+                            <div class="text-center py-8">
+                                <x-heroicon-o-chat-bubble-left-ellipsis
+                                    class="w-12 h-12 text-frappe-subtext1 mx-auto mb-3" />
+                                <p class="text-frappe-subtext1">No reviews yet. Be the first to leave a review!</p>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+            </div>
             <!-- Related Businesses Carousel -->
             @if ($relatedBusinesses->count() > 0)
                 <div class="frosted-card overflow-hidden shadow-lg sm:rounded-xl mt-6">
                     <div class="p-4 sm:p-6">
-                        <h3 class="text-xl font-semibold text-frappe-text mb-4">{{ __('messages.similar_businesses') }}
+                        <h3 class="text-xl font-semibold text-frappe-text mb-4">
+                            {{ __('messages.similar_businesses') }}
                         </h3>
                         <div class="relative">
                             <div class="overflow-x-auto scrollbar-hide">
@@ -203,4 +579,561 @@
             @endif
         </div>
     </div>
+
+    <!-- Delete Review Confirmation Modal -->
+    <div id="deleteReviewModal"
+        class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 backdrop-blur-sm z-50 hidden">
+        <div class="frosted-modal p-6 rounded-2xl shadow-2xl w-full max-w-md mx-4">
+            <h3 class="text-xl font-semibold mb-4 text-frappe-red">Delete Review</h3>
+            <p class="mb-6 text-frappe-text opacity-90">Are you sure you want to delete the review by <span
+                    id="modalReviewUser" class="font-bold text-frappe-lavender"></span>?</p>
+            <div class="flex justify-end gap-3">
+                <button type="button" onclick="hideDeleteReviewModal()"
+                    class="px-6 py-2 bg-gradient-to-r from-gray-500/20 to-gray-600/20 backdrop-blur-sm border border-gray-400/30 text-gray-300 rounded-lg hover:from-gray-500/30 hover:to-gray-600/30 transition-all">
+                    Cancel
+                </button>
+                <button type="button" onclick="confirmDeleteReview()"
+                    class="px-6 py-2 bg-gradient-to-r from-red-500/30 to-pink-500/30 backdrop-blur-sm border border-red-400/40 text-red-300 rounded-lg hover:from-red-500/40 hover:to-pink-500/40 transition-all">
+                    Delete
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Response Confirmation Modal -->
+    <div id="deleteResponseModal" class="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm z-50 hidden">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="frosted-modal p-6 rounded-2xl shadow-2xl w-full max-w-md">
+                <h3 class="text-xl font-semibold mb-4 text-frappe-red">Delete Response</h3>
+                <p class="mb-6 text-frappe-text opacity-90">Are you sure you want to delete the response from <span
+                        id="modalResponseBusiness" class="font-bold text-frappe-lavender"></span>?</p>
+                <div class="flex justify-end gap-3">
+                    <button type="button" onclick="hideDeleteResponseModal()"
+                        class="px-6 py-2 bg-gradient-to-r from-gray-500/20 to-gray-600/20 backdrop-blur-sm border border-gray-400/30 text-gray-300 rounded-lg hover:from-gray-500/30 hover:to-gray-600/30 transition-all">
+                        Cancel
+                    </button>
+                    <button type="button" onclick="confirmDeleteResponse()"
+                        class="px-6 py-2 bg-gradient-to-r from-red-500/30 to-pink-500/30 backdrop-blur-sm border border-red-400/40 text-red-300 rounded-lg hover:from-red-500/40 hover:to-pink-500/40 transition-all">
+                        Delete
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedRating = 0;
+        let editRatings = {};
+
+        // Initialize form on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Clear any cached form data
+            const commentInput = document.getElementById('comment');
+            const ratingInput = document.getElementById('rating');
+
+            if (commentInput) {
+                commentInput.value = '';
+            }
+            if (ratingInput) {
+                ratingInput.value = '';
+            }
+
+            // Reset star display
+            selectedRating = 0;
+            updateStarDisplay(0);
+        });
+
+        // Star rating functions for new reviews
+        function setRating(rating) {
+            selectedRating = rating;
+            document.getElementById('rating').value = rating;
+            updateStarDisplay(rating);
+        }
+
+        function hoverRating(rating) {
+            updateStarDisplay(rating);
+        }
+
+        function resetRating() {
+            updateStarDisplay(selectedRating);
+        }
+
+        function updateStarDisplay(rating) {
+            const stars = document.querySelectorAll('.star-button');
+            stars.forEach((star, index) => {
+                const starIcon = star.querySelector('svg');
+                if (index < rating) {
+                    starIcon.classList.remove('text-gray-300');
+                    starIcon.classList.add('text-yellow-400');
+                } else {
+                    starIcon.classList.remove('text-yellow-400');
+                    starIcon.classList.add('text-gray-300');
+                }
+            });
+        }
+
+        // Star rating functions for editing reviews
+        function setEditRating(reviewId, rating) {
+            editRatings[reviewId] = rating;
+            document.getElementById(`edit-rating-${reviewId}`).value = rating;
+            updateEditStarDisplay(reviewId, rating);
+        }
+
+        function hoverEditRating(reviewId, rating) {
+            updateEditStarDisplay(reviewId, rating);
+        }
+
+        function resetEditRating(reviewId) {
+            const currentRating = editRatings[reviewId] || 0;
+            updateEditStarDisplay(reviewId, currentRating);
+        }
+
+        function updateEditStarDisplay(reviewId, rating) {
+            const stars = document.querySelectorAll(`.edit-star-button-${reviewId}`);
+            stars.forEach((star, index) => {
+                const starIcon = star.querySelector('svg');
+                if (index < rating) {
+                    starIcon.classList.remove('text-gray-300');
+                    starIcon.classList.add('text-yellow-400');
+                } else {
+                    starIcon.classList.remove('text-yellow-400');
+                    starIcon.classList.add('text-gray-300');
+                }
+            });
+        }
+
+        // Review management functions
+        function editReview(reviewId) {
+            // Get data from button attributes
+            const button = event.target.closest('button');
+            const rating = parseInt(button.getAttribute('data-rating'));
+            const comment = button.getAttribute('data-comment');
+
+            // Set initial values
+            editRatings[reviewId] = rating;
+            document.getElementById(`edit-rating-${reviewId}`).value = rating;
+            document.getElementById(`edit-comment-${reviewId}`).value = comment;
+
+            // Update star display
+            updateEditStarDisplay(reviewId, rating);
+
+            // Toggle visibility
+            document.querySelector(`.review-content-${reviewId}`).classList.add('hidden');
+            document.querySelector(`.review-edit-form-${reviewId}`).classList.remove('hidden');
+        }
+
+        function cancelEditReview(reviewId) {
+            // Toggle visibility back
+            document.querySelector(`.review-content-${reviewId}`).classList.remove('hidden');
+            document.querySelector(`.review-edit-form-${reviewId}`).classList.add('hidden');
+        }
+
+        function deleteReview(reviewId) {
+            fetch(`/reviews/${reviewId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Reset the review form before reloading
+                        resetReviewForm();
+
+                        // Remove the review from the page
+                        document.querySelector(`[data-review-id="${reviewId}"]`).remove();
+
+                        // Refresh the page to update the average rating
+                        location.reload();
+                    } else {
+                        alert(data.error || 'Failed to delete review');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Failed to delete review');
+                });
+        }
+
+        function resetReviewForm() {
+            // Clear rating
+            selectedRating = 0;
+            const ratingInput = document.getElementById('rating');
+            if (ratingInput) {
+                ratingInput.value = '';
+            }
+
+            // Clear comment
+            const commentInput = document.getElementById('comment');
+            if (commentInput) {
+                commentInput.value = '';
+            }
+
+            // Reset star display
+            const stars = document.querySelectorAll('.star-button');
+            stars.forEach(star => {
+                const starIcon = star.querySelector('svg');
+                starIcon.classList.remove('text-yellow-400');
+                starIcon.classList.add('text-gray-300');
+            });
+        }
+
+        // Modal functions for delete confirmation
+        let reviewToDelete = null;
+
+        function showDeleteReviewModal(reviewId, userName) {
+            reviewToDelete = reviewId;
+            document.getElementById('modalReviewUser').textContent = userName;
+            document.getElementById('deleteReviewModal').classList.remove('hidden');
+        }
+
+        function hideDeleteReviewModal() {
+            reviewToDelete = null;
+            document.getElementById('deleteReviewModal').classList.add('hidden');
+        }
+
+        function confirmDeleteReview() {
+            if (reviewToDelete) {
+                deleteReview(reviewToDelete);
+                hideDeleteReviewModal();
+            }
+        }
+
+        function updateReview(event, reviewId) {
+            event.preventDefault();
+
+            const form = event.target;
+            const rating = document.getElementById(`edit-rating-${reviewId}`).value;
+            const comment = document.getElementById(`edit-comment-${reviewId}`).value;
+
+            if (!rating) {
+                alert('Please select a rating');
+                return;
+            }
+
+            if (!comment.trim()) {
+                alert('Please write a comment');
+                return;
+            }
+
+            // Show loading state
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Updating...';
+            submitBtn.disabled = true;
+
+            fetch(`/reviews/${reviewId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    body: JSON.stringify({
+                        rating: parseInt(rating),
+                        comment: comment
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Refresh the page to show the updated review
+                        location.reload();
+                    } else {
+                        alert(data.error || 'Failed to update review');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Failed to update review');
+                })
+                .finally(() => {
+                    submitBtn.textContent = originalText;
+                    submitBtn.disabled = false;
+                });
+        }
+
+        function submitReview(event) {
+            event.preventDefault();
+
+            const form = event.target;
+            const rating = document.getElementById('rating').value;
+            const comment = document.getElementById('comment').value;
+
+            if (!rating) {
+                alert('Please select a rating');
+                return;
+            }
+
+            if (!comment.trim()) {
+                alert('Please write a comment');
+                return;
+            }
+
+            // Show loading state
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Submitting...';
+            submitBtn.disabled = true;
+
+            fetch(`/businesses/{{ $business->id }}/reviews`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    body: JSON.stringify({
+                        rating: parseInt(rating),
+                        comment: comment
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Refresh the page to show the new review
+                        location.reload();
+                    } else {
+                        alert(data.error || 'Failed to submit review');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Failed to submit review');
+                })
+                .finally(() => {
+                    submitBtn.textContent = originalText;
+                    submitBtn.disabled = false;
+                });
+        }
+
+        function voteReview(reviewId, isUpvote) {
+            fetch(`/reviews/${reviewId}/vote`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    body: JSON.stringify({
+                        is_upvote: isUpvote
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Update vote counts and button states
+                        const reviewDiv = document.querySelector(`[data-review-id="${reviewId}"]`);
+
+                        // Update upvote count
+                        const upvoteBtn = reviewDiv.querySelector(`button[onclick="voteReview(${reviewId}, true)"]`);
+                        const upvoteCount = upvoteBtn.querySelector('.upvote-count');
+                        upvoteCount.textContent = data.upvotes;
+
+                        // Update downvote count
+                        const downvoteBtn = reviewDiv.querySelector(`button[onclick="voteReview(${reviewId}, false)"]`);
+                        const downvoteCount = downvoteBtn.querySelector('.downvote-count');
+                        downvoteCount.textContent = data.downvotes;
+
+                        // Update button states
+                        upvoteBtn.className = upvoteBtn.className.replace(
+                            /bg-green-500\/20 text-green-400|bg-frappe-surface0\/50 text-frappe-subtext1 hover:bg-green-500\/10/g,
+                            '');
+                        downvoteBtn.className = downvoteBtn.className.replace(
+                            /bg-red-500\/20 text-red-400|bg-frappe-surface0\/50 text-frappe-subtext1 hover:bg-red-500\/10/g,
+                            '');
+
+                        if (data.user_vote === true) {
+                            upvoteBtn.className += ' bg-green-500/20 text-green-400';
+                            downvoteBtn.className += ' bg-frappe-surface0/50 text-frappe-subtext1 hover:bg-red-500/10';
+                        } else if (data.user_vote === false) {
+                            upvoteBtn.className += ' bg-frappe-surface0/50 text-frappe-subtext1 hover:bg-green-500/10';
+                            downvoteBtn.className += ' bg-red-500/20 text-red-400';
+                        } else {
+                            upvoteBtn.className += ' bg-frappe-surface0/50 text-frappe-subtext1 hover:bg-green-500/10';
+                            downvoteBtn.className += ' bg-frappe-surface0/50 text-frappe-subtext1 hover:bg-red-500/10';
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Failed to vote');
+                });
+        }
+
+        function submitResponse(event, reviewId) {
+            event.preventDefault();
+
+            const form = event.target;
+            const response = form.querySelector('textarea[name="response"]').value;
+
+            if (!response.trim()) {
+                alert('Please write a response');
+                return;
+            }
+
+            // Show loading state
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Submitting...';
+            submitBtn.disabled = true;
+
+            fetch(`/reviews/${reviewId}/respond`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    body: JSON.stringify({
+                        response: response
+                    })
+                })
+                .then(response => {
+                    console.log('Response status:', response.status);
+                    console.log('Response headers:', [...response.headers.entries()]);
+
+                    // Get the text first to see what we're getting
+                    return response.text().then(text => {
+                        console.log('Response text:', text);
+
+                        // Check if response is ok
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}, body: ${text}`);
+                        }
+
+                        // Try to parse as JSON
+                        try {
+                            return JSON.parse(text);
+                        } catch (e) {
+                            throw new Error('Response is not valid JSON: ' + text);
+                        }
+                    });
+                })
+                .then(data => {
+                    if (data.success) {
+                        // Refresh the page to show the new response
+                        location.reload();
+                    } else {
+                        alert(data.error || 'Failed to submit response');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Failed to submit response: ' + error.message);
+                })
+                .finally(() => {
+                    submitBtn.textContent = originalText;
+                    submitBtn.disabled = false;
+                });
+        }
+
+        // Response management functions
+        function editResponse(responseId) {
+            // Get data from button attributes
+            const button = event.target.closest('button');
+            const responseText = button.getAttribute('data-response');
+
+            // Set initial values
+            document.getElementById(`edit-response-${responseId}`).value = responseText;
+
+            // Toggle visibility
+            document.querySelector(`.response-content-${responseId}`).classList.add('hidden');
+            document.querySelector(`.response-edit-form-${responseId}`).classList.remove('hidden');
+        }
+
+        function cancelEditResponse(responseId) {
+            // Toggle visibility back
+            document.querySelector(`.response-content-${responseId}`).classList.remove('hidden');
+            document.querySelector(`.response-edit-form-${responseId}`).classList.add('hidden');
+        }
+
+        function updateResponse(event, responseId) {
+            event.preventDefault();
+
+            const form = event.target;
+            const response = document.getElementById(`edit-response-${responseId}`).value;
+
+            if (!response.trim()) {
+                alert('Please write a response');
+                return;
+            }
+
+            // Show loading state
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Updating...';
+            submitBtn.disabled = true;
+
+            fetch(`/review-responses/${responseId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    body: JSON.stringify({
+                        response: response
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Refresh the page to show the updated response
+                        location.reload();
+                    } else {
+                        alert(data.error || 'Failed to update response');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Failed to update response');
+                })
+                .finally(() => {
+                    submitBtn.textContent = originalText;
+                    submitBtn.disabled = false;
+                });
+        }
+
+        function deleteResponse(responseId) {
+            fetch(`/review-responses/${responseId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Refresh the page to show the changes
+                        location.reload();
+                    } else {
+                        alert(data.error || 'Failed to delete response');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Failed to delete response');
+                });
+        }
+
+        // Response modal functions
+        let responseToDelete = null;
+
+        function showDeleteResponseModal(responseId, businessName) {
+            responseToDelete = responseId;
+            document.getElementById('modalResponseBusiness').textContent = businessName;
+            document.getElementById('deleteResponseModal').classList.remove('hidden');
+        }
+
+        function hideDeleteResponseModal() {
+            responseToDelete = null;
+            document.getElementById('deleteResponseModal').classList.add('hidden');
+        }
+
+        function confirmDeleteResponse() {
+            if (responseToDelete) {
+                deleteResponse(responseToDelete);
+                hideDeleteResponseModal();
+            }
+        }
+    </script>
 </x-app-layout>
