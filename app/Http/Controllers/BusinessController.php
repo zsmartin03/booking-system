@@ -63,6 +63,48 @@ class BusinessController extends Controller
         }
 
         $businesses = $query->get();
+
+        $businesses = $businesses->map(function ($business) {
+            $business->average_rating = $business->reviews()->avg('rating') ?? 0;
+            $business->reviews_count = $business->reviews()->count();
+            return $business;
+        });
+
+        if ($request->filled('min_rating')) {
+            $minRating = floatval($request->min_rating);
+            $businesses = $businesses->filter(function ($business) use ($minRating) {
+                return $business->average_rating >= $minRating && $business->reviews_count > 0;
+            });
+        }
+
+        $sortBy = $request->get('sort', 'name');
+        switch ($sortBy) {
+            case 'rating_high':
+                $businesses = $businesses->sortBy([
+                    ['average_rating', 'desc'],
+                    ['name', 'asc']
+                ]);
+                break;
+            case 'rating_low':
+                $businesses = $businesses->sortBy([
+                    ['average_rating', 'asc'],
+                    ['name', 'asc']
+                ]);
+                break;
+            case 'reviews_count':
+                $businesses = $businesses->sortBy([
+                    ['reviews_count', 'desc'],
+                    ['name', 'asc']
+                ]);
+                break;
+            case 'name':
+            default:
+                $businesses = $businesses->sortBy('name');
+                break;
+        }
+
+        $businesses = $businesses->values();
+
         $categories = Category::orderBy('name')->get();
 
         return view('businesses.public_index', compact('businesses', 'categories'));
@@ -118,24 +160,83 @@ class BusinessController extends Controller
     /**
      * Display the specified business (public view).
      */
-    public function show(string $id)
+    public function show(string $id, Request $request)
     {
         $business = Business::with([
             'categories',
             'services',
-            'reviews' => function ($query) {
-                $query->with(['user', 'response.user', 'votes'])
-                    ->orderBy('created_at', 'desc');
-            }
         ])->findOrFail($id);
 
-        // Separate user's review from other reviews if user is authenticated
+        $sortBy = $request->get('sort', 'helpful'); // default to most helpful
+        $filterRating = $request->get('rating');
+        $filterBooking = $request->get('booking');
+        $page = $request->get('page', 1);
+
         $userReview = null;
-        $otherReviews = $business->reviews;
 
         if (Auth::check()) {
-            $userReview = $business->reviews()->where('user_id', Auth::id())->with(['user', 'response.user', 'votes'])->first();
-            $otherReviews = $business->reviews()->where('user_id', '!=', Auth::id())->with(['user', 'response.user', 'votes'])->orderBy('created_at', 'desc')->get();
+            $userReview = $business->reviews()
+                ->where('user_id', Auth::id())
+                ->with(['user', 'response.user', 'votes'])
+                ->first();
+        }
+
+        $reviewsQuery = $business->reviews()
+            ->with(['user', 'response.user', 'votes'])
+            ->when(Auth::check(), function ($query) {
+                $query->where('reviews.user_id', '!=', Auth::id());
+            });
+
+        if ($filterRating) {
+            $reviewsQuery->where('rating', $filterRating);
+        }
+
+        if ($filterBooking === 'verified') {
+            $reviewsQuery->where('has_booking', true);
+        }
+
+        switch ($sortBy) {
+            case 'rating_high':
+                $reviewsQuery->orderBy('rating', 'desc')->orderBy('created_at', 'desc');
+                break;
+            case 'rating_low':
+                $reviewsQuery->orderBy('rating', 'asc')->orderBy('created_at', 'desc');
+                break;
+            case 'date_new':
+                $reviewsQuery->orderBy('created_at', 'desc');
+                break;
+            case 'date_old':
+                $reviewsQuery->orderBy('created_at', 'asc');
+                break;
+            case 'helpful':
+            default:
+                // Sort by best like/dislike ratio using raw SQL for efficiency
+                $reviewsQuery->leftJoin('review_votes', 'reviews.id', '=', 'review_votes.review_id')
+                    ->selectRaw('reviews.*,
+                        COALESCE(SUM(CASE WHEN review_votes.is_upvote = 1 THEN 1 ELSE 0 END), 0) as upvotes_count,
+                        COALESCE(SUM(CASE WHEN review_votes.is_upvote = 0 THEN 1 ELSE 0 END), 0) as downvotes_count,
+                        (COALESCE(SUM(CASE WHEN review_votes.is_upvote = 1 THEN 1 ELSE 0 END), 0) -
+                         COALESCE(SUM(CASE WHEN review_votes.is_upvote = 0 THEN 1 ELSE 0 END), 0)) as net_votes')
+                    ->groupBy('reviews.id')
+                    ->orderBy('net_votes', 'desc')
+                    ->orderBy('reviews.created_at', 'desc');
+                break;
+        }
+
+        $otherReviews = $reviewsQuery->paginate(10, ['*'], 'page', $page)->appends($request->query());
+
+        if ($request->ajax()) {
+            return response()->json([
+                'html' => view('businesses.partials.reviews-list', compact('otherReviews', 'business'))->render(),
+                'pagination' => [
+                    'current_page' => $otherReviews->currentPage(),
+                    'last_page' => $otherReviews->lastPage(),
+                    'per_page' => $otherReviews->perPage(),
+                    'total' => $otherReviews->total(),
+                    'from' => $otherReviews->firstItem(),
+                    'to' => $otherReviews->lastItem(),
+                ]
+            ]);
         }
 
         $relatedBusinesses = collect();

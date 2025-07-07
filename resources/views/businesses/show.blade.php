@@ -104,7 +104,6 @@
                         </div>
                     @endif
 
-                    {{-- Move the book_now button here, inside the card --}}
                     @auth
                         @if (in_array(auth()->user()->role, ['client', 'provider', 'admin']))
                             <div class="mt-6 text-center sm:text-left">
@@ -124,7 +123,7 @@
                         </div>
                     @endauth
                 </div>
-            </div> <!-- End .frosted-card -->
+            </div>
 
             <!-- Services Section -->
             @if ($business->services->count() > 0)
@@ -153,7 +152,7 @@
             <div class="frosted-card overflow-hidden shadow-lg sm:rounded-xl mt-6">
                 <div class="p-4 sm:p-6">
                     <div class="flex items-center justify-between mb-6">
-                        <h3 class="text-xl font-semibold text-frappe-text">Reviews</h3>
+                        <h3 class="text-xl font-semibold text-frappe-text">{{ __('messages.reviews') }}</h3>
                         <div class="flex items-center gap-2">
                             <div class="text-2xl font-bold text-frappe-text">
                                 {{ number_format($business->average_rating, 1) }}</div>
@@ -168,7 +167,8 @@
                                     @endif
                                 @endfor
                             </div>
-                            <span class="text-frappe-subtext1 text-sm">({{ $business->reviews_count }} reviews)</span>
+                            <span class="text-frappe-subtext1 text-sm">({{ $business->reviews_count }}
+                                {{ __('messages.reviews_count') }})</span>
                         </div>
                     </div>
 
@@ -177,11 +177,12 @@
                             @if (!$userReview)
                                 <!-- Write Review Form -->
                                 <div class="bg-frappe-surface0/30 rounded-lg p-4 mb-6 border border-frappe-surface2/30">
-                                    <h4 class="font-semibold text-frappe-text mb-4">Write a Review</h4>
+                                    <h4 class="font-semibold text-frappe-text mb-4">{{ __('messages.write_review') }}</h4>
                                     <form id="reviewForm" onsubmit="submitReview(event)" autocomplete="off">
                                         @csrf
                                         <div class="mb-4">
-                                            <label class="block text-sm font-medium text-frappe-text mb-2">Rating</label>
+                                            <label
+                                                class="block text-sm font-medium text-frappe-text mb-2">{{ __('messages.rating') }}</label>
                                             <div class="flex items-center gap-1">
                                                 @for ($i = 1; $i <= 5; $i++)
                                                     <button type="button" onclick="setRating({{ $i }})"
@@ -197,14 +198,14 @@
                                         </div>
                                         <div class="mb-4">
                                             <label for="comment"
-                                                class="block text-sm font-medium text-frappe-text mb-2">Comment</label>
+                                                class="block text-sm font-medium text-frappe-text mb-2">{{ __('messages.comment') }}</label>
                                             <textarea name="comment" id="comment" rows="4"
                                                 class="w-full px-3 py-2 border border-frappe-surface2/30 rounded-md bg-frappe-surface0/50 text-frappe-text focus:outline-none focus:ring-2 focus:ring-frappe-blue/50"
-                                                placeholder="Share your experience..." autocomplete="off"></textarea>
+                                                placeholder="{{ __('messages.share_your_experience') }}" autocomplete="off"></textarea>
                                         </div>
                                         <button type="submit"
                                             class="frosted-button text-white px-4 py-2 rounded-lg transition-all">
-                                            Submit Review
+                                            {{ __('messages.submit_review') }}
                                         </button>
                                     </form>
                                 </div>
@@ -213,16 +214,110 @@
                                 <div class="bg-frappe-surface0/30 rounded-lg p-4 mb-6 border border-frappe-surface2/30">
                                     <div class="flex items-center gap-2">
                                         <x-heroicon-o-check-circle class="w-5 h-5 text-green-400" />
-                                        <span class="text-frappe-text font-medium">You have already reviewed this
-                                            business</span>
+                                        <span
+                                            class="text-frappe-text font-medium">{{ __('messages.already_reviewed') }}</span>
                                     </div>
                                     <p class="text-frappe-subtext1 text-sm mt-2">
-                                        You can edit or delete your review below using the edit and delete buttons.
+                                        {{ __('messages.edit_delete_review_info') }}
                                     </p>
                                 </div>
                             @endif
                         @endif
                     @endauth
+
+                    <!-- Sort and Filter Controls -->
+                    @if ((isset($otherReviews) && $otherReviews->count() > 0) || (isset($userReview) && $userReview))
+                        <div class="mb-6 p-4 bg-frappe-surface0/20 rounded-lg border border-frappe-surface2/20">
+                            <!-- Filter Status Info -->
+                            @if (request('sort') || request('rating') || request('booking'))
+                                <div class="mb-3 p-2 bg-frappe-blue/10 border border-frappe-blue/20 rounded-md">
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex items-center gap-2 text-sm text-frappe-blue">
+                                            <x-heroicon-o-funnel class="w-4 h-4" />
+                                            <span>
+                                                @if (isset($otherReviews))
+                                                    {{ __('messages.showing') }} {{ $otherReviews->count() }}
+                                                    {{ __('messages.of') }}
+                                                    {{ $business->reviews_count - (isset($userReview) && $userReview ? 1 : 0) }}
+                                                    {{ __('messages.reviews') }}
+                                                @endif
+                                                @if (request('rating'))
+                                                    • {{ request('rating') }} {{ __('messages.stars') }}
+                                                @endif
+                                                @if (request('booking') === 'verified')
+                                                    • {{ __('messages.verified_only') }}
+                                                @endif
+                                            </span>
+                                        </div>
+                                        <button onclick="clearFilters()"
+                                            class="text-xs px-2 py-1 bg-frappe-red/20 text-frappe-red border border-frappe-red/30 rounded hover:bg-frappe-red/30 transition-all">
+                                            {{ __('messages.clear_filters') }}
+                                        </button>
+                                    </div>
+                                </div>
+                            @endif
+
+                            <div class="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+                                <div class="flex flex-col sm:flex-row gap-4">
+                                    <!-- Sort Options -->
+                                    <div class="flex items-center gap-2">
+                                        <label
+                                            class="text-sm font-medium text-frappe-text">{{ __('messages.sort_reviews') }}:</label>
+                                        <select id="sortReviews" onchange="applyFilters()"
+                                            class="px-3 py-1 bg-frappe-surface1/30 border border-frappe-surface2/30 rounded-md text-frappe-text text-sm focus:outline-none focus:ring-2 focus:ring-frappe-blue/50">
+                                            <option value="helpful"
+                                                {{ request('sort') === 'helpful' || !request('sort') ? 'selected' : '' }}>
+                                                {{ __('messages.sort_by_helpful') }}</option>
+                                            <option value="rating_high"
+                                                {{ request('sort') === 'rating_high' ? 'selected' : '' }}>
+                                                {{ __('messages.sort_by_rating_high') }}</option>
+                                            <option value="rating_low"
+                                                {{ request('sort') === 'rating_low' ? 'selected' : '' }}>
+                                                {{ __('messages.sort_by_rating_low') }}</option>
+                                            <option value="date_new"
+                                                {{ request('sort') === 'date_new' ? 'selected' : '' }}>
+                                                {{ __('messages.sort_by_date_new') }}</option>
+                                            <option value="date_old"
+                                                {{ request('sort') === 'date_old' ? 'selected' : '' }}>
+                                                {{ __('messages.sort_by_date_old') }}</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Filter by Rating -->
+                                    <div class="flex items-center gap-2">
+                                        <label
+                                            class="text-sm font-medium text-frappe-text">{{ __('messages.filter_reviews') }}:</label>
+                                        <select id="filterRating" onchange="applyFilters()"
+                                            class="px-3 py-1 bg-frappe-surface1/30 border border-frappe-surface2/30 rounded-md text-frappe-text text-sm focus:outline-none focus:ring-2 focus:ring-frappe-blue/50">
+                                            <option value="" {{ !request('rating') ? 'selected' : '' }}>
+                                                {{ __('messages.all_ratings') }}</option>
+                                            <option value="5" {{ request('rating') == '5' ? 'selected' : '' }}>
+                                                ⭐⭐⭐⭐⭐ (5)</option>
+                                            <option value="4" {{ request('rating') == '4' ? 'selected' : '' }}>
+                                                ⭐⭐⭐⭐ (4)</option>
+                                            <option value="3" {{ request('rating') == '3' ? 'selected' : '' }}>
+                                                ⭐⭐⭐ (3)</option>
+                                            <option value="2" {{ request('rating') == '2' ? 'selected' : '' }}>⭐⭐
+                                                (2)</option>
+                                            <option value="1" {{ request('rating') == '1' ? 'selected' : '' }}>⭐
+                                                (1)</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Filter by Booking Status -->
+                                    <div class="flex items-center gap-2">
+                                        <label
+                                            class="flex items-center gap-2 text-sm font-medium text-frappe-text cursor-pointer">
+                                            <input type="checkbox" id="filterBooking" onchange="applyFilters()"
+                                                {{ request('booking') === 'verified' ? 'checked' : '' }}
+                                                class="rounded border-frappe-surface2/30 bg-frappe-surface0/50 text-frappe-blue focus:ring-frappe-blue/50">
+                                            {{ __('messages.with_booking') }}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
 
                     <!-- Reviews List -->
                     <div class="space-y-4" id="reviewsList">
@@ -245,13 +340,13 @@
                                                     <span
                                                         class="inline-flex items-center gap-1 bg-frappe-blue/20 text-frappe-blue px-2 py-1 rounded-full text-xs">
                                                         <x-heroicon-s-user class="w-4 h-4" />
-                                                        Your Review
+                                                        {{ __('messages.your_review') }}
                                                     </span>
                                                     @if ($userReview->has_booking)
                                                         <span
                                                             class="inline-flex items-center gap-1 bg-green-500/20 text-green-400 px-2 py-1 rounded-full text-xs">
                                                             <x-heroicon-s-check-badge class="w-4 h-4" />
-                                                            Verified Booking
+                                                            {{ __('messages.verified_booking') }}
                                                         </span>
                                                     @endif
                                                 </div>
@@ -275,15 +370,16 @@
                                                     data-rating="{{ $userReview->rating }}"
                                                     data-comment="{{ htmlspecialchars($userReview->comment, ENT_QUOTES, 'UTF-8') }}"
                                                     class="edit-button text-white px-4 py-2 rounded-lg inline-flex items-center gap-2 text-sm transition-all"
-                                                    title="Edit Review">
+                                                    title="{{ __('messages.edit') }} {{ __('messages.reviews') }}">
                                                     <x-heroicon-o-pencil class="w-4 h-4" />
-                                                    <span class="hidden sm:inline">Edit</span>
+                                                    <span class="hidden sm:inline">{{ __('messages.edit') }}</span>
                                                 </button>
-                                                <button onclick="showDeleteReviewModal({{ $userReview->id }})"
+                                                <button
+                                                    onclick="showDeleteReviewModal({{ $userReview->id }}, '{{ addslashes($business->name) }}')"
                                                     class="delete-button text-white px-4 py-2 rounded-lg inline-flex items-center gap-2 text-sm transition-all"
-                                                    title="Delete Review">
+                                                    title="{{ __('messages.delete') }} {{ __('messages.reviews') }}">
                                                     <x-heroicon-o-trash class="w-4 h-4" />
-                                                    <span class="hidden sm:inline">Delete</span>
+                                                    <span class="hidden sm:inline">{{ __('messages.delete') }}</span>
                                                 </button>
                                             </div>
                                         @endif
@@ -300,7 +396,7 @@
                                             @csrf
                                             <div class="mb-4">
                                                 <label
-                                                    class="block text-sm font-medium text-frappe-text mb-2">Rating</label>
+                                                    class="block text-sm font-medium text-frappe-text mb-2">{{ __('messages.rating') }}</label>
                                                 <div class="flex items-center gap-1">
                                                     @for ($i = 1; $i <= 5; $i++)
                                                         <button type="button"
@@ -318,19 +414,19 @@
                                             </div>
                                             <div class="mb-4">
                                                 <label
-                                                    class="block text-sm font-medium text-frappe-text mb-2">Comment</label>
+                                                    class="block text-sm font-medium text-frappe-text mb-2">{{ __('messages.comment') }}</label>
                                                 <textarea name="comment" id="edit-comment-{{ $userReview->id }}" rows="4"
                                                     class="w-full px-3 py-2 border border-frappe-surface2/30 rounded-md bg-frappe-surface0/50 text-frappe-text focus:outline-none focus:ring-2 focus:ring-frappe-blue/50"
-                                                    placeholder="Share your experience...">{{ $userReview->comment }}</textarea>
+                                                    placeholder="{{ __('messages.share_your_experience') }}">{{ $userReview->comment }}</textarea>
                                             </div>
                                             <div class="flex gap-2">
                                                 <button type="submit"
                                                     class="frosted-button text-white px-4 py-2 rounded-lg transition-all text-sm">
-                                                    Update Review
+                                                    {{ __('messages.update_review') }}
                                                 </button>
                                                 <button type="button" onclick="cancelEditReview({{ $userReview->id }})"
                                                     class="bg-frappe-surface0/50 text-frappe-text px-4 py-2 rounded-lg hover:bg-frappe-surface1/50 transition-all text-sm">
-                                                    Cancel
+                                                    {{ __('messages.cancel') }}
                                                 </button>
                                             </div>
                                         </form>
@@ -343,7 +439,8 @@
                                             <div class="flex items-center justify-between mb-2">
                                                 <div class="flex items-center gap-2">
                                                     <x-heroicon-o-building-storefront class="w-4 h-4 text-frappe-blue" />
-                                                    <span class="text-sm font-medium text-frappe-blue">Response from
+                                                    <span
+                                                        class="text-sm font-medium text-frappe-blue">{{ __('messages.response_from') }}
                                                         {{ $business->name }}</span>
                                                     <span
                                                         class="text-frappe-subtext1 text-xs">{{ $userReview->response->created_at->diffForHumans() }}</span>
@@ -353,16 +450,18 @@
                                                         <button onclick="editResponse({{ $userReview->response->id }})"
                                                             data-response="{{ htmlspecialchars($userReview->response->response, ENT_QUOTES, 'UTF-8') }}"
                                                             class="edit-button text-white px-3 py-2 rounded-lg inline-flex items-center gap-2 text-sm transition-all"
-                                                            title="Edit Response">
+                                                            title="{{ __('messages.edit_response') }}">
                                                             <x-heroicon-o-pencil class="w-4 h-4" />
-                                                            <span class="hidden sm:inline">Edit</span>
+                                                            <span
+                                                                class="hidden sm:inline">{{ __('messages.edit') }}</span>
                                                         </button>
                                                         <button
-                                                            onclick="showDeleteResponseModal({{ $userReview->response->id }})"
+                                                            onclick="showDeleteResponseModal({{ $userReview->response->id }}, '{{ addslashes($business->name) }}')"
                                                             class="delete-button text-white px-3 py-2 rounded-lg inline-flex items-center gap-2 text-sm transition-all"
-                                                            title="Delete Response">
+                                                            title="{{ __('messages.delete_response') }}">
                                                             <x-heroicon-o-trash class="w-4 h-4" />
-                                                            <span class="hidden sm:inline">Delete</span>
+                                                            <span
+                                                                class="hidden sm:inline">{{ __('messages.delete') }}</span>
                                                         </button>
                                                     </div>
                                                 @endif
@@ -376,15 +475,15 @@
                                             <form onsubmit="submitResponse(event, {{ $userReview->id }})">
                                                 @csrf
                                                 <div class="mb-3">
-                                                    <label class="block text-sm font-medium text-frappe-text mb-2">Respond
-                                                        to this review</label>
+                                                    <label
+                                                        class="block text-sm font-medium text-frappe-text mb-2">{{ __('messages.respond_to_review') }}</label>
                                                     <textarea name="response" rows="3"
                                                         class="w-full px-3 py-2 border border-frappe-surface2/30 rounded-md bg-frappe-surface0/50 text-frappe-text focus:outline-none focus:ring-2 focus:ring-frappe-blue/50"
-                                                        placeholder="Write your response..."></textarea>
+                                                        placeholder="{{ __('messages.write_your_response') }}"></textarea>
                                                 </div>
                                                 <button type="submit"
                                                     class="frosted-button text-white px-4 py-2 rounded-lg transition-all text-sm">
-                                                    Submit Response
+                                                    {{ __('messages.submit_response') }}
                                                 </button>
                                             </form>
                                         </div>
@@ -394,133 +493,36 @@
                         @endauth
 
                         @if (isset($otherReviews) && $otherReviews->count() > 0)
-                            <!-- Other Reviews -->
-                            @foreach ($otherReviews as $review)
-                                <div class="bg-frappe-surface0/30 rounded-lg p-4 border border-frappe-surface2/30"
-                                    data-review-id="{{ $review->id }}">
-                                    <div class="flex items-start justify-between mb-3">
-                                        <div class="flex items-center gap-3">
-                                            <div
-                                                class="w-10 h-10 bg-frappe-blue/20 rounded-full flex items-center justify-center">
-                                                <span
-                                                    class="text-frappe-blue font-semibold">{{ substr($review->user->name, 0, 1) }}</span>
-                                            </div>
-                                            <div>
-                                                <div class="flex items-center gap-2">
-                                                    <span
-                                                        class="font-medium text-frappe-text">{{ $review->user->name }}</span>
-                                                    @if ($review->has_booking)
-                                                        <span
-                                                            class="inline-flex items-center gap-1 bg-green-500/20 text-green-400 px-2 py-1 rounded-full text-xs">
-                                                            <x-heroicon-s-check-badge class="w-4 h-4" />
-                                                            Verified Booking
-                                                        </span>
-                                                    @endif
-                                                </div>
-                                                <div class="flex items-center gap-1 mt-1">
-                                                    @for ($i = 1; $i <= 5; $i++)
-                                                        @if ($i <= $review->rating)
-                                                            <x-heroicon-s-star class="w-4 h-4 text-yellow-400" />
-                                                        @else
-                                                            <x-heroicon-o-star class="w-4 h-4 text-gray-300" />
-                                                        @endif
-                                                    @endfor
-                                                    <span
-                                                        class="text-frappe-subtext1 text-sm ml-2">{{ $review->created_at->diffForHumans() }}</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <p class="text-frappe-text mb-3">{{ $review->comment }}</p>
-
-                                    <!-- Vote buttons -->
-                                    @auth
-                                        @if (auth()->id() !== $review->user_id)
-                                            <div class="flex items-center gap-4 mb-3">
-                                                <button onclick="voteReview({{ $review->id }}, true)"
-                                                    class="vote-button flex items-center gap-1 px-3 py-1 rounded-full text-sm transition-colors
-                                                               {{ $review->getUserVoteType(auth()->id()) === true ? 'bg-green-500/20 text-green-400' : 'bg-frappe-surface0/50 text-frappe-subtext1 hover:bg-green-500/10' }}">
-                                                    <x-heroicon-o-hand-thumb-up class="w-4 h-4" />
-                                                    <span class="upvote-count">{{ $review->upvotes()->count() }}</span>
-                                                </button>
-                                                <button onclick="voteReview({{ $review->id }}, false)"
-                                                    class="vote-button flex items-center gap-1 px-3 py-1 rounded-full text-sm transition-colors
-                                                               {{ $review->getUserVoteType(auth()->id()) === false ? 'bg-red-500/20 text-red-400' : 'bg-frappe-surface0/50 text-frappe-subtext1 hover:bg-red-500/10' }}">
-                                                    <x-heroicon-o-hand-thumb-down class="w-4 h-4" />
-                                                    <span
-                                                        class="downvote-count">{{ $review->downvotes()->count() }}</span>
-                                                </button>
-                                            </div>
-                                        @endif
-                                    @endauth
-
-                                    <!-- Business Response -->
-                                    @if ($review->response)
-                                        <div
-                                            class="response-content-{{ $review->response->id }} bg-frappe-surface1/30 rounded-lg p-3 border-l-4 border-frappe-blue">
-                                            <div class="flex items-center justify-between mb-2">
-                                                <div class="flex items-center gap-2">
-                                                    <x-heroicon-o-building-storefront
-                                                        class="w-4 h-4 text-frappe-blue" />
-                                                    <span class="text-sm font-medium text-frappe-blue">Response from
-                                                        {{ $business->name }}</span>
-                                                    <span
-                                                        class="text-frappe-subtext1 text-xs">{{ $review->response->created_at->diffForHumans() }}</span>
-                                                </div>
-                                                @if (auth()->check() && auth()->id() === $business->user_id)
-                                                    <div class="flex items-center gap-2">
-                                                        <button onclick="editResponse({{ $review->response->id }})"
-                                                            data-response="{{ htmlspecialchars($review->response->response, ENT_QUOTES, 'UTF-8') }}"
-                                                            class="edit-button text-white px-3 py-2 rounded-lg inline-flex items-center gap-2 text-sm transition-all"
-                                                            title="Edit Response">
-                                                            <x-heroicon-o-pencil class="w-4 h-4" />
-                                                            <span class="hidden sm:inline">Edit</span>
-                                                        </button>
-                                                        <button
-                                                            onclick="showDeleteResponseModal({{ $review->response->id }})"
-                                                            class="delete-button text-white px-3 py-2 rounded-lg inline-flex items-center gap-2 text-sm transition-all"
-                                                            title="Delete Response">
-                                                            <x-heroicon-o-trash class="w-4 h-4" />
-                                                            <span class="hidden sm:inline">Delete</span>
-                                                        </button>
-                                                    </div>
-                                                @endif
-                                            </div>
-                                            <p class="text-frappe-text text-sm">{{ $review->response->response }}</p>
-                                        </div>
-                                    @elseif (auth()->check() && auth()->id() === $business->user_id)
-                                        <!-- Response Form for Business Owner -->
-                                        <div
-                                            class="bg-frappe-surface1/30 rounded-lg p-3 border-l-4 border-frappe-blue">
-                                            <form onsubmit="submitResponse(event, {{ $review->id }})">
-                                                @csrf
-                                                <div class="mb-3">
-                                                    <label
-                                                        class="block text-sm font-medium text-frappe-text mb-2">Respond
-                                                        to this review</label>
-                                                    <textarea name="response" rows="3"
-                                                        class="w-full px-3 py-2 border border-frappe-surface2/30 rounded-md bg-frappe-surface0/50 text-frappe-text focus:outline-none focus:ring-2 focus:ring-frappe-blue/50"
-                                                        placeholder="Write your response..."></textarea>
-                                                </div>
-                                                <button type="submit"
-                                                    class="frosted-button text-white px-4 py-2 rounded-lg transition-all text-sm">
-                                                    Submit Response
-                                                </button>
-                                            </form>
-                                        </div>
-                                    @endif
-                                </div>
-                            @endforeach
+                            <!-- Other Reviews Container -->
+                            <div id="otherReviewsContainer">
+                                @include('businesses.partials.reviews-list', [
+                                    'otherReviews' => $otherReviews,
+                                    'business' => $business,
+                                ])
+                            </div>
                         @endif
 
                         @if ((!isset($userReview) || !$userReview) && (!isset($otherReviews) || $otherReviews->count() === 0))
                             <div class="text-center py-8">
                                 <x-heroicon-o-chat-bubble-left-ellipsis
                                     class="w-12 h-12 text-frappe-subtext1 mx-auto mb-3" />
-                                <p class="text-frappe-subtext1">No reviews yet. Be the first to leave a review!</p>
+                                <p class="text-frappe-subtext1">{{ __('messages.no_reviews') }}.
+                                    {{ __('messages.first_review') }}</p>
                             </div>
                         @endif
+                    </div>
+
+                    <!-- Pagination Controls -->
+                    <div id="paginationContainer"
+                        class="mt-6 flex flex-col sm:flex-row items-center justify-between gap-4"
+                        style="display: none;">
+                        <div class="text-sm text-frappe-subtext1">
+                            <span
+                                id="paginationInfo">{{ __('messages.showing_reviews', ['from' => 'FROM_PLACEHOLDER', 'to' => 'TO_PLACEHOLDER', 'total' => 'TOTAL_PLACEHOLDER']) }}</span>
+                        </div>
+                        <div class="flex items-center gap-2" id="paginationButtons">
+                            <!-- Pagination buttons will be dynamically generated -->
+                        </div>
                     </div>
                 </div>
             </div>
@@ -544,6 +546,28 @@
                                                         {{ $relatedBusiness->name }}
                                                     </a>
                                                 </h4>
+
+                                                <!-- Average Rating Display -->
+                                                <div class="flex items-center gap-2 mb-3">
+                                                    <div class="flex items-center">
+                                                        @for ($i = 1; $i <= 5; $i++)
+                                                            @if ($i <= floor($relatedBusiness->average_rating))
+                                                                <x-heroicon-s-star class="w-4 h-4 text-yellow-400" />
+                                                            @elseif ($i - 0.5 <= $relatedBusiness->average_rating)
+                                                                <x-heroicon-s-star class="w-4 h-4 text-yellow-400" />
+                                                            @else
+                                                                <x-heroicon-o-star class="w-4 h-4 text-gray-300" />
+                                                            @endif
+                                                        @endfor
+                                                    </div>
+                                                    <span class="text-sm font-medium text-frappe-text">
+                                                        {{ number_format($relatedBusiness->average_rating, 1) }}
+                                                    </span>
+                                                    <span class="text-frappe-subtext1 text-xs">
+                                                        ({{ $relatedBusiness->reviews_count }}
+                                                        {{ __('messages.reviews_count') }})
+                                                    </span>
+                                                </div>
                                                 @if ($relatedBusiness->categories->count() > 0)
                                                     <div class="flex flex-wrap gap-1 mb-2">
                                                         @foreach ($relatedBusiness->categories as $category)
@@ -584,17 +608,17 @@
     <div id="deleteReviewModal"
         class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 backdrop-blur-sm z-50 hidden">
         <div class="frosted-modal p-6 rounded-2xl shadow-2xl w-full max-w-md mx-4">
-            <h3 class="text-xl font-semibold mb-4 text-frappe-red">Delete Review</h3>
-            <p class="mb-6 text-frappe-text opacity-90">Are you sure you want to delete the review by <span
-                    id="modalReviewUser" class="font-bold text-frappe-lavender"></span>?</p>
+            <h3 class="text-xl font-semibold mb-4 text-frappe-red">{{ __('messages.delete_review_modal_title') }}
+            </h3>
+            <p class="mb-6 text-frappe-text opacity-90" id="deleteReviewConfirmText"></p>
             <div class="flex justify-end gap-3">
                 <button type="button" onclick="hideDeleteReviewModal()"
                     class="px-6 py-2 bg-gradient-to-r from-gray-500/20 to-gray-600/20 backdrop-blur-sm border border-gray-400/30 text-gray-300 rounded-lg hover:from-gray-500/30 hover:to-gray-600/30 transition-all">
-                    Cancel
+                    {{ __('messages.cancel') }}
                 </button>
                 <button type="button" onclick="confirmDeleteReview()"
                     class="px-6 py-2 bg-gradient-to-r from-red-500/30 to-pink-500/30 backdrop-blur-sm border border-red-400/40 text-red-300 rounded-lg hover:from-red-500/40 hover:to-pink-500/40 transition-all">
-                    Delete
+                    {{ __('messages.delete') }}
                 </button>
             </div>
         </div>
@@ -604,17 +628,17 @@
     <div id="deleteResponseModal" class="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm z-50 hidden">
         <div class="flex items-center justify-center min-h-screen p-4">
             <div class="frosted-modal p-6 rounded-2xl shadow-2xl w-full max-w-md">
-                <h3 class="text-xl font-semibold mb-4 text-frappe-red">Delete Response</h3>
-                <p class="mb-6 text-frappe-text opacity-90">Are you sure you want to delete the response from <span
-                        id="modalResponseBusiness" class="font-bold text-frappe-lavender"></span>?</p>
+                <h3 class="text-xl font-semibold mb-4 text-frappe-red">
+                    {{ __('messages.delete_response_modal_title') }}</h3>
+                <p class="mb-6 text-frappe-text opacity-90" id="deleteResponseConfirmText"></p>
                 <div class="flex justify-end gap-3">
                     <button type="button" onclick="hideDeleteResponseModal()"
                         class="px-6 py-2 bg-gradient-to-r from-gray-500/20 to-gray-600/20 backdrop-blur-sm border border-gray-400/30 text-gray-300 rounded-lg hover:from-gray-500/30 hover:to-gray-600/30 transition-all">
-                        Cancel
+                        {{ __('messages.cancel') }}
                     </button>
                     <button type="button" onclick="confirmDeleteResponse()"
                         class="px-6 py-2 bg-gradient-to-r from-red-500/30 to-pink-500/30 backdrop-blur-sm border border-red-400/40 text-red-300 rounded-lg hover:from-red-500/40 hover:to-pink-500/40 transition-all">
-                        Delete
+                        {{ __('messages.delete') }}
                     </button>
                 </div>
             </div>
@@ -622,6 +646,24 @@
     </div>
 
     <script>
+        // Translation object for JavaScript
+        const translations = {
+            pleaseSelectRating: '{{ __('messages.please_select_rating') }}',
+            pleaseWriteComment: '{{ __('messages.please_write_comment') }}',
+            pleaseWriteResponse: '{{ __('messages.please_write_response') }}',
+            failedToSubmitReview: '{{ __('messages.failed_to_submit_review') }}',
+            failedToUpdateReview: '{{ __('messages.failed_to_update_review') }}',
+            failedToDeleteReview: '{{ __('messages.failed_to_delete_review') }}',
+            failedToVote: '{{ __('messages.failed_to_vote') }}',
+            failedToSubmitResponse: '{{ __('messages.failed_to_submit_response') }}',
+            failedToUpdateResponse: '{{ __('messages.failed_to_update_response') }}',
+            failedToDeleteResponse: '{{ __('messages.failed_to_delete_response') }}',
+            submitting: '{{ __('messages.submitting') }}',
+            updating: '{{ __('messages.updating') }}',
+            deleteReviewConfirm: '{{ __('messages.delete_review_confirm') }}',
+            deleteResponseConfirm: '{{ __('messages.delete_response_confirm') }}'
+        };
+
         let selectedRating = 0;
         let editRatings = {};
 
@@ -748,12 +790,12 @@
                         // Refresh the page to update the average rating
                         location.reload();
                     } else {
-                        alert(data.error || 'Failed to delete review');
+                        alert(data.error || translations.failedToDeleteReview);
                     }
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    alert('Failed to delete review');
+                    alert(translations.failedToDeleteReview);
                 });
         }
 
@@ -783,9 +825,10 @@
         // Modal functions for delete confirmation
         let reviewToDelete = null;
 
-        function showDeleteReviewModal(reviewId, userName) {
+        function showDeleteReviewModal(reviewId, businessName) {
             reviewToDelete = reviewId;
-            document.getElementById('modalReviewUser').textContent = userName;
+            const confirmText = translations.deleteReviewConfirm.replace(':business', businessName);
+            document.getElementById('deleteReviewConfirmText').textContent = confirmText;
             document.getElementById('deleteReviewModal').classList.remove('hidden');
         }
 
@@ -809,19 +852,19 @@
             const comment = document.getElementById(`edit-comment-${reviewId}`).value;
 
             if (!rating) {
-                alert('Please select a rating');
+                alert(translations.pleaseSelectRating);
                 return;
             }
 
             if (!comment.trim()) {
-                alert('Please write a comment');
+                alert(translations.pleaseWriteComment);
                 return;
             }
 
             // Show loading state
             const submitBtn = form.querySelector('button[type="submit"]');
             const originalText = submitBtn.textContent;
-            submitBtn.textContent = 'Updating...';
+            submitBtn.textContent = translations.updating;
             submitBtn.disabled = true;
 
             fetch(`/reviews/${reviewId}`, {
@@ -841,12 +884,12 @@
                         // Refresh the page to show the updated review
                         location.reload();
                     } else {
-                        alert(data.error || 'Failed to update review');
+                        alert(data.error || translations.failedToUpdateReview);
                     }
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    alert('Failed to update review');
+                    alert(translations.failedToUpdateReview);
                 })
                 .finally(() => {
                     submitBtn.textContent = originalText;
@@ -862,19 +905,19 @@
             const comment = document.getElementById('comment').value;
 
             if (!rating) {
-                alert('Please select a rating');
+                alert(translations.pleaseSelectRating);
                 return;
             }
 
             if (!comment.trim()) {
-                alert('Please write a comment');
+                alert(translations.pleaseWriteComment);
                 return;
             }
 
             // Show loading state
             const submitBtn = form.querySelector('button[type="submit"]');
             const originalText = submitBtn.textContent;
-            submitBtn.textContent = 'Submitting...';
+            submitBtn.textContent = translations.submitting;
             submitBtn.disabled = true;
 
             fetch(`/businesses/{{ $business->id }}/reviews`, {
@@ -894,12 +937,12 @@
                         // Refresh the page to show the new review
                         location.reload();
                     } else {
-                        alert(data.error || 'Failed to submit review');
+                        alert(data.error || translations.failedToSubmitReview);
                     }
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    alert('Failed to submit review');
+                    alert(translations.failedToSubmitReview);
                 })
                 .finally(() => {
                     submitBtn.textContent = originalText;
@@ -956,7 +999,7 @@
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    alert('Failed to vote');
+                    alert(translations.failedToVote);
                 });
         }
 
@@ -967,14 +1010,14 @@
             const response = form.querySelector('textarea[name="response"]').value;
 
             if (!response.trim()) {
-                alert('Please write a response');
+                alert(translations.pleaseWriteResponse);
                 return;
             }
 
             // Show loading state
             const submitBtn = form.querySelector('button[type="submit"]');
             const originalText = submitBtn.textContent;
-            submitBtn.textContent = 'Submitting...';
+            submitBtn.textContent = translations.submitting;
             submitBtn.disabled = true;
 
             fetch(`/reviews/${reviewId}/respond`, {
@@ -1018,7 +1061,7 @@
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    alert('Failed to submit response: ' + error.message);
+                    alert(translations.failedToSubmitResponse + ': ' + error.message);
                 })
                 .finally(() => {
                     submitBtn.textContent = originalText;
@@ -1053,14 +1096,14 @@
             const response = document.getElementById(`edit-response-${responseId}`).value;
 
             if (!response.trim()) {
-                alert('Please write a response');
+                alert(translations.pleaseWriteResponse);
                 return;
             }
 
             // Show loading state
             const submitBtn = form.querySelector('button[type="submit"]');
             const originalText = submitBtn.textContent;
-            submitBtn.textContent = 'Updating...';
+            submitBtn.textContent = translations.updating;
             submitBtn.disabled = true;
 
             fetch(`/review-responses/${responseId}`, {
@@ -1079,12 +1122,12 @@
                         // Refresh the page to show the updated response
                         location.reload();
                     } else {
-                        alert(data.error || 'Failed to update response');
+                        alert(data.error || translations.failedToUpdateResponse);
                     }
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    alert('Failed to update response');
+                    alert(translations.failedToUpdateResponse);
                 })
                 .finally(() => {
                     submitBtn.textContent = originalText;
@@ -1106,12 +1149,12 @@
                         // Refresh the page to show the changes
                         location.reload();
                     } else {
-                        alert(data.error || 'Failed to delete response');
+                        alert(data.error || translations.failedToDeleteResponse);
                     }
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    alert('Failed to delete response');
+                    alert(translations.failedToDeleteResponse);
                 });
         }
 
@@ -1120,7 +1163,8 @@
 
         function showDeleteResponseModal(responseId, businessName) {
             responseToDelete = responseId;
-            document.getElementById('modalResponseBusiness').textContent = businessName;
+            const confirmText = translations.deleteResponseConfirm.replace(':name', businessName);
+            document.getElementById('deleteResponseConfirmText').textContent = confirmText;
             document.getElementById('deleteResponseModal').classList.remove('hidden');
         }
 
@@ -1135,5 +1179,141 @@
                 hideDeleteResponseModal();
             }
         }
+
+        // Filter and Sort Functions
+        // Load reviews page with AJAX
+        function loadReviewsPage(page) {
+            const sortBy = document.getElementById('sortReviews').value;
+            const filterRating = document.getElementById('filterRating').value;
+            const filterBooking = document.getElementById('filterBooking') ? (document.getElementById('filterBooking')
+                .checked ? 'verified' : '') : '';
+
+            // Show loading state
+            const container = document.getElementById('otherReviewsContainer');
+            if (container) {
+                container.innerHTML =
+                    '<div class="text-center py-8"><div class="text-frappe-subtext1">{{ __('messages.loading_reviews') }}</div></div>';
+            }
+
+            const params = new URLSearchParams({
+                page: page,
+                sort: sortBy
+            });
+
+            if (filterRating) params.append('rating', filterRating);
+            if (filterBooking) params.append('booking', filterBooking);
+
+            fetch(`{{ route('businesses.show', $business->id) }}?${params}`, {
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (container) {
+                        container.innerHTML = data.html;
+                    }
+
+                    // Update pagination controls
+                    updatePaginationControls(data.pagination);
+                })
+                .catch(error => {
+                    console.error('Error loading reviews:', error);
+                    if (container) {
+                        container.innerHTML = '<div class="text-center py-8 text-red-500">Error loading reviews</div>';
+                    }
+                });
+        }
+
+        // Update pagination controls
+        function updatePaginationControls(pagination) {
+            const paginationContainer = document.getElementById('paginationContainer');
+            if (!paginationContainer) return;
+
+            if (pagination.last_page <= 1) {
+                paginationContainer.style.display = 'none';
+                return;
+            }
+
+            paginationContainer.style.display = 'flex';
+
+            // Update pagination info
+            const paginationInfo = document.getElementById('paginationInfo');
+            if (paginationInfo) {
+                paginationInfo.textContent =
+                    '{{ __('messages.showing_reviews', ['from' => 'FROM_PLACEHOLDER', 'to' => 'TO_PLACEHOLDER', 'total' => 'TOTAL_PLACEHOLDER']) }}'
+                    .replace('FROM_PLACEHOLDER', pagination.from || 0)
+                    .replace('TO_PLACEHOLDER', pagination.to || 0)
+                    .replace('TOTAL_PLACEHOLDER', pagination.total);
+            }
+
+            // Update pagination buttons
+            const buttonsContainer = document.getElementById('paginationButtons');
+            if (buttonsContainer) {
+                buttonsContainer.innerHTML = '';
+
+                // Previous button
+                if (pagination.current_page > 1) {
+                    const prevBtn = document.createElement('button');
+                    prevBtn.onclick = () => loadReviewsPage(pagination.current_page - 1);
+                    prevBtn.className =
+                        'inline-flex items-center gap-2 bg-gradient-to-r from-blue-500/20 to-indigo-500/20 backdrop-blur-sm border border-blue-400/30 text-blue-300 px-4 py-2 rounded-lg text-sm hover:from-blue-500/30 hover:to-indigo-500/30 transition-all';
+                    prevBtn.textContent = '{{ __('messages.previous') }}';
+                    buttonsContainer.appendChild(prevBtn);
+                }
+
+                // Page number buttons
+                const startPage = Math.max(1, pagination.current_page - 2);
+                const endPage = Math.min(pagination.last_page, pagination.current_page + 2);
+
+                for (let i = startPage; i <= endPage; i++) {
+                    const pageBtn = document.createElement('button');
+                    pageBtn.onclick = () => loadReviewsPage(i);
+                    pageBtn.className = i === pagination.current_page ?
+                        'inline-flex items-center justify-center bg-gradient-to-r from-blue-600/40 to-indigo-600/40 backdrop-blur-sm border border-blue-400/50 text-white px-3 py-2 rounded-lg text-sm font-medium shadow-lg' :
+                        'inline-flex items-center justify-center bg-gradient-to-r from-blue-500/20 to-indigo-500/20 backdrop-blur-sm border border-blue-400/30 text-blue-300 px-3 py-2 rounded-lg text-sm hover:from-blue-500/30 hover:to-indigo-500/30 transition-all';
+                    pageBtn.textContent = i;
+                    buttonsContainer.appendChild(pageBtn);
+                }
+
+                // Next button
+                if (pagination.current_page < pagination.last_page) {
+                    const nextBtn = document.createElement('button');
+                    nextBtn.onclick = () => loadReviewsPage(pagination.current_page + 1);
+                    nextBtn.className =
+                        'inline-flex items-center gap-2 bg-gradient-to-r from-blue-500/20 to-indigo-500/20 backdrop-blur-sm border border-blue-400/30 text-blue-300 px-4 py-2 rounded-lg text-sm hover:from-blue-500/30 hover:to-indigo-500/30 transition-all';
+                    nextBtn.textContent = '{{ __('messages.next') }}';
+                    buttonsContainer.appendChild(nextBtn);
+                }
+            }
+        }
+
+        function applyFilters() {
+            loadReviewsPage(1); // Always start from page 1 when filters change
+        }
+
+        function clearFilters() {
+            const url = new URL(window.location);
+            url.searchParams.delete('sort');
+            url.searchParams.delete('rating');
+            url.searchParams.delete('booking');
+            window.location.href = url.toString();
+        }
+
+        // Initialize pagination on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if we have pagination data from the server
+            @if (isset($otherReviews) && $otherReviews->lastPage() > 1)
+                const paginationData = {
+                    current_page: {{ $otherReviews->currentPage() }},
+                    last_page: {{ $otherReviews->lastPage() }},
+                    per_page: {{ $otherReviews->perPage() }},
+                    total: {{ $otherReviews->total() }},
+                    from: {{ $otherReviews->firstItem() ?? 0 }},
+                    to: {{ $otherReviews->lastItem() ?? 0 }}
+                };
+                updatePaginationControls(paginationData);
+            @endif
+        });
     </script>
 </x-app-layout>

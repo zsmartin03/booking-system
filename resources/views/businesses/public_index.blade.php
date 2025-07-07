@@ -11,7 +11,7 @@
             <div class="frosted-card overflow-hidden shadow-lg sm:rounded-xl border border-frappe-surface2 mb-6">
                 <div class="p-6">
                     <form method="GET" action="{{ route('businesses.public.index') }}" class="space-y-4">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                             <!-- Search by name -->
                             <div>
                                 <label for="search" class="block text-sm font-medium text-frappe-text mb-2">
@@ -38,6 +38,57 @@
                                     @endforeach
                                 </select>
                             </div>
+
+                            <!-- Filter by minimum rating -->
+                            <div>
+                                <label for="min_rating" class="block text-sm font-medium text-frappe-text mb-2">
+                                    {{ __('messages.minimum_rating') }}
+                                </label>
+                                <select id="min_rating" name="min_rating"
+                                    class="w-full px-3 py-2 bg-frappe-mantle border border-frappe-surface2 rounded-lg text-frappe-text focus:outline-none focus:ring-2 focus:ring-frappe-blue focus:border-transparent">
+                                    <option value="">{{ __('messages.any_rating') }}</option>
+                                    <option value="4.5" {{ request('min_rating') == '4.5' ? 'selected' : '' }}>
+                                        4.5+ ⭐⭐⭐⭐⭐
+                                    </option>
+                                    <option value="4" {{ request('min_rating') == '4' ? 'selected' : '' }}>
+                                        4+ ⭐⭐⭐⭐
+                                    </option>
+                                    <option value="3.5" {{ request('min_rating') == '3.5' ? 'selected' : '' }}>
+                                        3.5+ ⭐⭐⭐
+                                    </option>
+                                    <option value="3" {{ request('min_rating') == '3' ? 'selected' : '' }}>
+                                        3+ ⭐⭐⭐
+                                    </option>
+                                    <option value="2" {{ request('min_rating') == '2' ? 'selected' : '' }}>
+                                        2+ ⭐⭐
+                                    </option>
+                                </select>
+                            </div>
+
+                            <!-- Sort by -->
+                            <div>
+                                <label for="sort" class="block text-sm font-medium text-frappe-text mb-2">
+                                    {{ __('messages.sort_by') }}
+                                </label>
+                                <select id="sort" name="sort"
+                                    class="w-full px-3 py-2 bg-frappe-mantle border border-frappe-surface2 rounded-lg text-frappe-text focus:outline-none focus:ring-2 focus:ring-frappe-blue focus:border-transparent">
+                                    <option value="name"
+                                        {{ request('sort') == 'name' || !request('sort') ? 'selected' : '' }}>
+                                        {{ __('messages.name_a_to_z') }}
+                                    </option>
+                                    <option value="rating_high"
+                                        {{ request('sort') == 'rating_high' ? 'selected' : '' }}>
+                                        {{ __('messages.rating_high_to_low') }}
+                                    </option>
+                                    <option value="rating_low" {{ request('sort') == 'rating_low' ? 'selected' : '' }}>
+                                        {{ __('messages.rating_low_to_high') }}
+                                    </option>
+                                    <option value="reviews_count"
+                                        {{ request('sort') == 'reviews_count' ? 'selected' : '' }}>
+                                        {{ __('messages.most_reviewed') }}
+                                    </option>
+                                </select>
+                            </div>
                         </div>
 
                         <!-- Action buttons -->
@@ -48,7 +99,7 @@
                                 {{ __('messages.search') }}
                             </button>
 
-                            @if (request('search') || request('category'))
+                            @if (request('search') || request('category') || request('min_rating') || request('sort'))
                                 <a href="{{ route('businesses.public.index') }}"
                                     class="inline-flex items-center gap-2 bg-gradient-to-r from-gray-500/20 to-gray-600/20 backdrop-blur-sm border border-gray-400/30 text-gray-300 px-4 py-2 rounded-lg text-sm hover:from-gray-500/30 hover:to-gray-600/30 transition-all">
                                     <x-heroicon-o-x-mark class="w-4 h-4" />
@@ -61,7 +112,7 @@
             </div>
 
             <!-- Results info -->
-            @if (request('search') || request('category'))
+            @if (request('search') || request('category') || request('min_rating') || request('sort'))
                 <div class="mb-6">
                     <div class="frosted-card overflow-hidden shadow-lg sm:rounded-xl border border-frappe-surface2">
                         <div class="p-4">
@@ -80,10 +131,34 @@
                                             {{ __('messages.showing_businesses_matching', ['search' => request('search')]) }}
                                         @elseif(request('category'))
                                             {{ __('messages.showing_businesses_in_category', ['category' => $categories->where('slug', request('category'))->first()?->name]) }}
+                                        @else
+                                            {{ __('messages.showing_filtered_businesses') }}
+                                        @endif
+                                        @if (request('min_rating'))
+                                            {{ __('messages.with_rating_above', ['rating' => request('min_rating')]) }}
                                         @endif
                                     </p>
                                     <p class="text-frappe-subtext1 text-xs mt-1">
                                         {{ $businesses->count() }} {{ __('messages.results') }}
+                                        @if (request('sort'))
+                                            • {{ __('messages.sorted_by') }}
+                                            @switch(request('sort'))
+                                                @case('rating_high')
+                                                    {{ __('messages.rating_high_to_low') }}
+                                                @break
+
+                                                @case('rating_low')
+                                                    {{ __('messages.rating_low_to_high') }}
+                                                @break
+
+                                                @case('reviews_count')
+                                                    {{ __('messages.most_reviewed') }}
+                                                @break
+
+                                                @default
+                                                    {{ __('messages.name_a_to_z') }}
+                                            @endswitch
+                                        @endif
                                     </p>
                                 </div>
                             </div>
@@ -105,6 +180,27 @@
                                 class="text-frappe-blue hover:text-frappe-sapphire text-lg sm:text-xl font-semibold block mb-2 transition-colors">
                                 {{ $business->name }}
                             </a>
+
+                            <!-- Average Rating Display -->
+                            <div class="flex items-center gap-2 mb-3">
+                                <div class="flex items-center">
+                                    @for ($i = 1; $i <= 5; $i++)
+                                        @if ($i <= floor($business->average_rating))
+                                            <x-heroicon-s-star class="w-4 h-4 text-yellow-400" />
+                                        @elseif ($i - 0.5 <= $business->average_rating)
+                                            <x-heroicon-s-star class="w-4 h-4 text-yellow-400" />
+                                        @else
+                                            <x-heroicon-o-star class="w-4 h-4 text-gray-300" />
+                                        @endif
+                                    @endfor
+                                </div>
+                                <span class="text-sm font-medium text-frappe-text">
+                                    {{ number_format($business->average_rating, 1) }}
+                                </span>
+                                <span class="text-frappe-subtext1 text-xs">
+                                    ({{ $business->reviews_count }} {{ __('messages.reviews_count') }})
+                                </span>
+                            </div>
 
                             <!-- Categories -->
                             @if ($business->categories->count() > 0)
