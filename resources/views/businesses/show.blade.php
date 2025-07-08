@@ -122,6 +122,18 @@
                             <p class="text-frappe-subtext1 text-sm mt-2">{{ __('messages.please_sign_in_to_book') }}</p>
                         </div>
                     @endauth
+
+                    <!-- Location Map -->
+                    @if ($business->latitude && $business->longitude)
+                        <div class="mt-6 mb-6">
+                            <h3 class="text-lg font-semibold text-frappe-text mb-3">{{ __('messages.location') }}</h3>
+                            <div id="business-show-map"
+                                class="w-full h-64 bg-frappe-surface0/30 rounded-lg border border-frappe-surface2/50"
+                                data-latitude="{{ $business->latitude }}" data-longitude="{{ $business->longitude }}"
+                                data-business-name="{{ $business->name }}">
+                            </div>
+                        </div>
+                    @endif
                 </div>
             </div>
 
@@ -652,7 +664,6 @@
     </div>
 
     <script>
-        // Translation object for JavaScript
         const translations = {
             pleaseSelectRating: '{{ __('messages.please_select_rating') }}',
             pleaseWriteComment: '{{ __('messages.please_write_comment') }}',
@@ -673,9 +684,7 @@
         let selectedRating = 0;
         let editRatings = {};
 
-        // Initialize form on page load
         document.addEventListener('DOMContentLoaded', function() {
-            // Clear any cached form data
             const commentInput = document.getElementById('comment');
             const ratingInput = document.getElementById('rating');
 
@@ -686,12 +695,10 @@
                 ratingInput.value = '';
             }
 
-            // Reset star display
             selectedRating = 0;
             updateStarDisplay(0);
         });
 
-        // Star rating functions for new reviews
         function setRating(rating) {
             selectedRating = rating;
             document.getElementById('rating').value = rating;
@@ -720,7 +727,6 @@
             });
         }
 
-        // Star rating functions for editing reviews
         function setEditRating(reviewId, rating) {
             editRatings[reviewId] = rating;
             document.getElementById(`edit-rating-${reviewId}`).value = rating;
@@ -750,28 +756,22 @@
             });
         }
 
-        // Review management functions
         function editReview(reviewId) {
-            // Get data from button attributes
             const button = event.target.closest('button');
             const rating = parseInt(button.getAttribute('data-rating'));
             const comment = button.getAttribute('data-comment');
 
-            // Set initial values
             editRatings[reviewId] = rating;
             document.getElementById(`edit-rating-${reviewId}`).value = rating;
             document.getElementById(`edit-comment-${reviewId}`).value = comment;
 
-            // Update star display
             updateEditStarDisplay(reviewId, rating);
 
-            // Toggle visibility
             document.querySelector(`.review-content-${reviewId}`).classList.add('hidden');
             document.querySelector(`.review-edit-form-${reviewId}`).classList.remove('hidden');
         }
 
         function cancelEditReview(reviewId) {
-            // Toggle visibility back
             document.querySelector(`.review-content-${reviewId}`).classList.remove('hidden');
             document.querySelector(`.review-edit-form-${reviewId}`).classList.add('hidden');
         }
@@ -787,13 +787,10 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        // Reset the review form before reloading
                         resetReviewForm();
 
-                        // Remove the review from the page
                         document.querySelector(`[data-review-id="${reviewId}"]`).remove();
 
-                        // Refresh the page to update the average rating
                         location.reload();
                     } else {
                         alert(data.error || translations.failedToDeleteReview);
@@ -806,20 +803,17 @@
         }
 
         function resetReviewForm() {
-            // Clear rating
             selectedRating = 0;
             const ratingInput = document.getElementById('rating');
             if (ratingInput) {
                 ratingInput.value = '';
             }
 
-            // Clear comment
             const commentInput = document.getElementById('comment');
             if (commentInput) {
                 commentInput.value = '';
             }
 
-            // Reset star display
             const stars = document.querySelectorAll('.star-button');
             stars.forEach(star => {
                 const starIcon = star.querySelector('svg');
@@ -828,7 +822,6 @@
             });
         }
 
-        // Modal functions for delete confirmation
         let reviewToDelete = null;
 
         function showDeleteReviewModal(reviewId, businessName) {
@@ -867,7 +860,6 @@
                 return;
             }
 
-            // Show loading state
             const submitBtn = form.querySelector('button[type="submit"]');
             const originalText = submitBtn.textContent;
             submitBtn.textContent = translations.updating;
@@ -887,7 +879,6 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        // Refresh the page to show the updated review
                         location.reload();
                     } else {
                         alert(data.error || translations.failedToUpdateReview);
@@ -920,7 +911,6 @@
                 return;
             }
 
-            // Show loading state
             const submitBtn = form.querySelector('button[type="submit"]');
             const originalText = submitBtn.textContent;
             submitBtn.textContent = translations.submitting;
@@ -940,7 +930,6 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        // Refresh the page to show the new review
                         location.reload();
                     } else {
                         alert(data.error || translations.failedToSubmitReview);
@@ -970,20 +959,16 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        // Update vote counts and button states
                         const reviewDiv = document.querySelector(`[data-review-id="${reviewId}"]`);
 
-                        // Update upvote count
                         const upvoteBtn = reviewDiv.querySelector(`button[onclick="voteReview(${reviewId}, true)"]`);
                         const upvoteCount = upvoteBtn.querySelector('.upvote-count');
                         upvoteCount.textContent = data.upvotes;
 
-                        // Update downvote count
                         const downvoteBtn = reviewDiv.querySelector(`button[onclick="voteReview(${reviewId}, false)"]`);
                         const downvoteCount = downvoteBtn.querySelector('.downvote-count');
                         downvoteCount.textContent = data.downvotes;
 
-                        // Update button states
                         upvoteBtn.className = upvoteBtn.className.replace(
                             /bg-green-500\/20 text-green-400|bg-frappe-surface0\/50 text-frappe-subtext1 hover:bg-green-500\/10/g,
                             '');
@@ -1020,7 +1005,6 @@
                 return;
             }
 
-            // Show loading state
             const submitBtn = form.querySelector('button[type="submit"]');
             const originalText = submitBtn.textContent;
             submitBtn.textContent = translations.submitting;
@@ -1040,16 +1024,13 @@
                     console.log('Response status:', response.status);
                     console.log('Response headers:', [...response.headers.entries()]);
 
-                    // Get the text first to see what we're getting
                     return response.text().then(text => {
                         console.log('Response text:', text);
 
-                        // Check if response is ok
                         if (!response.ok) {
                             throw new Error(`HTTP error! status: ${response.status}, body: ${text}`);
                         }
 
-                        // Try to parse as JSON
                         try {
                             return JSON.parse(text);
                         } catch (e) {
@@ -1059,7 +1040,6 @@
                 })
                 .then(data => {
                     if (data.success) {
-                        // Refresh the page to show the new response
                         location.reload();
                     } else {
                         alert(data.error || 'Failed to submit response');
@@ -1075,22 +1055,17 @@
                 });
         }
 
-        // Response management functions
         function editResponse(responseId) {
-            // Get data from button attributes
             const button = event.target.closest('button');
             const responseText = button.getAttribute('data-response');
 
-            // Set initial values
             document.getElementById(`edit-response-${responseId}`).value = responseText;
 
-            // Toggle visibility
             document.querySelector(`.response-content-${responseId}`).classList.add('hidden');
             document.querySelector(`.response-edit-form-${responseId}`).classList.remove('hidden');
         }
 
         function cancelEditResponse(responseId) {
-            // Toggle visibility back
             document.querySelector(`.response-content-${responseId}`).classList.remove('hidden');
             document.querySelector(`.response-edit-form-${responseId}`).classList.add('hidden');
         }
@@ -1106,7 +1081,6 @@
                 return;
             }
 
-            // Show loading state
             const submitBtn = form.querySelector('button[type="submit"]');
             const originalText = submitBtn.textContent;
             submitBtn.textContent = translations.updating;
@@ -1125,7 +1099,6 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        // Refresh the page to show the updated response
                         location.reload();
                     } else {
                         alert(data.error || translations.failedToUpdateResponse);
@@ -1152,7 +1125,6 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        // Refresh the page to show the changes
                         location.reload();
                     } else {
                         alert(data.error || translations.failedToDeleteResponse);
@@ -1164,7 +1136,6 @@
                 });
         }
 
-        // Response modal functions
         let responseToDelete = null;
 
         function showDeleteResponseModal(responseId, businessName) {
@@ -1186,15 +1157,12 @@
             }
         }
 
-        // Filter and Sort Functions
-        // Load reviews page with AJAX
         function loadReviewsPage(page) {
             const sortBy = document.getElementById('sortReviews').value;
             const filterRating = document.getElementById('filterRating').value;
             const filterBooking = document.getElementById('filterBooking') ? (document.getElementById('filterBooking')
                 .checked ? 'verified' : '') : '';
 
-            // Show loading state
             const container = document.getElementById('otherReviewsContainer');
             if (container) {
                 container.innerHTML =
@@ -1220,7 +1188,6 @@
                         container.innerHTML = data.html;
                     }
 
-                    // Update pagination controls
                     updatePaginationControls(data.pagination);
                 })
                 .catch(error => {
@@ -1231,7 +1198,6 @@
                 });
         }
 
-        // Update pagination controls
         function updatePaginationControls(pagination) {
             const paginationContainer = document.getElementById('paginationContainer');
             if (!paginationContainer) return;
@@ -1243,7 +1209,6 @@
 
             paginationContainer.style.display = 'flex';
 
-            // Update pagination info
             const paginationInfo = document.getElementById('paginationInfo');
             if (paginationInfo) {
                 paginationInfo.textContent =
@@ -1253,12 +1218,10 @@
                     .replace('TOTAL_PLACEHOLDER', pagination.total);
             }
 
-            // Update pagination buttons
             const buttonsContainer = document.getElementById('paginationButtons');
             if (buttonsContainer) {
                 buttonsContainer.innerHTML = '';
 
-                // Previous button
                 if (pagination.current_page > 1) {
                     const prevBtn = document.createElement('button');
                     prevBtn.onclick = () => loadReviewsPage(pagination.current_page - 1);
@@ -1268,7 +1231,6 @@
                     buttonsContainer.appendChild(prevBtn);
                 }
 
-                // Page number buttons
                 const startPage = Math.max(1, pagination.current_page - 2);
                 const endPage = Math.min(pagination.last_page, pagination.current_page + 2);
 
@@ -1282,7 +1244,6 @@
                     buttonsContainer.appendChild(pageBtn);
                 }
 
-                // Next button
                 if (pagination.current_page < pagination.last_page) {
                     const nextBtn = document.createElement('button');
                     nextBtn.onclick = () => loadReviewsPage(pagination.current_page + 1);
@@ -1295,7 +1256,7 @@
         }
 
         function applyFilters() {
-            loadReviewsPage(1); // Always start from page 1 when filters change
+            loadReviewsPage(1);
         }
 
         function clearFilters() {
@@ -1306,9 +1267,7 @@
             window.location.href = url.toString();
         }
 
-        // Initialize pagination on page load
         document.addEventListener('DOMContentLoaded', function() {
-            // Check if we have pagination data from the server
             @if (isset($otherReviews) && $otherReviews->lastPage() > 1)
                 const paginationData = {
                     current_page: {{ $otherReviews->currentPage() }},

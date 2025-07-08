@@ -27,6 +27,7 @@ return [
     'business_name' => 'Business Name',
     'business_description' => 'Business Description',
     'address' => 'Address',
+    'location' => 'Location',
     'phone' => 'Phone',
     'email' => 'Email',
     'website' => 'Website',

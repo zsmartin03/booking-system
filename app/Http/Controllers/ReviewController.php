@@ -20,12 +20,10 @@ class ReviewController extends Controller
 
         $user = Auth::user();
 
-        // Check if user has already reviewed this business
         if ($business->reviews()->where('user_id', $user->id)->exists()) {
             return response()->json(['error' => 'You have already reviewed this business'], 400);
         }
 
-        // Check if user has had a booking with this business
         $hasBooking = $user->hasBookingWithBusiness($business->id);
 
         $review = $business->reviews()->create([
@@ -50,19 +48,15 @@ class ReviewController extends Controller
 
         $user = Auth::user();
 
-        // Check if user has already voted on this review
         $existingVote = $review->votes()->where('user_id', $user->id)->first();
 
         if ($existingVote) {
             if ($existingVote->is_upvote == $request->is_upvote) {
-                // Same vote, remove it
                 $existingVote->delete();
             } else {
-                // Different vote, update it
                 $existingVote->update(['is_upvote' => $request->is_upvote]);
             }
         } else {
-            // Create new vote
             $review->votes()->create([
                 'user_id' => $user->id,
                 'is_upvote' => $request->is_upvote,
@@ -85,12 +79,10 @@ class ReviewController extends Controller
 
         $user = Auth::user();
 
-        // Check if user owns the business
         if ($review->business->user_id !== $user->id) {
             return response()->json(['error' => 'You can only respond to reviews of your own business'], 403);
         }
 
-        // Check if there's already a response
         if ($review->response) {
             $review->response->update(['response' => $request->response]);
         } else {
@@ -119,7 +111,6 @@ class ReviewController extends Controller
 
         $user = Auth::user();
 
-        // Check if user owns the review
         if ($review->user_id !== $user->id) {
             return response()->json(['error' => 'You can only edit your own reviews'], 403);
         }
@@ -140,7 +131,6 @@ class ReviewController extends Controller
     {
         $user = Auth::user();
 
-        // Check if user owns the review
         if ($review->user_id !== $user->id) {
             return response()->json(['error' => 'You can only delete your own reviews'], 403);
         }
@@ -161,7 +151,6 @@ class ReviewController extends Controller
 
         $user = Auth::user();
 
-        // Check if user owns the response (business owner)
         if ($reviewResponse->user_id !== $user->id) {
             return response()->json(['error' => 'You can only edit your own responses'], 403);
         }
@@ -181,7 +170,6 @@ class ReviewController extends Controller
     {
         $user = Auth::user();
 
-        // Check if user owns the response (business owner)
         if ($reviewResponse->user_id !== $user->id) {
             return response()->json(['error' => 'You can only delete your own responses'], 403);
         }

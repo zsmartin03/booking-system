@@ -32,7 +32,25 @@
                             <x-text-input id="address" name="address" type="text" class="mt-1 block w-full"
                                 :value="old('address', $business->address)" required />
                             <x-input-error :messages="$errors->get('address')" class="mt-2" />
+                            <p class="text-sm text-frappe-subtext1 mt-1">Type an address or click on the map to set
+                                location</p>
                         </div>
+
+                        <!-- Map Container -->
+                        <div class="mb-4">
+                            <x-input-label :value="__('Location Map')" />
+                            <div id="business-form-map"
+                                class="w-full h-64 bg-frappe-surface0/30 rounded-lg mt-2 border border-frappe-surface2/50">
+                            </div>
+                            <p class="text-sm text-frappe-subtext1 mt-1">Click on the map to set the exact location or
+                                type an address above</p>
+                        </div>
+
+                        <!-- Hidden coordinate inputs -->
+                        <input type="hidden" id="latitude" name="latitude"
+                            value="{{ old('latitude', $business->latitude) }}">
+                        <input type="hidden" id="longitude" name="longitude"
+                            value="{{ old('longitude', $business->longitude) }}">
 
                         <div class="mb-4">
                             <x-input-label for="phone_number" :value="__('messages.phone')" />

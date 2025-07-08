@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Business;
 use App\Models\Category;
+use App\Services\GeocodingService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -143,10 +144,34 @@ class BusinessController extends Controller
             'website' => 'nullable|url',
             'logo' => 'nullable|string',
             'categories' => 'array',
-            'categories.*' => 'exists:categories,id'
+            'categories.*' => 'exists:categories,id',
+            'latitude' => 'nullable|numeric',
+            'longitude' => 'nullable|numeric'
         ]);
 
         $validated['user_id'] = $user->id;
+
+        // Handle geocoding
+        $geocodingService = app(GeocodingService::class);
+
+        if (!empty($validated['latitude']) && !empty($validated['longitude'])) {
+            // If lat/lng provided, use them and reverse geocode for formatted address
+            $result = $geocodingService->reverseGeocode($validated['latitude'], $validated['longitude']);
+            if ($result && $result['formatted_address']) {
+                $validated['address'] = $result['formatted_address'];
+            }
+        } else {
+            // If no coordinates provided, geocode the address
+            $result = $geocodingService->geocode($validated['address']);
+            if ($result) {
+                $validated['latitude'] = $result['latitude'];
+                $validated['longitude'] = $result['longitude'];
+                $validated['address'] = $result['formatted_address'];
+            } else {
+                // If geocoding fails, don't allow business creation
+                return back()->withErrors(['address' => 'Could not find a valid location for this address. Please try a different address.'])->withInput();
+            }
+        }
 
         $business = Business::create($validated);
 
@@ -291,8 +316,32 @@ class BusinessController extends Controller
             'website' => 'nullable|url',
             'logo' => 'nullable|string',
             'categories' => 'array',
-            'categories.*' => 'exists:categories,id'
+            'categories.*' => 'exists:categories,id',
+            'latitude' => 'nullable|numeric',
+            'longitude' => 'nullable|numeric'
         ]);
+
+        // Handle geocoding
+        $geocodingService = app(GeocodingService::class);
+
+        if (!empty($validated['latitude']) && !empty($validated['longitude'])) {
+            // If lat/lng provided, use them and reverse geocode for formatted address
+            $result = $geocodingService->reverseGeocode($validated['latitude'], $validated['longitude']);
+            if ($result && $result['formatted_address']) {
+                $validated['address'] = $result['formatted_address'];
+            }
+        } else {
+            // If no coordinates provided, geocode the address
+            $result = $geocodingService->geocode($validated['address']);
+            if ($result) {
+                $validated['latitude'] = $result['latitude'];
+                $validated['longitude'] = $result['longitude'];
+                $validated['address'] = $result['formatted_address'];
+            } else {
+                // If geocoding fails, don't allow business update
+                return back()->withErrors(['address' => 'Could not find a valid location for this address. Please try a different address.'])->withInput();
+            }
+        }
 
         $business->update($validated);
 

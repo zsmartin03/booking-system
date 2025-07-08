@@ -26,6 +26,7 @@ return [
     'business_name' => 'Vállalkozás neve',
     'business_description' => 'Vállalkozás leírása',
     'address' => 'Cím',
+    'location' => 'Helyszín',
     'phone' => 'Telefon',
     'email' => 'E-mail',
     'website' => 'Weboldal',
