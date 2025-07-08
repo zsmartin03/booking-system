@@ -23,6 +23,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'password',
         'phone_number',
         'role',
+        'avatar',
     ];
 
     /**
@@ -96,5 +97,29 @@ class User extends Authenticatable implements MustVerifyEmail
             })
             ->where('status', '!=', 'cancelled')
             ->exists();
+    }
+
+    /**
+     * Get the user's avatar URL
+     */
+    public function getAvatarUrl(): string
+    {
+        if ($this->avatar) {
+            return asset('storage/' . $this->avatar);
+        }
+
+        return null;
+    }
+
+    /**
+     * Get the user's avatar or initials fallback
+     */
+    public function getAvatarOrInitials(): array
+    {
+        return [
+            'avatar' => $this->getAvatarUrl(),
+            'initials' => substr($this->name, 0, 1),
+            'name' => $this->name
+        ];
     }
 }

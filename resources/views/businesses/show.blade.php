@@ -329,9 +329,15 @@
                                     <div class="flex items-start justify-between mb-3">
                                         <div class="flex items-center gap-3">
                                             <div
-                                                class="w-10 h-10 bg-frappe-blue/20 rounded-full flex items-center justify-center">
-                                                <span
-                                                    class="text-frappe-blue font-semibold">{{ substr($userReview->user->name, 0, 1) }}</span>
+                                                class="w-10 h-10 bg-frappe-blue/20 rounded-full flex items-center justify-center overflow-hidden">
+                                                @if ($userReview->user->avatar)
+                                                    <img src="{{ $userReview->user->getAvatarUrl() }}"
+                                                        alt="{{ $userReview->user->name }}"
+                                                        class="w-full h-full object-cover rounded-full">
+                                                @else
+                                                    <span
+                                                        class="text-frappe-blue font-semibold">{{ substr($userReview->user->name, 0, 1) }}</span>
+                                                @endif
                                             </div>
                                             <div>
                                                 <div class="flex items-center gap-2">
