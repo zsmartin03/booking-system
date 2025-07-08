@@ -98,6 +98,20 @@
                         </div>
                     @endif
 
+                    <!-- Location Map -->
+                    @if ($business->latitude && $business->longitude)
+                        <div class="mb-6">
+                            <h3 class="text-lg font-semibold text-frappe-text mb-3">{{ __('messages.location') }}</h3>
+                            <div class="bg-frappe-surface0/30 rounded-lg p-4 border border-frappe-surface2/30">
+                                <div id="business-location-map" class="w-full h-80 rounded-lg"></div>
+                                <p class="text-frappe-subtext1 text-sm mt-2">
+                                    <x-heroicon-o-map-pin class="w-4 h-4 inline" />
+                                    {{ $business->formatted_address ?? $business->address }}
+                                </p>
+                            </div>
+                        </div>
+                    @endif
+
                     @if ($business->logo)
                         <div class="mt-6 text-center">
                             <img src="{{ $business->logo }}" alt="{{ $business->name }} Logo"
@@ -917,7 +931,7 @@
                     })
                 })
                 .then(response => response.json())
-                .then(data => {
+                .then data => {
                     if (data.success) {
                         location.reload();
                     } else {
@@ -1267,6 +1281,22 @@
                     to: {{ $otherReviews->lastItem() ?? 0 }}
                 };
                 updatePaginationControls(paginationData);
+            @endif
+        });
+    </script>
+
+    <!-- Business Location Map Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            @if ($business->latitude && $business->longitude)
+                if (window.geocodingMaps) {
+                    window.geocodingMaps.setupDisplayMap(
+                        'business-location-map',
+                        {{ $business->latitude }},
+                        {{ $business->longitude }},
+                        @json($business->name)
+                    );
+                }
             @endif
         });
     </script>
