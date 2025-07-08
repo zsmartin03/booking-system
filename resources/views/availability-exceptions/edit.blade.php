@@ -1,11 +1,11 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-frappe-lavender leading-tight">
-            {{ __('messages.edit_availability_exception_for') }} {{ $employee->name }}
+            {{ __('messages.edit_availability_exception') }}: {{ $employee->name }}
         </h2>
     </x-slot>
 
-    <div class="py-6 max-w-md mx-auto">
+    <div class="py-6 max-w-2xl mx-auto">
         <div class="frosted-card rounded-xl shadow-lg p-6">
             <form method="POST" action="{{ route('availability-exceptions.update', $exception->id) }}">
                 @csrf
@@ -42,7 +42,7 @@
                             {{ __('messages.available_override_regular_hours') }}
                         </option>
                         <option value="unavailable" @selected(old('type', $exception->type) == 'unavailable')>
-                            {{ __('messages.unavailable_description') }}
+                            {{ __('messages.unavailable_block_time_off') }}
                         </option>
                     </select>
                     <x-input-error :messages="$errors->get('type')" class="mt-2 text-frappe-red text-sm" />
@@ -61,7 +61,7 @@
                     <x-input-label for="note" :value="__('messages.note_optional')" />
                     <textarea id="note" name="note" rows="3"
                         class="block w-full mt-1 bg-frappe-surface0/50 border-frappe-surface1/30 text-frappe-text rounded-md shadow-sm backdrop-blur-sm focus:border-frappe-blue focus:ring-frappe-blue/50"
-                        placeholder="{{ __(messages . 'note_placeholder') }}">{{ old('note', $exception->note) }}</textarea>
+                        placeholder="{{ __('messages.note_placeholder') }}">{{ old('note', $exception->note) }}</textarea>
                     <x-input-error :messages="$errors->get('note')" class="mt-2 text-frappe-red text-sm" />
                 </div>
 

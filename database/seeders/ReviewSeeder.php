@@ -198,8 +198,6 @@ class ReviewSeeder extends Seeder
                 }
             }
         }
-
-        $this->command->info('Review seeder completed successfully!');
     }
 
     /**

@@ -6,7 +6,7 @@
     </x-slot>
 
     <div class="py-6">
-        <div class="max-w-2xl mx-auto sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="frosted-card overflow-hidden shadow-lg sm:rounded-xl">
                 <div class="p-6">
                     <form method="POST" action="{{ route('businesses.update', $business->id) }}">
@@ -40,7 +40,7 @@
                         <div class="mb-4">
                             <x-input-label :value="__('Location Map')" />
                             <div id="business-form-map"
-                                class="w-full h-64 bg-frappe-surface0/30 rounded-lg mt-2 border border-frappe-surface2/50">
+                                class="w-full h-96 bg-frappe-surface0/30 rounded-lg mt-2 border border-frappe-surface2/50">
                             </div>
                             <p class="text-sm text-frappe-subtext1 mt-1">Click on the map to set the exact location or
                                 type an address above</p>

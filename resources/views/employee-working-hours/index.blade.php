@@ -5,7 +5,7 @@
         </h2>
     </x-slot>
 
-    <div class="py-6 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="py-6 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="mb-4">
             <a href="{{ route('employee-working-hours.create', ['employee_id' => $employee->id]) }}"
                 class="action-button text-white px-4 py-2 rounded-lg inline-flex items-center gap-2">

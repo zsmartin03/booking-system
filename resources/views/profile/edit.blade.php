@@ -6,7 +6,7 @@
     </x-slot>
 
     <div class="py-6">
-        <div class="max-w-3xl mx-auto sm:px-6 lg:px-8">
+        <div class="max-w-2xl mx-auto sm:px-6 lg:px-8">
             <!-- Status Messages -->
             @if (session('status'))
                 <div class="mb-4 p-4 bg-frappe-green/20 text-frappe-green border border-frappe-green rounded-lg">

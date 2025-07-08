@@ -44,7 +44,9 @@ Route::get('/locale/init/{locale}', function ($locale) {
 })->name('locale.init');
 
 Route::middleware('guest')->group(function () {
-    Route::view('/', 'welcome', ['businesses' => \App\Models\Business::all()])->name('home');
+    Route::get('/', function () {
+        return view('welcome', ['businesses' => \App\Models\Business::all()]);
+    })->name('home');
 });
 
 // Authenticated Routes

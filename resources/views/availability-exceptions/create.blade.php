@@ -5,7 +5,7 @@
         </h2>
     </x-slot>
 
-    <div class="py-6 max-w-md mx-auto">
+    <div class="py-6 max-w-2xl mx-auto">
         <div class="frosted-card rounded-xl shadow-lg p-6">
             <form method="POST" action="{{ route('availability-exceptions.store') }}">
                 @csrf

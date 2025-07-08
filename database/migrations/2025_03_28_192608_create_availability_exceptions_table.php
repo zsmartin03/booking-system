@@ -18,7 +18,7 @@ return new class extends Migration
             $table->time('start_time');
             $table->time('end_time');
             $table->enum('type', ['available', 'unavailable']);
-            $table->text('note');
+            $table->text('note')->nullable();
             $table->timestamps();
         });
     }

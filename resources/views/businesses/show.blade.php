@@ -24,7 +24,7 @@
     </style>
 
     <div class="py-6">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="frosted-card overflow-hidden shadow-lg sm:rounded-xl">
                 <div class="p-4 sm:p-6">
                     <!-- Business Name -->
@@ -42,7 +42,8 @@
                         <div class="space-y-3">
                             <div class="bg-frappe-surface0/30 rounded-lg p-3">
                                 <div class="text-sm text-frappe-subtext1 mb-1">{{ __('messages.address') }}</div>
-                                <div class="text-frappe-text">{{ $business->address }}</div>
+                                <div class="text-frappe-text">{{ $business->formatted_address ?? $business->address }}
+                                </div>
                             </div>
                             <div class="bg-frappe-surface0/30 rounded-lg p-3">
                                 <div class="text-sm text-frappe-subtext1 mb-1">{{ __('messages.phone') }}</div>
@@ -122,18 +123,6 @@
                             <p class="text-frappe-subtext1 text-sm mt-2">{{ __('messages.please_sign_in_to_book') }}</p>
                         </div>
                     @endauth
-
-                    <!-- Location Map -->
-                    @if ($business->latitude && $business->longitude)
-                        <div class="mt-6 mb-6">
-                            <h3 class="text-lg font-semibold text-frappe-text mb-3">{{ __('messages.location') }}</h3>
-                            <div id="business-show-map"
-                                class="w-full h-64 bg-frappe-surface0/30 rounded-lg border border-frappe-surface2/50"
-                                data-latitude="{{ $business->latitude }}" data-longitude="{{ $business->longitude }}"
-                                data-business-name="{{ $business->name }}">
-                            </div>
-                        </div>
-                    @endif
                 </div>
             </div>
 
