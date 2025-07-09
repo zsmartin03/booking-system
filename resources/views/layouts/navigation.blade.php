@@ -66,11 +66,11 @@
                 @else
                     <div class="flex items-center gap-4">
                         <a href="{{ route('login') }}"
-                            class="frosted-button-login inline-flex items-center px-3 py-2 text-white rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-frappe-blue focus:ring-offset-2">
+                            class="frosted-button-login inline-flex items-center px-3 py-2 text-white rounded-lg transition-all focus:outline-none">
                             {{ __('messages.log_in') }}
                         </a>
                         <a href="{{ route('register') }}"
-                            class="frosted-button-register inline-flex items-center px-3 py-2 text-white rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-frappe-green focus:ring-offset-2">
+                            class="frosted-button-register inline-flex items-center px-3 py-2 text-white rounded-lg transition-all focus:outline-none">
                             {{ __('messages.register') }}
                         </a>
                     </div>

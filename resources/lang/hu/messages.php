@@ -596,4 +596,18 @@ return [
     'showing_filtered_businesses' => 'Szűrt üzletek megjelenítése',
     'with_rating_above' => ':rating fölötti értékeléssel',
     'sorted_by' => 'rendezve',
+
+    // Hero Section
+    'welcome_to_booking_system' => 'Üdvözöljük a BookingSystem-ben',
+    'hero_description' => 'Kapcsolódjon helyi vállalkozásokkal és foglaljon szolgáltatásokat könnyedén. Akár szolgáltatásokat keres, akár üzletét vezeti, minden szükséges eszköz megtalálható itt.',
+    'for_users' => 'Felhasználóknak',
+    'for_business_owners' => 'Üzlettulajdonosoknak',
+    'user_feature_1' => 'Helyi vállalkozások böngészése és felfedezése',
+    'user_feature_2' => 'Szolgáltatások és időpontok foglalása',
+    'user_feature_3' => 'Értékelések és vélemények írása',
+    'business_feature_1' => 'Üzleti profil kezelése',
+    'business_feature_2' => 'Foglalások és időpontok elfogadása',
+    'business_feature_3' => 'Válasz az ügyfél-értékelésekre',
+    'register_now' => 'Regisztráljon Most',
+    'search_businesses' => 'Vállalkozások Keresése',
 ];

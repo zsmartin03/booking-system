@@ -104,15 +104,18 @@
         }
 
         .frosted-button-register {
-            background: linear-gradient(135deg, rgba(166, 209, 137, 0.25), rgba(166, 209, 137, 0.35));
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(166, 209, 137, 0.35);
-            color: white;
-            transition: all 0.3s ease;
+            background: linear-gradient(to right, rgba(166, 209, 137, 0.16), rgba(148, 198, 123, 0.16)) !important;
+            backdrop-filter: blur(6px) !important;
+            border: 1px solid rgba(166, 209, 137, 0.24) !important;
+            color: #a6d189 !important;
+            padding: 0.5rem 1rem !important;
+            border-radius: 0.5rem !important;
+            font-size: 0.875rem !important;
+            transition: all 0.3s ease !important;
         }
 
         .frosted-button-register:hover {
-            background: linear-gradient(135deg, rgba(166, 209, 137, 0.4), rgba(166, 209, 137, 0.5));
+            background: linear-gradient(to right, rgba(166, 209, 137, 0.35), rgba(148, 198, 123, 0.35)) !important;
         }
 
         .frosted-button-save {
@@ -140,24 +143,81 @@
 
         /* Navigation specific styles */
         .nav-container {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            width: 100% !important;
+            z-index: 9999 !important;
+            backdrop-filter: blur(15px) !important;
+            transform: translateZ(0) !important;
+        }
+
+        nav.nav-container,
+        .nav-container {
+            position: fixed !important;
+            top: 0px !important;
+            left: 0px !important;
+            right: 0px !important;
+            width: 100vw !important;
+            z-index: 99999 !important;
+            transform: translateZ(0) !important;
+            will-change: transform !important;
+        }
+
+        .nav-frosted {
+            background: rgba(49, 50, 68, 0.8) !important;
+            backdrop-filter: blur(15px) !important;
+            border-bottom: 1px solid rgba(186, 194, 222, 0.15) !important;
+            position: relative !important;
+            z-index: 100 !important;
+        }
+
+        /* Language switcher needs higher z-index */
+        .language-switcher {
+            position: relative;
+            z-index: 1000;
+        }
+
+        /* Ensure dropdowns stay above everything */
+        .dropdown-menu {
+            z-index: 1001 !important;
+        }
+
+        .hamburger-button {
+            background: rgba(137, 180, 250, 0.2);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(137, 180, 250, 0.3);
+            color: rgba(137, 180, 250, 1);
+            transition: all 0.3s ease;
+        }
+
+        .hamburger-button:hover {
+            background: rgba(137, 180, 250, 0.3);
+            color: white;
+        }
+
+        .mobile-menu-overlay {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
-            width: 100%;
-            z-index: 1000;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 50;
+            backdrop-filter: blur(4px);
         }
 
-        .nav-frosted {
-            background: rgba(49, 50, 68, 0.8);
-            backdrop-filter: blur(15px);
-            border-bottom: 1px solid rgba(186, 194, 222, 0.15);
-        }
-
-
-        /* Ensure dropdowns stay above everything */
-        .dropdown-menu {
-            z-index: 10000 !important;
+        .mobile-menu-drawer {
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: 16rem;
+            background: rgba(49, 50, 68, 0.95);
+            backdrop-filter: blur(20px);
+            border-left: 1px solid rgba(186, 194, 222, 0.15);
+            z-index: 51;
         }
 
         /* Header frosted glass */
@@ -168,8 +228,9 @@
         }
 
         .main-content {
-            margin-top: 64px;
+            margin-top: 64px !important;
             /* Height of navbar */
+            padding-top: 0 !important;
         }
 
         /* Select dropdown styling */

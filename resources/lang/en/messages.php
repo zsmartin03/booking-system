@@ -588,4 +588,18 @@ return [
     'showing_filtered_businesses' => 'Showing filtered businesses',
     'with_rating_above' => 'with rating above :rating',
     'sorted_by' => 'sorted by',
+
+    // Hero Section
+    'welcome_to_booking_system' => 'Welcome to BookingSystem',
+    'hero_description' => 'Connect with local businesses and book services effortlessly. Whether you\'re looking for services or managing your business, everything you need can be found here.',
+    'for_users' => 'For Users',
+    'for_business_owners' => 'For Business Owners',
+    'user_feature_1' => 'Browse and discover local businesses',
+    'user_feature_2' => 'Book services and appointments',
+    'user_feature_3' => 'Leave reviews and ratings',
+    'business_feature_1' => 'Manage your business profile',
+    'business_feature_2' => 'Accept bookings and appointments',
+    'business_feature_3' => 'Respond to customer reviews',
+    'register_now' => 'Register Now',
+    'search_businesses' => 'Search Businesses',
 ];
