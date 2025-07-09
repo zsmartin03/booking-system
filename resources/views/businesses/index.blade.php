@@ -111,6 +111,16 @@
                                 <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                                     <div class="flex-1">
                                         <div class="flex flex-col sm:flex-row sm:items-start gap-4">
+                                            <!-- Business Logo -->
+                                            @if ($business->logo)
+                                                <div class="flex-shrink-0">
+                                                    <div class="w-16 h-16 flex items-center justify-center">
+                                                        <img src="{{ $business->logo_url }}" alt="{{ $business->name }} Logo" 
+                                                            class="max-w-full max-h-full object-contain border border-frappe-surface2">
+                                                    </div>
+                                                </div>
+                                            @endif
+
                                             <div class="flex-1">
                                                 <a href="{{ route('businesses.show', $business->id) }}"
                                                     class="text-frappe-blue hover:text-frappe-sapphire text-xl font-semibold block mb-1 transition-colors">

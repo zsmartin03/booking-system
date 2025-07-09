@@ -7,6 +7,8 @@ use App\Models\Category;
 use App\Services\GeocodingService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 class BusinessController extends Controller
 {
@@ -135,7 +137,7 @@ class BusinessController extends Controller
             'phone_number' => 'required|string',
             'email' => 'required|email',
             'website' => 'nullable|url',
-            'logo' => 'nullable|string',
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'categories' => 'array',
             'categories.*' => 'exists:categories,id',
             'latitude' => 'nullable|numeric',
@@ -143,6 +145,15 @@ class BusinessController extends Controller
         ]);
 
         $validated['user_id'] = $user->id;
+
+        if ($request->hasFile('logo')) {
+            try {
+                $logoPath = $request->file('logo')->store('business-logos', 'public');
+                $validated['logo'] = $logoPath;
+            } catch (\Exception $e) {
+                return back()->withErrors(['logo' => 'Failed to upload logo. Please try again.'])->withInput();
+            }
+        }
 
         // Handle geocoding
         $geocodingService = app(GeocodingService::class);
@@ -307,12 +318,27 @@ class BusinessController extends Controller
             'phone_number' => 'required|string',
             'email' => 'required|email',
             'website' => 'nullable|url',
-            'logo' => 'nullable|string',
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'categories' => 'array',
             'categories.*' => 'exists:categories,id',
             'latitude' => 'nullable|numeric',
             'longitude' => 'nullable|numeric'
         ]);
+
+        // Handle logo upload
+        if ($request->hasFile('logo')) {
+            try {
+                // Delete old logo if it exists
+                if ($business->logo) {
+                    Storage::disk('public')->delete($business->logo);
+                }
+
+                $logoPath = $request->file('logo')->store('business-logos', 'public');
+                $validated['logo'] = $logoPath;
+            } catch (\Exception $e) {
+                return back()->withErrors(['logo' => 'Failed to upload logo. Please try again.'])->withInput();
+            }
+        }
 
         // Handle geocoding
         $geocodingService = app(GeocodingService::class);
@@ -360,8 +386,47 @@ class BusinessController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
+        // Delete logo file if it exists
+        if ($business->logo) {
+            try {
+                Storage::disk('public')->delete($business->logo);
+            } catch (\Exception $e) {
+                // Log the error but don't fail the deletion
+                Log::warning('Failed to delete business logo: ' . $e->getMessage());
+            }
+        }
+
         $business->delete();
 
         return redirect()->route('businesses.index')->with('success', 'Business deleted successfully.');
+    }
+
+    /**
+     * Remove the logo from the specified business.
+     */
+    public function removeLogo(string $id)
+    {
+        $user = Auth::user();
+        $business = Business::findOrFail($id);
+
+        if ($user->role !== 'admin' && $business->user_id !== $user->id) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        if ($business->logo) {
+            try {
+                Storage::disk('public')->delete($business->logo);
+            } catch (\Exception $e) {
+                return back()->with('error', 'Failed to remove logo file.');
+            }
+
+            $business->update(['logo' => null]);
+
+            return redirect()->route('businesses.edit', $business->id)
+                ->with('success', 'Logo removed successfully!');
+        }
+
+        return redirect()->route('businesses.edit', $business->id)
+            ->with('info', 'No logo to remove.');
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class Business extends Model
 {
@@ -51,5 +52,13 @@ class Business extends Model
     public function getReviewsCountAttribute(): int
     {
         return $this->reviews()->count();
+    }
+
+    public function getLogoUrlAttribute(): ?string
+    {
+        if ($this->logo) {
+            return asset('storage/' . $this->logo);
+        }
+        return null;
     }
 }

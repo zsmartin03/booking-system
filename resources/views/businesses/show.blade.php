@@ -114,8 +114,10 @@
 
                     @if ($business->logo)
                         <div class="mt-6 text-center">
-                            <img src="{{ $business->logo }}" alt="{{ $business->name }} Logo"
-                                class="max-w-full h-32 mx-auto rounded shadow-lg">
+                            <div class="inline-flex items-center justify-center max-w-full h-32">
+                                <img src="{{ $business->logo_url }}" alt="{{ $business->name }} Logo"
+                                    class="max-w-full max-h-full object-contain shadow-lg">
+                            </div>
                         </div>
                     @endif
 

@@ -76,6 +76,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/manage/businesses/{id}/edit', [BusinessController::class, 'edit'])->name('businesses.edit');
         Route::put('/manage/businesses/{id}', [BusinessController::class, 'update'])->name('businesses.update');
         Route::delete('/manage/businesses/{id}', [BusinessController::class, 'destroy'])->name('businesses.destroy');
+        Route::delete('/manage/businesses/{id}/remove-logo', [BusinessController::class, 'removeLogo'])->name('businesses.remove-logo');
 
         Route::resource('business-working-hours', BusinessWorkingHourController::class)->except(['show']);
 

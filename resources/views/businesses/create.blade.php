@@ -9,7 +9,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="frosted-card overflow-hidden shadow-lg sm:rounded-xl">
                 <div class="p-6">
-                    <form method="POST" action="{{ route('businesses.store') }}">
+                    <form method="POST" action="{{ route('businesses.store') }}" enctype="multipart/form-data">
                         @csrf
 
                         <div class="mb-4">
@@ -72,8 +72,67 @@
 
                         <div class="mb-4">
                             <x-input-label for="logo" :value="__('messages.business_logo')" />
-                            <x-text-input id="logo" name="logo" type="text" class="mt-1 block w-full"
-                                :value="old('logo')" />
+                            
+                            <div class="flex items-start gap-6">
+                                <!-- Logo Preview -->
+                                <div class="flex flex-col items-center">
+                                    <div class="relative group">
+                                        <div id="logo-preview"
+                                            class="w-24 h-24 rounded-lg overflow-hidden bg-gradient-to-br from-frappe-blue/20 to-frappe-sapphire/20 border-2 border-frappe-surface2/30 flex items-center justify-center transition-all duration-300 group-hover:border-frappe-blue/50">
+                                            <div id="logo-placeholder"
+                                                class="w-full h-full flex items-center justify-center">
+                                                <x-heroicon-o-building-office-2 class="w-8 h-8 text-frappe-blue" />
+                                            </div>
+                                        </div>
+                                        <!-- Loading indicator -->
+                                        <div id="logo-loading"
+                                            class="absolute inset-0 bg-frappe-surface0/80 backdrop-blur-sm rounded-lg flex items-center justify-center hidden">
+                                            <div class="animate-spin rounded-full h-6 w-6 border-2 border-frappe-blue border-t-transparent"></div>
+                                        </div>
+                                    </div>
+                                    <span class="text-xs text-frappe-subtext1 mt-2 text-center">{{ __('messages.business_logo') }}</span>
+                                </div>
+
+                                <!-- Upload Controls -->
+                                <div class="flex-1">
+                                    <!-- Custom File Input -->
+                                    <div class="relative">
+                                        <input id="logo" name="logo" type="file" class="hidden"
+                                            accept="image/*" onchange="previewLogo(this)">
+                                        <label for="logo"
+                                            class="frosted-button inline-flex items-center gap-2 px-4 py-2 rounded-lg cursor-pointer transition-all">
+                                            <x-heroicon-o-photo class="w-5 h-5" />
+                                            {{ __('messages.choose_photo') }}
+                                        </label>
+                                    </div>
+
+                                    <!-- File Info -->
+                                    <div id="file-info" class="mt-2 hidden">
+                                        <div class="bg-frappe-surface0/30 rounded-lg p-3 border border-frappe-surface2/30">
+                                            <div class="flex items-center gap-2">
+                                                <x-heroicon-o-document-arrow-up class="w-4 h-4 text-frappe-green" />
+                                                <span id="file-name" class="text-sm text-frappe-text font-medium"></span>
+                                                <span id="file-size" class="text-xs text-frappe-subtext1"></span>
+                                            </div>
+                                            <button type="button" onclick="clearFileInput()"
+                                                class="text-xs text-frappe-red hover:text-frappe-red/80 mt-1">
+                                                {{ __('messages.remove') }}
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Upload Guidelines -->
+                                    <div class="mt-4 text-xs text-frappe-subtext1">
+                                        <p>{{ __('messages.logo_guidelines') }}</p>
+                                        <ul class="list-disc list-inside mt-1 space-y-1">
+                                            <li>{{ __('messages.max_file_size_2mb') }}</li>
+                                            <li>{{ __('messages.supported_formats') }}</li>
+                                            <li>{{ __('messages.recommended_logo_size') }}</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
                             <x-input-error :messages="$errors->get('logo')" class="mt-2" />
                         </div>
 
@@ -274,5 +333,71 @@
                 noCategoriesText.style.display = selectedCategoryIds.length === 0 ? 'block' : 'none';
             }
         });
+
+        // Logo preview function
+        function previewLogo(input) {
+            const preview = document.getElementById('logo-preview');
+            const placeholder = document.getElementById('logo-placeholder');
+            const fileInfo = document.getElementById('file-info');
+            const fileName = document.getElementById('file-name');
+            const fileSize = document.getElementById('file-size');
+            
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    // Hide placeholder
+                    if (placeholder) placeholder.classList.add('hidden');
+                    
+                    // Create or update preview image
+                    let previewImg = document.getElementById('new-logo-preview');
+                    if (!previewImg) {
+                        previewImg = document.createElement('img');
+                        previewImg.id = 'new-logo-preview';
+                        previewImg.className = 'w-full h-full object-contain';
+                        previewImg.alt = 'Logo Preview';
+                        preview.appendChild(previewImg);
+                    }
+                    
+                    previewImg.src = e.target.result;
+                    previewImg.classList.remove('hidden');
+                    
+                    // Show file info
+                    fileName.textContent = file.name;
+                    fileSize.textContent = formatFileSize(file.size);
+                    fileInfo.classList.remove('hidden');
+                }
+                
+                reader.readAsDataURL(file);
+            } else {
+                clearFileInput();
+            }
+        }
+
+        function clearFileInput() {
+            const input = document.getElementById('logo');
+            const preview = document.getElementById('logo-preview');
+            const placeholder = document.getElementById('logo-placeholder');
+            const previewImg = document.getElementById('new-logo-preview');
+            const fileInfo = document.getElementById('file-info');
+            
+            input.value = '';
+            
+            // Hide preview and file info
+            if (previewImg) previewImg.classList.add('hidden');
+            fileInfo.classList.add('hidden');
+            
+            // Show placeholder
+            if (placeholder) placeholder.classList.remove('hidden');
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
     </script>
 </x-app-layout>

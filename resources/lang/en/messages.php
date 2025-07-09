@@ -320,6 +320,10 @@ return [
     'required' => 'Required',
     'optional' => 'Optional',
     'business_logo' => 'Business Logo',
+    'remove_logo' => 'Remove Logo',
+    'remove_logo_confirmation' => 'Are you sure you want to remove this logo? This action cannot be undone.',
+    'logo_guidelines' => 'Logo upload guidelines:',
+    'recommended_logo_size' => 'Recommended size: 200x200px or larger',
     'categories' => 'Categories',
 
     // Authentication

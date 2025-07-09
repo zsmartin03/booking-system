@@ -287,6 +287,10 @@ return [
     'required' => 'Kötelező',
     'optional' => 'Opcionális',
     'business_logo' => 'Vállalkozás logója',
+    'remove_logo' => 'Logó eltávolítása',
+    'remove_logo_confirmation' => 'Biztosan el szeretné távolítani ezt a logót? Ez a művelet nem vonható vissza.',
+    'logo_guidelines' => 'Logó feltöltési útmutató:',
+    'recommended_logo_size' => 'Ajánlott méret: 200x200px vagy nagyobb',
     'categories' => 'Kategóriák',
 
     // Authentication
