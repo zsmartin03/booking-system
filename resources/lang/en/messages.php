@@ -86,6 +86,9 @@ return [
 
     // Pagination
     'showing_reviews' => 'Showing :from to :to of :total reviews',
+    'showing' => 'Showing',
+    'to' => 'to',
+    'of' => 'of',
     'previous' => 'Previous',
     'next' => 'Next',
     'loading_reviews' => 'Loading reviews...',
@@ -458,6 +461,7 @@ return [
     'service_details' => 'Service Details',
     'all_businesses' => 'All Businesses',
     'view_details' => 'View Details',
+    'view_all_businesses' => 'View All Businesses',
     'please_sign_in_to_book' => 'Please sign in to make a booking',
 
     // Additional business terms

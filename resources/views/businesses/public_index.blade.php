@@ -137,29 +137,28 @@
                                         @if (request('min_rating'))
                                             {{ __('messages.with_rating_above', ['rating' => request('min_rating')]) }}
                                         @endif
-                                    </p>
-                                    <p class="text-frappe-subtext1 text-xs mt-1">
-                                        {{ $businesses->count() }} {{ __('messages.results') }}
-                                        @if (request('sort'))
-                                            • {{ __('messages.sorted_by') }}
-                                            @switch(request('sort'))
-                                                @case('rating_high')
-                                                    {{ __('messages.rating_high_to_low') }}
-                                                @break
+                                    </p>                    <p class="text-frappe-subtext1 text-xs mt-1">
+                        {{ $businesses->total() }} {{ __('messages.results') }}
+                        @if (request('sort'))
+                            • {{ __('messages.sorted_by') }}
+                            @switch(request('sort'))
+                                @case('rating_high')
+                                    {{ __('messages.rating_high_to_low') }}
+                                @break
 
-                                                @case('rating_low')
-                                                    {{ __('messages.rating_low_to_high') }}
-                                                @break
+                                @case('rating_low')
+                                    {{ __('messages.rating_low_to_high') }}
+                                @break
 
-                                                @case('reviews_count')
-                                                    {{ __('messages.most_reviewed') }}
-                                                @break
+                                @case('reviews_count')
+                                    {{ __('messages.most_reviewed') }}
+                                @break
 
-                                                @default
-                                                    {{ __('messages.name_a_to_z') }}
-                                            @endswitch
-                                        @endif
-                                    </p>
+                                @default
+                                    {{ __('messages.name_a_to_z') }}
+                            @endswitch
+                        @endif
+                    </p>
                                 </div>
                             </div>
                         </div>
@@ -172,71 +171,11 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                 @endif
 
-                <div
-                    class="frosted-card overflow-hidden shadow-lg sm:rounded-xl border border-frappe-surface2 hover:shadow-2xl transition-all duration-300 hover:scale-105 hover:transform hover:-translate-y-2">
-                    <div class="p-4 sm:p-6">
-                        <div class="mb-4">
-                            <a href="{{ route('businesses.show', $business->id) }}"
-                                class="text-frappe-blue hover:text-frappe-sapphire text-lg sm:text-xl font-semibold block mb-2 transition-colors">
-                                {{ $business->name }}
-                            </a>
-
-                            <!-- Average Rating Display -->
-                            <div class="flex items-center gap-2 mb-3">
-                                <div class="flex items-center">
-                                    @for ($i = 1; $i <= 5; $i++)
-                                        @if ($i <= floor($business->average_rating))
-                                            <x-heroicon-s-star class="w-4 h-4 text-yellow-400" />
-                                        @elseif ($i - 0.5 <= $business->average_rating)
-                                            <x-heroicon-s-star class="w-4 h-4 text-yellow-400" />
-                                        @else
-                                            <x-heroicon-o-star class="w-4 h-4 text-gray-300" />
-                                        @endif
-                                    @endfor
-                                </div>
-                                <span class="text-sm font-medium text-frappe-text">
-                                    {{ number_format($business->average_rating, 1) }}
-                                </span>
-                                <span class="text-frappe-subtext1 text-xs">
-                                    ({{ $business->reviews_count }} {{ __('messages.reviews_count') }})
-                                </span>
-                            </div>
-
-                            <!-- Categories -->
-                            @if ($business->categories->count() > 0)
-                                <div class="flex flex-wrap gap-1 mb-2">
-                                    @foreach ($business->categories as $category)
-                                        <a href="{{ route('businesses.public.index', ['category' => $category->slug]) }}"
-                                            class="{{ $category->badge_classes }}"
-                                            style="{{ $category->badge_styles }}"
-                                            onmouseover="this.style.cssText = '{{ $category->badge_styles }} {{ $category->badge_hover_styles }}'"
-                                            onmouseout="this.style.cssText = '{{ $category->badge_styles }}'">
-                                            {{ $category->name }}
-                                        </a>
-                                    @endforeach
-                                </div>
-                            @endif
-
-                            <p class="text-frappe-subtext1 text-sm opacity-80">{{ $business->address }}</p>
-                            @if ($business->description)
-                                <p class="text-frappe-subtext0 text-sm mt-2 opacity-70 line-clamp-3">
-                                    {{ $business->description }}</p>
-                            @endif
-                        </div>
-
-                        <div class="flex justify-center">
-                            <a href="{{ route('businesses.show', $business->id) }}"
-                                class="inline-flex items-center gap-2 bg-gradient-to-r from-blue-500/20 to-indigo-500/20 backdrop-blur-sm border border-blue-400/30 text-blue-300 px-4 py-2 rounded-lg text-sm hover:from-blue-500/30 hover:to-indigo-500/30 transition-all">
-                                <x-heroicon-o-eye class="w-4 h-4" />
-                                {{ __('messages.view_details') }}
-                            </a>
-                        </div>
-                    </div>
-                </div>
+                <x-business-card :business="$business" />
 
                 @if ($loop->last)
-        </div>
-        @endif
+                    </div>
+                @endif
     @empty
         <div class="frosted-card overflow-hidden shadow-lg sm:rounded-xl">
             <div class="p-6 text-center">
@@ -244,6 +183,89 @@
             </div>
         </div>
         @endforelse
+
+        <!-- Pagination -->
+        @if($businesses->hasPages())
+            <div class="mt-8">
+                <div class="frosted-card overflow-hidden shadow-lg sm:rounded-xl border border-frappe-surface2">
+                    <div class="p-6">
+                        <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+                            <!-- Results info -->
+                            <div class="text-sm text-frappe-subtext1">
+                                {{ __('messages.showing') }} 
+                                <span class="font-medium text-frappe-text">{{ $businesses->firstItem() }}</span>
+                                {{ __('messages.to') }}
+                                <span class="font-medium text-frappe-text">{{ $businesses->lastItem() }}</span>
+                                {{ __('messages.of') }}
+                                <span class="font-medium text-frappe-text">{{ $businesses->total() }}</span>
+                                {{ __('messages.results') }}
+                            </div>
+
+                            <!-- Pagination links -->
+                            <div class="flex items-center gap-2">
+                                {{-- Previous Page Link --}}
+                                @if (!$businesses->onFirstPage())
+                                    <a href="{{ $businesses->previousPageUrl() }}" class="inline-flex items-center gap-2 bg-gradient-to-r from-blue-500/20 to-indigo-500/20 backdrop-blur-sm border border-blue-400/30 text-blue-300 px-4 py-2 rounded-lg text-sm hover:from-blue-500/30 hover:to-indigo-500/30 transition-all">
+                                        <x-heroicon-o-chevron-left class="w-4 h-4" />
+                                        {{ __('messages.previous') }}
+                                    </a>
+                                @endif
+
+                                {{-- Pagination Elements --}}
+                                @php
+                                    $currentPage = $businesses->currentPage();
+                                    $lastPage = $businesses->lastPage();
+                                    $startPage = max(1, $currentPage - 2);
+                                    $endPage = min($lastPage, $currentPage + 2);
+                                @endphp
+
+                                @if ($startPage > 1)
+                                    <a href="{{ $businesses->url(1) }}" class="inline-flex items-center justify-center bg-gradient-to-r from-blue-500/20 to-indigo-500/20 backdrop-blur-sm border border-blue-400/30 text-blue-300 px-3 py-2 rounded-lg text-sm hover:from-blue-500/30 hover:to-indigo-500/30 transition-all">
+                                        1
+                                    </a>
+                                    @if ($startPage > 2)
+                                        <span class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-frappe-subtext1 bg-frappe-surface0/50 border border-frappe-surface2/50 leading-5 rounded-md">
+                                            ...
+                                        </span>
+                                    @endif
+                                @endif
+
+                                @for ($page = $startPage; $page <= $endPage; $page++)
+                                    @if ($page == $currentPage)
+                                        <span class="inline-flex items-center justify-center bg-gradient-to-r from-blue-600/40 to-indigo-600/40 backdrop-blur-sm border border-blue-400/50 text-white px-3 py-2 rounded-lg text-sm font-medium shadow-lg">
+                                            {{ $page }}
+                                        </span>
+                                    @else
+                                        <a href="{{ $businesses->url($page) }}" class="inline-flex items-center justify-center bg-gradient-to-r from-blue-500/20 to-indigo-500/20 backdrop-blur-sm border border-blue-400/30 text-blue-300 px-3 py-2 rounded-lg text-sm hover:from-blue-500/30 hover:to-indigo-500/30 transition-all">
+                                            {{ $page }}
+                                        </a>
+                                    @endif
+                                @endfor
+
+                                @if ($endPage < $lastPage)
+                                    @if ($endPage < $lastPage - 1)
+                                        <span class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-frappe-subtext1 bg-frappe-surface0/50 border border-frappe-surface2/50 leading-5 rounded-md">
+                                            ...
+                                        </span>
+                                    @endif
+                                    <a href="{{ $businesses->url($lastPage) }}" class="inline-flex items-center justify-center bg-gradient-to-r from-blue-500/20 to-indigo-500/20 backdrop-blur-sm border border-blue-400/30 text-blue-300 px-3 py-2 rounded-lg text-sm hover:from-blue-500/30 hover:to-indigo-500/30 transition-all">
+                                        {{ $lastPage }}
+                                    </a>
+                                @endif
+
+                                {{-- Next Page Link --}}
+                                @if ($businesses->hasMorePages())
+                                    <a href="{{ $businesses->nextPageUrl() }}" class="inline-flex items-center gap-2 bg-gradient-to-r from-blue-500/20 to-indigo-500/20 backdrop-blur-sm border border-blue-400/30 text-blue-300 px-4 py-2 rounded-lg text-sm hover:from-blue-500/30 hover:to-indigo-500/30 transition-all">
+                                        {{ __('messages.next') }}
+                                        <x-heroicon-o-chevron-right class="w-4 h-4" />
+                                    </a>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
     </div>
     </div>
 </x-app-layout>

@@ -45,7 +45,14 @@ Route::get('/locale/init/{locale}', function ($locale) {
 
 Route::middleware('guest')->group(function () {
     Route::get('/', function () {
-        return view('welcome', ['businesses' => \App\Models\Business::all()]);
+        return view('welcome', [
+            'businesses' => \App\Models\Business::with('categories')
+                ->withCount('reviews')
+                ->withAvg('reviews', 'rating')
+                ->orderBy('reviews_count', 'desc')
+                ->take(9)
+                ->get()
+        ]);
     })->name('home');
 });
 

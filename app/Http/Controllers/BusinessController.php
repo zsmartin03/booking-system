@@ -50,7 +50,9 @@ class BusinessController extends Controller
      */
     public function publicIndex(Request $request)
     {
-        $query = Business::with('categories');
+        $query = Business::with('categories')
+            ->withCount('reviews')
+            ->withAvg('reviews', 'rating');
 
         if ($request->filled('search')) {
             $query->where('name', 'like', '%' . $request->search . '%');
@@ -63,48 +65,39 @@ class BusinessController extends Controller
             });
         }
 
-        $businesses = $query->get();
-
-        $businesses = $businesses->map(function ($business) {
-            $business->average_rating = $business->reviews()->avg('rating') ?? 0;
-            $business->reviews_count = $business->reviews()->count();
-            return $business;
-        });
-
         if ($request->filled('min_rating')) {
             $minRating = floatval($request->min_rating);
-            $businesses = $businesses->filter(function ($business) use ($minRating) {
-                return $business->average_rating >= $minRating && $business->reviews_count > 0;
-            });
+            $query->having('reviews_avg_rating', '>=', $minRating)
+                ->where('reviews_count', '>', 0);
         }
 
         $sortBy = $request->get('sort', 'name');
         switch ($sortBy) {
             case 'rating_high':
-                $businesses = $businesses->sortBy([
-                    ['average_rating', 'desc'],
-                    ['name', 'asc']
-                ]);
+                $query->orderBy('reviews_avg_rating', 'desc')
+                    ->orderBy('name', 'asc');
                 break;
             case 'rating_low':
-                $businesses = $businesses->sortBy([
-                    ['average_rating', 'asc'],
-                    ['name', 'asc']
-                ]);
+                $query->orderBy('reviews_avg_rating', 'asc')
+                    ->orderBy('name', 'asc');
                 break;
             case 'reviews_count':
-                $businesses = $businesses->sortBy([
-                    ['reviews_count', 'desc'],
-                    ['name', 'asc']
-                ]);
+                $query->orderBy('reviews_count', 'desc')
+                    ->orderBy('name', 'asc');
                 break;
             case 'name':
             default:
-                $businesses = $businesses->sortBy('name');
+                $query->orderBy('name', 'asc');
                 break;
         }
 
-        $businesses = $businesses->values();
+        $businesses = $query->paginate(12)->appends($request->query());
+
+        $businesses->getCollection()->transform(function ($business) {
+            $business->average_rating = $business->reviews_avg_rating ?? 0;
+            $business->reviews_count = $business->reviews_count ?? 0;
+            return $business;
+        });
 
         $categories = Category::orderBy('name')->get();
 

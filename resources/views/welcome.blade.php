@@ -162,32 +162,18 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     @endif
 
-                    <div
-                        class="frosted-card overflow-hidden shadow-lg sm:rounded-xl border border-frappe-surface2 hover:shadow-2xl transition-all duration-300 hover:scale-105 hover:transform hover:-translate-y-2">
-                        <div class="p-6">
-                            <div class="mb-4">
-                                <a href="{{ route('businesses.show', $business->id) }}"
-                                    class="text-frappe-blue hover:text-frappe-sapphire text-xl font-semibold block mb-2 transition-colors">
-                                    {{ $business->name }}
-                                </a>
-                                <p class="text-frappe-subtext1 text-sm opacity-80">{{ $business->address }}</p>
-                                @if ($business->description)
-                                    <p class="text-frappe-subtext0 text-sm mt-2 opacity-70">
-                                        {{ $business->description }}</p>
-                                @endif
-                            </div>
-
-                            <div class="flex justify-center">
-                                <a href="{{ route('businesses.show', $business->id) }}"
-                                    class="frosted-button text-white px-4 py-2 rounded-lg transition-all inline-flex items-center gap-2">
-                                    <x-heroicon-o-eye class="w-4 h-4" />
-                                    {{ __('messages.view') }}
-                                </a>
-                            </div>
-                        </div>
-                    </div>
+                    <x-business-card :business="$business" />
 
                     @if ($loop->last)
+            </div>
+
+            <!-- View All Businesses Link -->
+            <div class="text-center mt-8">
+                <a href="{{ route('businesses.public.index') }}"
+                    class="inline-flex items-center gap-2 bg-gradient-to-r from-blue-500/20 to-indigo-500/20 backdrop-blur-sm border border-blue-400/30 text-blue-300 px-6 py-3 rounded-lg text-sm hover:from-blue-500/30 hover:to-indigo-500/30 transition-all">
+                    <x-heroicon-o-building-storefront class="w-5 h-5" />
+                    {{ __('messages.view_all_businesses') }}
+                </a>
             </div>
             @endif
         @empty
@@ -197,7 +183,7 @@
             </div>
             @endforelse
     </div>
-    </section>
+    </section>>
 
 
     </div>
@@ -210,7 +196,6 @@
                 window.location.href = '/locale/init/' + savedLanguage;
             }
 
-            // Hamburger menu logic
             const menu = document.getElementById('mobile-menu');
             const openBtn = document.getElementById('mobile-menu-toggle');
             const closeBtn = document.getElementById('mobile-menu-close');
@@ -224,7 +209,6 @@
                     menu.classList.add('hidden');
                 });
             }
-            // Close on backdrop click
             if (menu) {
                 menu.addEventListener('click', (e) => {
                     if (e.target === menu) menu.classList.add('hidden');

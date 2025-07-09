@@ -931,21 +931,21 @@
                     })
                 })
                 .then(response => response.json())
-                .then data => {
+                .then(data => {
                     if (data.success) {
                         location.reload();
                     } else {
                         alert(data.error || translations.failedToSubmitReview);
                     }
                 })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert(translations.failedToSubmitReview);
-                })
-                .finally(() => {
-                    submitBtn.textContent = originalText;
-                    submitBtn.disabled = false;
-                });
+        .catch(error => {
+                console.error('Error:', error);
+                alert(translations.failedToSubmitReview);
+            })
+            .finally(() => {
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            });
         }
 
         function voteReview(reviewId, isUpvote) {
@@ -1199,9 +1199,7 @@
                         container.innerHTML = '<div class="text-center py-8 text-red-500">Error loading reviews</div>';
                     }
                 });
-        }
-
-        function updatePaginationControls(pagination) {
+        }        function updatePaginationControls(pagination) {
             const paginationContainer = document.getElementById('paginationContainer');
             if (!paginationContainer) return;
 
@@ -1209,6 +1207,8 @@
                 paginationContainer.style.display = 'none';
                 return;
             }
+
+            paginationContainer.style.display = 'flex';
 
             paginationContainer.style.display = 'flex';
 
@@ -1271,12 +1271,12 @@
         }
 
         document.addEventListener('DOMContentLoaded', function() {
-            @if (isset($otherReviews) && $otherReviews->lastPage() > 1)
+            @if (isset($otherReviews))
                 const paginationData = {
-                    current_page: {{ $otherReviews->currentPage() }},
-                    last_page: {{ $otherReviews->lastPage() }},
-                    per_page: {{ $otherReviews->perPage() }},
-                    total: {{ $otherReviews->total() }},
+                    current_page: {{ $otherReviews->currentPage() ?? 1 }},
+                    last_page: {{ $otherReviews->lastPage() ?? 1 }},
+                    per_page: {{ $otherReviews->perPage() ?? 10 }},
+                    total: {{ $otherReviews->total() ?? 0 }},
                     from: {{ $otherReviews->firstItem() ?? 0 }},
                     to: {{ $otherReviews->lastItem() ?? 0 }}
                 };
@@ -1287,7 +1287,7 @@
 
     <!-- Business Location Map Script -->
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             @if ($business->latitude && $business->longitude)
                 if (window.geocodingMaps) {
                     window.geocodingMaps.setupDisplayMap(

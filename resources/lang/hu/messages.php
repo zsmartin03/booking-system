@@ -85,6 +85,9 @@ return [
 
     // Pagination
     'showing_reviews' => ':total értékelésből :from - :to megjelenítése',
+    'showing' => 'Megjelenítés',
+    'to' => 'től',
+    'of' => 'összesen',
     'previous' => 'Előző',
     'next' => 'Következő',
     'loading_reviews' => 'Értékelések betöltése...',
@@ -457,6 +460,7 @@ return [
     'service_details' => 'Szolgáltatás részletei',
     'all_businesses' => 'Minden vállalkozás',
     'view_details' => 'Részletek megtekintése',
+    'view_all_businesses' => 'Összes vállalkozás megtekintése',
     'please_sign_in_to_book' => 'Kérjük, jelentkezzen be a foglaláshoz',
 
     // Additional business terms
