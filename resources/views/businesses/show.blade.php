@@ -116,7 +116,7 @@
                         <div class="mt-6 text-center">
                             <div class="inline-flex items-center justify-center max-w-full h-32">
                                 <img src="{{ $business->logo_url }}" alt="{{ $business->name }} Logo"
-                                    class="max-w-full max-h-full object-contain shadow-lg">
+                                    class="max-w-full max-h-full object-contain">
                             </div>
                         </div>
                     @endif

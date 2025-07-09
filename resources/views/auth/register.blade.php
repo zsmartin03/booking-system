@@ -55,6 +55,20 @@
                 <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2 text-frappe-red text-sm" />
             </div>
 
+            <!-- Terms and Conditions -->
+            <div class="mt-4">
+                <label class="flex items-center space-x-2">
+                    <input type="checkbox" name="terms" value="1"
+                        class="h-4 w-4 text-frappe-blue focus:ring-frappe-blue border-frappe-surface1 rounded"
+                        {{ old('terms') ? 'checked' : '' }} required>
+                    <span class="text-sm text-frappe-text">
+                        {{ __('messages.agree_to_terms') }}
+                        <a href="#" class="text-frappe-blue hover:text-frappe-sapphire">{{ __('messages.terms_conditions') }}</a>
+                    </span>
+                </label>
+                <x-input-error :messages="$errors->get('terms')" class="mt-2 text-frappe-red text-sm" />
+            </div>
+
             <div class="flex items-center justify-between mt-6">
                 <a class="text-sm text-frappe-blue hover:text-frappe-sapphire" href="{{ route('login') }}">
                     {{ __('messages.already_have_account') }}

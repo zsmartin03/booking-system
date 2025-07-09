@@ -1,6 +1,7 @@
 @props(['business'])
 
-<div class="frosted-card overflow-hidden shadow-lg sm:rounded-xl border border-frappe-surface2 hover:shadow-2xl transition-all duration-300 hover:scale-105 hover:transform hover:-translate-y-2 flex flex-col h-full">
+<div
+    class="frosted-card overflow-hidden shadow-lg sm:rounded-xl border border-frappe-surface2 hover:shadow-2xl transition-all duration-300 hover:scale-105 hover:transform hover:-translate-y-2 flex flex-col h-full">
     <!-- Main content area that grows to fill available space -->
     <div class="p-4 sm:p-6 flex-1 flex flex-col">
         <!-- Top section with business info and logo -->
@@ -38,8 +39,7 @@
                     <div class="flex flex-wrap gap-1 mb-2">
                         @foreach ($business->categories as $category)
                             <a href="{{ route('businesses.public.index', ['category' => $category->slug]) }}"
-                                class="{{ $category->badge_classes }}"
-                                style="{{ $category->badge_styles }}"
+                                class="{{ $category->badge_classes }}" style="{{ $category->badge_styles }}"
                                 onmouseover="this.style.cssText = '{{ $category->badge_styles }} {{ $category->badge_hover_styles }}'"
                                 onmouseout="this.style.cssText = '{{ $category->badge_styles }}'">
                                 {{ $category->name }}
@@ -60,8 +60,8 @@
             @if ($business->logo)
                 <div class="flex-shrink-0">
                     <div class="w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center">
-                        <img src="{{ $business->logo_url }}" alt="{{ $business->name }} Logo" 
-                            class="max-w-full max-h-full object-contain shadow-md">
+                        <img src="{{ $business->logo_url }}" alt="{{ $business->name }} Logo"
+                            class="max-w-full max-h-full object-contain">
                     </div>
                 </div>
             @endif

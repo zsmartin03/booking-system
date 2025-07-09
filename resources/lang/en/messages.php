@@ -334,6 +334,8 @@ return [
     'reset_password' => 'Reset Password',
     'dont_have_account' => 'Don\'t have an account? Register',
     'already_have_account' => 'Already have an account? Sign In',
+    'agree_to_terms' => 'I agree to the',
+    'terms_conditions' => 'Terms and Conditions',
     'verify_email' => 'Verify Email',
     'password_reset_instruction' => 'Enter your email address below, and we’ll send you a link to reset your password.',
     'send_password_reset_link' => 'Send Password Reset Link',

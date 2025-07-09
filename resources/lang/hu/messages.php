@@ -301,6 +301,8 @@ return [
     'reset_password' => 'Jelszó visszaállítása',
     'dont_have_account' => 'Nincs még fiókja? Regisztráljon',
     'already_have_account' => 'Már van fiókja? Jelentkezzen be',
+    'agree_to_terms' => 'Elfogadom a',
+    'terms_conditions' => 'Felhasználási feltételeket',
     'verify_email' => 'E-mail megerősítése',
     'password_reset_instruction' => 'Add meg az email címedet, és küldünk egy linket a jelszó visszaállításához.',
     'send_password_reset_link' => 'Jelszó visszaállító link küldése',
