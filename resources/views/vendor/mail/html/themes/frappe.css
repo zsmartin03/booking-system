@@ -331,8 +331,12 @@ img {
     margin-bottom: 8px;
 }
 
-.panel-content p {
-    color: #b5bfe2;
+.panel-content p,
+.panel-content strong,
+.panel-content b,
+.panel-item strong,
+.panel-item b {
+    color: #c6d0f5;
     font-size: 14px;
     line-height: 1.6;
 }

@@ -121,22 +121,4 @@ Route::get('/booking-slots', [\App\Http\Controllers\BookingController::class, 'a
     ->name('booking-slots')
     ->middleware(['auth', 'verified']);
 
-Route::get('/debug/booking-slots', function (Request $request) {
-    $service = \App\Models\Service::findOrFail($request->service_id);
-    $employees = $service->employees()->where('active', true)->get();
 
-    $debug = [
-        'service' => $service->toArray(),
-        'employees_count' => $employees->count(),
-        'employees' => $employees->map(function ($emp) {
-            return [
-                'id' => $emp->id,
-                'name' => $emp->name,
-                'working_hours_count' => $emp->workingHours()->count(),
-                'working_hours' => $emp->workingHours()->get()->toArray()
-            ];
-        })
-    ];
-
-    return response()->json($debug);
-});

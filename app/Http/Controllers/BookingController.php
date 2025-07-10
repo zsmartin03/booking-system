@@ -127,22 +127,19 @@ class BookingController extends Controller
         }
 
         try {
-            $initialStatus = $settings['booking_confirmation_required'] ? 'pending' : 'confirmed';
-
+            // Set status to 'pending' by default regardless of settings
             $booking = Booking::create([
                 'client_id' => Auth::id(),
                 'service_id' => $service->id,
                 'employee_id' => $validated['employee_id'],
                 'start_time' => $start,
                 'end_time' => $end,
-                'status' => $initialStatus,
+                'status' => 'pending',
                 'notes' => $validated['notes'] ?? '',
                 'total_price' => $service->price,
             ]);
 
-            $successMessage = $settings['booking_confirmation_required']
-                ? __('messages.booking_created_awaiting_confirmation')
-                : __('messages.booking_confirmed_email_sent');
+            $successMessage = __('messages.booking_created_awaiting_confirmation');
 
             return redirect()->route('bookings.show', $booking->id)
                 ->with('success', $successMessage);
