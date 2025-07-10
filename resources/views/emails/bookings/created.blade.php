@@ -8,10 +8,10 @@ Thank you for booking with **{{ $booking->service->business->name }}**. Your boo
 ## Booking Details:
 
 <x-mail::panel>
-**Service:** {{ $booking->service->name }}  
-**Date:** {{ $booking->start_time->format('l, F j, Y') }}  
-**Time:** {{ $booking->start_time->format('g:i A') }} - {{ $booking->end_time->format('g:i A') }}  
-**Employee:** {{ $booking->employee->name }}  
+**Service:** {{ $booking->service->name }}
+**Date:** {{ $booking->start_time->format('l, F j, Y') }}
+**Time:** {{ $booking->start_time->format('g:i A') }} - {{ $booking->end_time->format('g:i A') }}
+**Employee:** {{ $booking->employee->name }}
 **Price:** ${{ number_format($booking->total_price, 2) }}
 </x-mail::panel>
 
