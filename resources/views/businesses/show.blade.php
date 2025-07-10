@@ -1,8 +1,9 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-frappe-lavender leading-tight">
-            {{ $business->name }}
-        </h2>
+        <x-breadcrumb :items="[
+            ['text' => __('messages.businesses'), 'url' => route('businesses.public.index')],
+            ['text' => $business->name, 'url' => null]
+        ]" />
     </x-slot>
 
     <style>

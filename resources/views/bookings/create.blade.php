@@ -1,8 +1,16 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-frappe-lavender leading-tight">
-            {{ __('messages.book_service') }}
-        </h2>
+        @if ($selectedBusiness)
+            <x-breadcrumb :items="[
+                ['text' => __('messages.all_businesses'), 'url' => route('businesses.public.index')],
+                ['text' => $selectedBusiness->name, 'url' => route('businesses.show', $selectedBusiness->id)],
+                ['text' => __('messages.book_service'), 'url' => null]
+            ]" />
+        @else
+            <x-breadcrumb :items="[
+                ['text' => __('messages.book_service'), 'url' => null]
+            ]" />
+        @endif
     </x-slot>
 
     <div class="py-6 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

@@ -1,8 +1,9 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-frappe-lavender leading-tight">
-            {{ __('messages.edit_category') }}
-        </h2>
+        <x-breadcrumb :items="[
+            ['text' => __('messages.categories'), 'url' => route('categories.index')],
+            ['text' => __('messages.edit_category') . ' - ' . $category->name, 'url' => null]
+        ]" />
     </x-slot>
 
     <div class="py-6">

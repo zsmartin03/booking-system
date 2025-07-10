@@ -1,8 +1,8 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-frappe-lavender leading-tight">
-            {{ __('messages.categories') }}
-        </h2>
+        <x-breadcrumb :items="[
+            ['text' => __('messages.categories'), 'url' => null]
+        ]" />
     </x-slot>
 
     <div class="py-6">

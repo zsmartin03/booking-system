@@ -1,8 +1,11 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-frappe-lavender leading-tight">
-            {{ __('messages.add_working_hour_for') }} {{ $employee->name }}
-        </h2>
+        <x-breadcrumb :items="[
+            ['text' => __('messages.businesses'), 'url' => route('businesses.index')],
+            ['text' => __('messages.employees') . ' - ' . $employee->business->name, 'url' => route('employees.index', ['business_id' => $employee->business->id])],
+            ['text' => __('messages.working_hours') . ' - ' . $employee->name, 'url' => route('employee-working-hours.index', ['employee_id' => $employee->id])],
+            ['text' => __('messages.add_working_hour'), 'url' => null]
+        ]" />
     </x-slot>
 
     <div class="py-6 max-w-md mx-auto">

@@ -1,8 +1,11 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-frappe-lavender leading-tight">
-            {{ __('messages.edit_availability_exception') }}: {{ $employee->name }}
-        </h2>
+        <x-breadcrumb :items="[
+            ['text' => __('messages.businesses'), 'url' => route('businesses.index')],
+            ['text' => __('messages.employees') . ' - ' . $employee->business->name, 'url' => route('employees.index', ['business_id' => $employee->business->id])],
+            ['text' => __('messages.availability_exceptions') . ' - ' . $employee->name, 'url' => route('availability-exceptions.index', ['employee_id' => $employee->id])],
+            ['text' => __('messages.edit_availability_exception'), 'url' => null]
+        ]" />
     </x-slot>
 
     <div class="py-6 max-w-2xl mx-auto">
