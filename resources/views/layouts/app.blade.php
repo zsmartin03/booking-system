@@ -487,6 +487,26 @@
             background: linear-gradient(to right, rgba(166, 209, 137, 0.18), rgba(137, 180, 250, 0.18)) !important;
             border-color: rgba(166, 209, 137, 0.28) !important;
         }
+
+        .frosted-button-cancel {
+            background: linear-gradient(to right, rgba(237, 135, 150, 0.20), rgba(210, 120, 137, 0.20)) !important;
+            backdrop-filter: blur(6px) !important;
+            border: 1px solid rgba(237, 135, 150, 0.30) !important;
+            color: #ed8796 !important;
+            padding: 0.5rem 1rem !important;
+            border-radius: 0.5rem !important;
+            font-size: 0.875rem !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            font-weight: 500 !important;
+            transition: all 0.3s ease !important;
+            cursor: pointer !important;
+        }
+
+        .frosted-button-cancel:hover {
+            background: linear-gradient(to right, rgba(237, 135, 150, 0.30), rgba(210, 120, 137, 0.30)) !important;
+        }
     </style>
 </head>
 

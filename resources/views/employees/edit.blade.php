@@ -2,8 +2,11 @@
     <x-slot name="header">
         <x-breadcrumb :items="[
             ['text' => __('messages.businesses'), 'url' => route('businesses.index')],
-            ['text' => __('messages.employees') . ' - ' . $business->name, 'url' => route('employees.index', ['business_id' => $business->id])],
-            ['text' => 'Edit ' . $employee->name, 'url' => null]
+            [
+                'text' => __('messages.employees') . ' - ' . $business->name,
+                'url' => route('employees.index', ['business_id' => $business->id]),
+            ],
+            ['text' => 'Edit ' . $employee->name, 'url' => null],
         ]" />
     </x-slot>
 
@@ -15,8 +18,8 @@
 
                 <div class="mb-4">
                     <x-input-label for="name" :value="__('messages.name')" />
-                    <x-text-input id="name" name="name" type="text" class="block w-full mt-1"
-                        :value="old('name', $employee->name)" required />
+                    <x-text-input id="name" name="name" type="text" class="block w-full mt-1" :value="old('name', $employee->name)"
+                        required />
                     <x-input-error :messages="$errors->get('name')" class="mt-2 text-frappe-red text-sm" />
                 </div>
 
@@ -58,7 +61,7 @@
                         <x-heroicon-o-pencil class="w-4 h-4" /> {{ __('messages.update_employee') }}
                     </button>
                     <a href="{{ route('employees.index', ['business_id' => $employee->business_id]) }}"
-                        class="bg-gray-500/20 backdrop-blur-sm border border-gray-400/30 text-gray-300 px-6 py-3 rounded-lg font-medium hover:bg-gray-500/30 transition-all inline-flex items-center justify-center gap-2 w-full sm:w-auto">
+                        class="frosted-button-cancel px-6 py-3 rounded-lg font-medium transition-all inline-flex items-center justify-center gap-2 w-full sm:w-auto">
                         {{ __('messages.cancel') }}
                     </a>
                 </div>

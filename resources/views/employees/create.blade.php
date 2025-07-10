@@ -2,8 +2,11 @@
     <x-slot name="header">
         <x-breadcrumb :items="[
             ['text' => __('messages.businesses'), 'url' => route('businesses.index')],
-            ['text' => __('messages.employees') . ' - ' . $business->name, 'url' => route('employees.index', ['business_id' => $business->id])],
-            ['text' => __('messages.add_employee_for') . ' ' . $business->name, 'url' => null]
+            [
+                'text' => __('messages.employees') . ' - ' . $business->name,
+                'url' => route('employees.index', ['business_id' => $business->id]),
+            ],
+            ['text' => __('messages.add_employee_for') . ' ' . $business->name, 'url' => null],
         ]" />
     </x-slot>
 
@@ -66,7 +69,7 @@
                         <x-heroicon-o-plus class="w-4 h-4" /> {{ __('messages.add_employee') }}
                     </button>
                     <a href="{{ route('employees.index', ['business_id' => $business->id]) }}"
-                        class="bg-gray-500/20 backdrop-blur-sm border border-gray-400/30 text-gray-300 px-6 py-3 rounded-lg font-medium hover:bg-gray-500/30 transition-all inline-flex items-center justify-center gap-2 w-full sm:w-auto">
+                        class="frosted-button-cancel px-6 py-3 rounded-lg font-medium transition-all inline-flex items-center justify-center gap-2 w-full sm:w-auto">
                         {{ __('messages.cancel') }}
                     </a>
                 </div>

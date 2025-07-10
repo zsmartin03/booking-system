@@ -2,7 +2,7 @@
     <x-slot name="header">
         <x-breadcrumb :items="[
             ['text' => __('messages.businesses'), 'url' => route('businesses.index')],
-            ['text' => __('messages.edit_business') . ' - ' . $business->name, 'url' => null]
+            ['text' => __('messages.edit_business') . ' - ' . $business->name, 'url' => null],
         ]" />
     </x-slot>
 
@@ -10,7 +10,8 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="frosted-card overflow-hidden shadow-lg sm:rounded-xl">
                 <div class="p-6">
-                    <form method="POST" action="{{ route('businesses.update', $business->id) }}" enctype="multipart/form-data">
+                    <form method="POST" action="{{ route('businesses.update', $business->id) }}"
+                        enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
 
@@ -76,7 +77,7 @@
 
                         <div class="mb-4">
                             <x-input-label for="logo" :value="__('messages.business_logo')" />
-                            
+
                             <div class="flex items-start gap-6">
                                 <!-- Logo Preview -->
                                 <div class="flex flex-col items-center">
@@ -84,9 +85,8 @@
                                         <div id="logo-preview"
                                             class="w-24 h-24 rounded-lg overflow-hidden bg-gradient-to-br from-frappe-blue/20 to-frappe-sapphire/20 border-2 border-frappe-surface2/30 flex items-center justify-center transition-all duration-300 group-hover:border-frappe-blue/50">
                                             @if ($business->logo)
-                                                <img id="current-logo"
-                                                    src="{{ $business->logo_url }}" alt="Current Logo"
-                                                    class="w-full h-full object-contain">
+                                                <img id="current-logo" src="{{ $business->logo_url }}"
+                                                    alt="Current Logo" class="w-full h-full object-contain">
                                             @else
                                                 <div id="logo-placeholder"
                                                     class="w-full h-full flex items-center justify-center">
@@ -97,10 +97,13 @@
                                         <!-- Loading indicator -->
                                         <div id="logo-loading"
                                             class="absolute inset-0 bg-frappe-surface0/80 backdrop-blur-sm rounded-lg flex items-center justify-center hidden">
-                                            <div class="animate-spin rounded-full h-6 w-6 border-2 border-frappe-blue border-t-transparent"></div>
+                                            <div
+                                                class="animate-spin rounded-full h-6 w-6 border-2 border-frappe-blue border-t-transparent">
+                                            </div>
                                         </div>
                                     </div>
-                                    <span class="text-xs text-frappe-subtext1 mt-2 text-center">{{ __('messages.business_logo') }}</span>
+                                    <span
+                                        class="text-xs text-frappe-subtext1 mt-2 text-center">{{ __('messages.business_logo') }}</span>
                                 </div>
 
                                 <!-- Upload Controls -->
@@ -118,10 +121,12 @@
 
                                     <!-- File Info -->
                                     <div id="file-info" class="mt-2 hidden">
-                                        <div class="bg-frappe-surface0/30 rounded-lg p-3 border border-frappe-surface2/30">
+                                        <div
+                                            class="bg-frappe-surface0/30 rounded-lg p-3 border border-frappe-surface2/30">
                                             <div class="flex items-center gap-2">
                                                 <x-heroicon-o-document-arrow-up class="w-4 h-4 text-frappe-green" />
-                                                <span id="file-name" class="text-sm text-frappe-text font-medium"></span>
+                                                <span id="file-name"
+                                                    class="text-sm text-frappe-text font-medium"></span>
                                                 <span id="file-size" class="text-xs text-frappe-subtext1"></span>
                                             </div>
                                             <button type="button" onclick="clearFileInput()"
@@ -364,16 +369,16 @@
             const fileInfo = document.getElementById('file-info');
             const fileName = document.getElementById('file-name');
             const fileSize = document.getElementById('file-size');
-            
+
             if (input.files && input.files[0]) {
                 const file = input.files[0];
                 const reader = new FileReader();
-                
+
                 reader.onload = function(e) {
                     // Hide placeholder or current logo
                     if (currentLogo) currentLogo.classList.add('hidden');
                     if (placeholder) placeholder.classList.add('hidden');
-                    
+
                     // Create or update preview image
                     let previewImg = document.getElementById('new-logo-preview');
                     if (!previewImg) {
@@ -383,16 +388,16 @@
                         previewImg.alt = 'New Logo Preview';
                         preview.appendChild(previewImg);
                     }
-                    
+
                     previewImg.src = e.target.result;
                     previewImg.classList.remove('hidden');
-                    
+
                     // Show file info
                     fileName.textContent = file.name;
                     fileSize.textContent = formatFileSize(file.size);
                     fileInfo.classList.remove('hidden');
                 }
-                
+
                 reader.readAsDataURL(file);
             } else {
                 clearFileInput();
@@ -406,13 +411,13 @@
             const placeholder = document.getElementById('logo-placeholder');
             const previewImg = document.getElementById('new-logo-preview');
             const fileInfo = document.getElementById('file-info');
-            
+
             input.value = '';
-            
+
             // Hide preview and file info
             if (previewImg) previewImg.classList.add('hidden');
             fileInfo.classList.add('hidden');
-            
+
             // Show original logo or placeholder
             if (currentLogo) {
                 currentLogo.classList.remove('hidden');
@@ -446,14 +451,14 @@
         <div class="frosted-card p-6 rounded-xl shadow-2xl max-w-md w-full mx-4">
             <h3 class="text-lg font-semibold text-frappe-text mb-4">{{ __('messages.remove_logo') }}</h3>
             <p class="text-frappe-subtext1 mb-6">{{ __('messages.remove_logo_confirmation') }}</p>
-            
+
             <form id="removeLogoForm" method="POST" action="{{ route('businesses.remove-logo', $business->id) }}">
                 @csrf
                 @method('DELETE')
-                
+
                 <div class="flex gap-3">
                     <button type="button" onclick="hideRemoveLogoModal()"
-                        class="flex-1 px-4 py-2 border border-frappe-surface2 text-frappe-subtext1 rounded-lg hover:bg-frappe-surface1 transition-colors">
+                        class="bg-gray-500/20 backdrop-blur-sm border border-gray-400/30 text-gray-300 flex-1 px-4 py-2 rounded-lg hover:bg-gray-500/30 transition-colors">
                         {{ __('messages.cancel') }}
                     </button>
                     <button type="submit"

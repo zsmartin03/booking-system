@@ -73,7 +73,7 @@
 
                         <div class="mb-4">
                             <x-input-label for="logo" :value="__('messages.business_logo')" />
-                            
+
                             <div class="flex items-start gap-6">
                                 <!-- Logo Preview -->
                                 <div class="flex flex-col items-center">
@@ -342,15 +342,15 @@
             const fileInfo = document.getElementById('file-info');
             const fileName = document.getElementById('file-name');
             const fileSize = document.getElementById('file-size');
-            
+
             if (input.files && input.files[0]) {
                 const file = input.files[0];
                 const reader = new FileReader();
-                
+
                 reader.onload = function(e) {
                     // Hide placeholder
                     if (placeholder) placeholder.classList.add('hidden');
-                    
+
                     // Create or update preview image
                     let previewImg = document.getElementById('new-logo-preview');
                     if (!previewImg) {
@@ -360,16 +360,16 @@
                         previewImg.alt = 'Logo Preview';
                         preview.appendChild(previewImg);
                     }
-                    
+
                     previewImg.src = e.target.result;
                     previewImg.classList.remove('hidden');
-                    
+
                     // Show file info
                     fileName.textContent = file.name;
                     fileSize.textContent = formatFileSize(file.size);
                     fileInfo.classList.remove('hidden');
                 }
-                
+
                 reader.readAsDataURL(file);
             } else {
                 clearFileInput();
@@ -382,13 +382,13 @@
             const placeholder = document.getElementById('logo-placeholder');
             const previewImg = document.getElementById('new-logo-preview');
             const fileInfo = document.getElementById('file-info');
-            
+
             input.value = '';
-            
+
             // Hide preview and file info
             if (previewImg) previewImg.classList.add('hidden');
             fileInfo.classList.add('hidden');
-            
+
             // Show placeholder
             if (placeholder) placeholder.classList.remove('hidden');
         }
