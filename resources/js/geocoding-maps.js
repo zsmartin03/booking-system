@@ -143,7 +143,7 @@ class GeocodingMaps {
                         if (result) {
                             latitudeInput.value = result.latitude;
                             longitudeInput.value = result.longitude;
-                            this.addMarker(result.latitude, result.longitude, true);
+                            this.addMarker(result.latitude, result.longitude, false);
 
                             // Always update with formatted address
                             addressInput.value = result.formatted_address;
@@ -166,7 +166,7 @@ class GeocodingMaps {
                 if (result) {
                     latitudeInput.value = result.latitude;
                     longitudeInput.value = result.longitude;
-                    this.addMarker(result.latitude, result.longitude, true);
+                    this.addMarker(result.latitude, result.longitude, false);
 
                     // Always update with formatted address
                     addressInput.value = result.formatted_address;
