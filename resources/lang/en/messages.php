@@ -532,6 +532,11 @@ return [
     'add_working_hour' => 'Add Working Hour',
     'edit_working_hour' => 'Edit Working Hour',
     'no_working_hours' => 'No working hours set.',
+    'employee_hours_within_business' => 'Employee working hours must be within the business working hours for each day.',
+    'business_hours' => 'Business hours',
+    'business_closed_on_day' => 'Business is closed on :day.',
+    'employee_hours_outside_business' => 'Employee hours for :day must be within business hours (:business_start - :business_end).',
+    'working_hours_updated' => 'Working hours updated successfully.',
 
     // Additional terms for availability exceptions
     'add_availability_exception' => 'Add Availability Exception',
@@ -608,4 +613,8 @@ return [
     'business_feature_3' => 'Respond to customer reviews',
     'register_now' => 'Register Now',
     'search_businesses' => 'Search Businesses',
+    'not_working' => 'Not working',
+    'conflicting_employee_hours' => 'Conflicting Employee Working Hours',
+    'conflicting_employee_hours_desc' => 'The following employees have working hours that would conflict with the new business hours. Do you want to delete these employee working hours and proceed?',
+    'delete_and_save' => 'Delete and Save',
 ];

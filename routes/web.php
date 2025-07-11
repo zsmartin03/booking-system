@@ -79,11 +79,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::delete('/manage/businesses/{id}/remove-logo', [BusinessController::class, 'removeLogo'])->name('businesses.remove-logo');
 
         Route::resource('business-working-hours', BusinessWorkingHourController::class)->except(['show']);
+        Route::post('business-working-hours/bulk-update', [BusinessWorkingHourController::class, 'bulkUpdate'])->name('business-working-hours.bulk-update');
 
         Route::resource('services', ServiceController::class)->except(['show']);
         Route::resource('employees', EmployeeController::class);
 
         Route::resource('employee-working-hours', EmployeeWorkingHourController::class)->except(['show']);
+        Route::post('employee-working-hours/bulk-update', [EmployeeWorkingHourController::class, 'bulkUpdate'])->name('employee-working-hours.bulk-update');
         Route::resource('availability-exceptions', AvailabilityExceptionController::class)->except(['show']);
 
         // Settings management
@@ -120,5 +122,3 @@ Route::get('/businesses', [BusinessController::class, 'publicIndex'])->name('bus
 Route::get('/booking-slots', [\App\Http\Controllers\BookingController::class, 'availableSlots'])
     ->name('booking-slots')
     ->middleware(['auth', 'verified']);
-
-

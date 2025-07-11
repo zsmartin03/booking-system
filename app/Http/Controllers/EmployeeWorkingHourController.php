@@ -17,14 +17,32 @@ class EmployeeWorkingHourController extends Controller
             ->when($user->role !== 'admin', fn($q) => $q->whereHas('business', fn($q2) => $q2->where('user_id', $user->id)))
             ->firstOrFail();
 
-        $workingHours = $employee->workingHours()->get();
 
-        $dayOrder = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
-        $workingHours = $workingHours->sortBy(function ($item) use ($dayOrder) {
-            return array_search($item->day_of_week, $dayOrder);
-        });
+        $businessWorkingHours = $employee->business->workingHours->keyBy('day_of_week');
+        $employeeWorkingHours = $employee->workingHours->keyBy('day_of_week');
+        $days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+        $businessHoursArr = [];
+        $employeeHoursArr = [];
+        foreach ($days as $day) {
+            $bwh = $businessWorkingHours[$day] ?? null;
+            $businessHoursArr[$day] = [
+                'enabled' => $bwh !== null,
+                'start_time' => $bwh->start_time ?? '',
+                'end_time' => $bwh->end_time ?? '',
+            ];
+            $ewh = $employeeWorkingHours[$day] ?? null;
+            $employeeHoursArr[$day] = [
+                'enabled' => $ewh !== null,
+                'start_time' => $ewh->start_time ?? '',
+                'end_time' => $ewh->end_time ?? '',
+            ];
+        }
 
-        return view('employee-working-hours.index', compact('employee', 'workingHours'));
+        return view('employee-working-hours.index', [
+            'employee' => $employee,
+            'businessWorkingHours' => $businessHoursArr,
+            'employeeWorkingHours' => $employeeHoursArr,
+        ]);
     }
 
     public function create(Request $request)
@@ -102,5 +120,79 @@ class EmployeeWorkingHourController extends Controller
 
         return redirect()->route('employee-working-hours.index', ['employee_id' => $employee->id])
             ->with('success', 'Working hour delfeted.');
+    }
+
+    public function bulkUpdate(Request $request)
+    {
+        $user = Auth::user();
+        $employee = Employee::where('id', $request->employee_id)
+            ->when($user->role !== 'admin', fn($q) => $q->whereHas('business', fn($q2) => $q2->where('user_id', $user->id)))
+            ->firstOrFail();
+        $businessWorkingHours = $employee->business->workingHours->keyBy('day_of_week');
+        $input = $request->input('working_hours', []);
+        $days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+        $errors = [];
+        foreach ($days as $day) {
+            if (empty($input[$day]['enabled'])) {
+                continue;
+            }
+            $start = $input[$day]['start_time'] ?? null;
+            $end = $input[$day]['end_time'] ?? null;
+            $bwh = $businessWorkingHours[$day] ?? null;
+            // Accept both H:i and H:i:s
+            $timePattern = '/^\d{2}:\d{2}(:\d{2})?$/';
+            if (!$start || !preg_match($timePattern, $start)) {
+                $errors[] = __('validation.date_format', ['attribute' => "working hours.$day.start time", 'format' => 'H:i']);
+            }
+            if (!$end || !preg_match($timePattern, $end)) {
+                $errors[] = __('validation.date_format', ['attribute' => "working hours.$day.end time", 'format' => 'H:i']);
+            }
+            // Normalize to H:i:s for DB
+            if ($start && strlen($start) === 5) $start .= ':00';
+            if ($end && strlen($end) === 5) $end .= ':00';
+            if ($start && $end && $start >= $end) {
+                $errors[] = __('validation.after', ['attribute' => "working hours.$day.end time", 'date' => "working hours.$day.start time"]);
+            }
+            if (!$bwh) {
+                $errors[] = __('messages.business_closed_on_day', ['day' => __("messages.$day")]);
+            } elseif ($start && $end && ($start < $bwh->start_time || $end > $bwh->end_time)) {
+                $errors[] = __('messages.employee_hours_outside_business', [
+                    'day' => __("messages.$day"),
+                    'business_start' => $bwh->start_time,
+                    'business_end' => $bwh->end_time,
+                ]);
+            }
+            $input[$day]['start_time'] = $start;
+            $input[$day]['end_time'] = $end;
+        }
+        if ($errors) {
+            return back()->withErrors($errors)->withInput();
+        }
+
+        foreach ($days as $day) {
+            if (empty($input[$day]['enabled'])) {
+                $ewh = $employee->workingHours()->where('day_of_week', $day)->first();
+                if ($ewh) {
+                    $ewh->delete();
+                }
+                continue;
+            }
+            $start = $input[$day]['start_time'] ?? null;
+            $end = $input[$day]['end_time'] ?? null;
+            $ewh = $employee->workingHours()->where('day_of_week', $day)->first();
+            if ($start && $end) {
+                if ($ewh) {
+                    $ewh->update(['start_time' => $start, 'end_time' => $end]);
+                } else {
+                    $employee->workingHours()->create([
+                        'day_of_week' => $day,
+                        'start_time' => $start,
+                        'end_time' => $end,
+                    ]);
+                }
+            }
+        }
+        return redirect()->route('employee-working-hours.index', ['employee_id' => $employee->id])
+            ->with('success', __('messages.working_hours_updated'));
     }
 }

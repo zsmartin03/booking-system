@@ -2,141 +2,117 @@
     <x-slot name="header">
         <x-breadcrumb :items="[
             ['text' => __('messages.businesses'), 'url' => route('businesses.index')],
-            ['text' => __('messages.employees') . ' - ' . $employee->business->name, 'url' => route('employees.index', ['business_id' => $employee->business->id])],
-            ['text' => __('messages.working_hours') . ' - ' . $employee->name, 'url' => null]
+            [
+                'text' => __('messages.employees') . ' - ' . $employee->business->name,
+                'url' => route('employees.index', ['business_id' => $employee->business->id]),
+            ],
+            ['text' => __('messages.working_hours') . ' - ' . $employee->name, 'url' => null],
         ]" />
     </x-slot>
 
-    <div class="py-6 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="mb-4">
-            <a href="{{ route('employee-working-hours.create', ['employee_id' => $employee->id]) }}"
-                class="action-button text-white px-4 py-2 rounded-lg inline-flex items-center gap-2">
-                <x-heroicon-o-plus class="w-5 h-5" /> {{ __('messages.add_working_hour') }}
-            </a>
-        </div>
-
+    <div class="py-6 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         @if (session('success'))
             <div class="mb-4 p-3 bg-frappe-green/20 text-frappe-green rounded">
                 {{ session('success') }}
             </div>
         @endif
-
-        <div class="frosted-card rounded-xl shadow-lg overflow-hidden">
-            <!-- Desktop Table View -->
-            <div class="hidden md:block">
-                <div class="overflow-x-auto">
-                    <table class="w-full min-w-full">
-                        <thead>
-                            <tr class="border-b border-frappe-surface1/30">
-                                <th class="text-left py-3 px-4 font-medium text-frappe-text">{{ __('messages.day') }}
-                                </th>
-                                <th class="text-left py-3 px-4 font-medium text-frappe-text">{{ __('messages.start') }}
-                                </th>
-                                <th class="text-left py-3 px-4 font-medium text-frappe-text">{{ __('messages.end') }}
-                                </th>
-                                <th class="py-3 px-4 font-medium text-frappe-text">{{ __('messages.actions') }}</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse($workingHours as $hour)
-                                <tr
-                                    class="border-b border-frappe-surface1/20 hover:bg-frappe-surface0/20 transition-colors">
-                                    <td class="py-3 px-4 text-frappe-text font-medium">
-                                        {{ __('messages.' . $hour->day_of_week) }}
-                                    </td>
-                                    <td class="py-3 px-4 text-frappe-subtext1">{{ $hour->start_time }}</td>
-                                    <td class="py-3 px-4 text-frappe-subtext1">{{ $hour->end_time }}</td>
-                                    <td class="py-3 px-4">
-                                        <div class="flex gap-2 justify-center">
-                                            <a href="{{ route('employee-working-hours.edit', $hour->id) }}"
-                                                class="edit-button text-white px-6 py-2 rounded-lg flex items-center gap-2 text-sm transition-all">
-                                                <x-heroicon-o-pencil class="w-4 h-4" /> {{ __('messages.edit') }}
-                                            </a>
-                                            <button
-                                                class="delete-button text-white px-6 py-2 rounded-lg flex items-center gap-2 text-sm transition-all"
-                                                onclick="showDeleteModal({{ $hour->id }}, '{{ __('messages.' . $hour->day_of_week) }} {{ $hour->start_time }}-{{ $hour->end_time }}')"
-                                                title="{{ __('messages.delete') }}">
-                                                <x-heroicon-o-trash class="w-4 h-4" /> {{ __('messages.delete') }}
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="4" class="py-8 text-center text-frappe-subtext1">
-                                        {{ __('messages.no_working_hours') }}</td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                </div>
+        @if ($errors->any())
+            <div class="mb-4 p-3 bg-frappe-red/20 text-frappe-red rounded">
+                <ul class="list-disc pl-5">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
             </div>
-
-            <!-- Mobile Card View -->
-            <div class="md:hidden">
-                @forelse($workingHours as $hour)
-                    <div class="p-4 border-b border-frappe-surface1/20 last:border-b-0">
-                        <div class="space-y-3">
-                            <div class="flex justify-between items-center">
-                                <h3 class="font-medium text-frappe-text">{{ __('messages.' . $hour->day_of_week) }}
-                                </h3>
-                                <span class="text-sm text-frappe-subtext1">{{ $hour->start_time }} -
-                                    {{ $hour->end_time }}</span>
+        @endif
+        <div class="flex flex-col md:flex-row gap-6">
+            <!-- Business Hours Card -->
+            <div class="frosted-card rounded-xl shadow-lg p-6 w-full md:w-1/3">
+                <h2 class="text-lg font-semibold mb-4">{{ __('messages.business_hours') }}</h2>
+                <ul class="space-y-2">
+                    @foreach (['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'] as $day)
+                        <li class="flex justify-between items-center">
+                            <span class="font-medium">{{ __('messages.' . $day) }}</span>
+                            <span>
+                                @if ($businessWorkingHours[$day]['enabled'])
+                                    {{ substr($businessWorkingHours[$day]['start_time'], 0, 5) }} -
+                                    {{ substr($businessWorkingHours[$day]['end_time'], 0, 5) }}
+                                @else
+                                    <span class="italic text-frappe-subtext1">{{ __('messages.closed') }}</span>
+                                @endif
+                            </span>
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
+            <!-- Employee Working Hours Form Card -->
+            <div class="frosted-card rounded-xl shadow-lg p-6 w-full md:w-2/3 flex flex-col justify-between">
+                <form method="POST"
+                    action="{{ route('employee-working-hours.bulk-update', ['employee_id' => $employee->id]) }}"
+                    x-data="workingHoursManager()">
+                    @csrf
+                    <input type="hidden" name="employee_id" value="{{ $employee->id }}">
+                    <div class="space-y-4">
+                        @foreach (['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'] as $day)
+                            <div
+                                class="flex items-center gap-4 py-2 border-b border-frappe-surface1/20 last:border-b-0">
+                                <label
+                                    class="flex items-center gap-2 min-w-[110px] @if (!$businessWorkingHours[$day]['enabled']) opacity-50 cursor-not-allowed @endif">
+                                    <input type="checkbox" name="working_hours[{{ $day }}][enabled]"
+                                        x-model="workingHours['{{ $day }}'].enabled"
+                                        @if (!$businessWorkingHours[$day]['enabled']) disabled @endif>
+                                    <span class="font-medium">{{ __('messages.' . $day) }}</span>
+                                    <span class="italic text-frappe-subtext1"
+                                        x-show="!workingHours['{{ $day }}'].enabled">{{ __('messages.not_working') }}</span>
+                                </label>
+                                <div class="flex items-center gap-2 flex-1"
+                                    x-show="workingHours['{{ $day }}'].enabled">
+                                    <x-input-label :for="'start_time_' . $day" :value="__('messages.start_time')" class="sr-only" />
+                                    <input type="time" :id="'start_time_' + '{{ $day }}'"
+                                        name="working_hours[{{ $day }}][start_time]"
+                                        class="block w-32 rounded px-2 py-1 bg-frappe-surface0 border border-frappe-surface1 text-frappe-text"
+                                        x-model="workingHours['{{ $day }}'].start_time" step="60"
+                                        autocomplete="off" @if (!$businessWorkingHours[$day]['enabled']) disabled @endif>
+                                    <span>-</span>
+                                    <x-input-label :for="'end_time_' . $day" :value="__('messages.end_time')" class="sr-only" />
+                                    <input type="time" :id="'end_time_' + '{{ $day }}'"
+                                        name="working_hours[{{ $day }}][end_time]"
+                                        class="block w-32 rounded px-2 py-1 bg-frappe-surface0 border border-frappe-surface1 text-frappe-text"
+                                        x-model="workingHours['{{ $day }}'].end_time" step="60"
+                                        autocomplete="off" @if (!$businessWorkingHours[$day]['enabled']) disabled @endif>
+                                </div>
                             </div>
-
-                            <div class="flex gap-2 justify-center sm:justify-start">
-                                <a href="{{ route('employee-working-hours.edit', $hour->id) }}"
-                                    class="edit-button text-white px-6 py-2 rounded-lg flex items-center gap-2 text-sm transition-all">
-                                    <x-heroicon-o-pencil class="w-4 h-4" /> {{ __('messages.edit') }}
-                                </a>
-                                <button
-                                    class="delete-button text-white px-6 py-2 rounded-lg flex items-center gap-2 text-sm transition-all"
-                                    onclick="showDeleteModal({{ $hour->id }}, '{{ __('messages.' . $hour->day_of_week) }} {{ $hour->start_time }}-{{ $hour->end_time }}')"
-                                    title="{{ __('messages.delete') }}">
-                                    <x-heroicon-o-trash class="w-4 h-4" /> {{ __('messages.delete') }}
-                                </button>
-                            </div>
-                        </div>
+                        @endforeach
                     </div>
-                @empty
-                    <div class="p-8 text-center text-frappe-subtext1">{{ __('messages.no_working_hours') }}</div>
-                @endforelse
+                    <div class="mt-6 flex justify-end">
+                        <x-primary-button class="bg-frappe-blue hover:bg-frappe-sapphire">
+                            <x-heroicon-o-check class="w-4 h-4" /> {{ __('messages.save') }}
+                        </x-primary-button>
+                    </div>
+                </form>
+                <div class="mt-8">
+                    <div
+                        class="bg-frappe-surface1/60 border border-frappe-surface1/30 rounded-lg px-4 py-3 text-frappe-subtext1 text-sm flex items-center gap-2">
+                        <x-heroicon-o-information-circle class="w-5 h-5 text-frappe-blue" />
+                        <span>{{ __('messages.employee_hours_within_business') }}</span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-
-    <div id="deleteModal"
-        class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 backdrop-blur-sm z-50 hidden">
-        <div class="frosted-modal p-6 rounded-2xl shadow-2xl w-full max-w-md mx-4">
-            <h3 class="text-xl font-semibold mb-4 text-frappe-red">{{ __('messages.delete_working_hour') }}</h3>
-            <p class="mb-6 text-frappe-text opacity-90">{{ __('messages.are_you_sure_delete') }} <span
-                    id="modalWorkingHour" class="font-bold text-frappe-lavender"></span>?</p>
-            <form id="deleteForm" method="POST">
-                @csrf
-                @method('DELETE')
-                <div class="flex justify-end gap-3">
-                    <button type="button" onclick="hideDeleteModal()"
-                        class="px-6 py-2 bg-gradient-to-r from-gray-500/20 to-gray-600/20 backdrop-blur-sm border border-gray-400/30 text-gray-300 rounded-lg hover:from-gray-500/30 hover:to-gray-600/30 transition-all">
-                        {{ __('messages.cancel') }}
-                    </button>
-                    <button type="submit"
-                        class="px-6 py-2 bg-gradient-to-r from-red-500/30 to-pink-500/30 backdrop-blur-sm border border-red-400/40 text-red-300 rounded-lg hover:from-red-500/40 hover:to-pink-500/40 transition-all">
-                        {{ __('messages.delete') }}
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-
     <script>
-        function showDeleteModal(hourId, hourInfo) {
-            document.getElementById('modalWorkingHour').textContent = hourInfo;
-            document.getElementById('deleteForm').action = "{{ url('/employee-working-hours') }}/" + hourId;
-            document.getElementById('deleteModal').classList.remove('hidden');
-        }
-
-        function hideDeleteModal() {
-            document.getElementById('deleteModal').classList.add('hidden');
+        function workingHoursManager() {
+            return {
+                workingHours: {
+                    @foreach (['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'] as $day)
+                        '{{ $day }}': {
+                            enabled: {{ old('working_hours.' . $day . '.enabled', null) !== null ? 'true' : ($employeeWorkingHours[$day]['enabled'] ?? false ? 'true' : 'false') }},
+                            start_time: '{{ old('working_hours.' . $day . '.start_time', $employeeWorkingHours[$day]['start_time'] ?? '') }}',
+                            end_time: '{{ old('working_hours.' . $day . '.end_time', $employeeWorkingHours[$day]['end_time'] ?? '') }}',
+                        },
+                    @endforeach
+                }
+            }
         }
     </script>
 </x-app-layout>

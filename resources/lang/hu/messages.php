@@ -616,4 +616,13 @@ return [
     'business_feature_3' => 'Válasz az ügyfél-értékelésekre',
     'register_now' => 'Regisztráljon Most',
     'search_businesses' => 'Vállalkozások Keresése',
+    'not_working' => 'Nem dolgozik',
+    'conflicting_employee_hours' => 'Ütköző alkalmazotti munkaidők',
+    'conflicting_employee_hours_desc' => 'A következő alkalmazottak munkaideje ütközne az új vállalkozási munkaidővel. Szeretné törölni ezeket az alkalmazotti munkaidőket és folytatni?',
+    'delete_and_save' => 'Törlés és mentés',
+    'employee_hours_within_business' => 'Az alkalmazottak munkaidejének minden nap a vállalkozás munkaidején belül kell lennie.',
+    'business_hours' => 'Vállalkozás munkaideje',
+    'business_closed_on_day' => 'A vállalkozás zárva van ezen a napon: :day.',
+    'employee_hours_outside_business' => 'Az alkalmazott munkaideje :day napon kívül esik a vállalkozás munkaidején (:business_start - :business_end).',
+    'working_hours_updated' => 'A munkaidő sikeresen frissítve.',
 ];
