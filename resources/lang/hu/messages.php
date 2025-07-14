@@ -363,6 +363,9 @@ return [
 
     // Form specific labels and messages
     'duration_minutes' => 'Időtartam (perc)',
+    'duration_help_text' => 'Az időtartamnak 5 perc és 24 óra (1440 perc) között kell lennie, és 5 perccel oszthatónak kell lennie.',
+    'duration_minimum_error' => 'Az időtartamnak legalább 5 percnek kell lennie.',
+    'duration_divisible_error' => 'Az időtartamnak 5 perccel oszthatónak kell lennie. Próbálja: :suggestion perc.',
     'assign_employees' => 'Alkalmazottak hozzárendelése',
     'confirm_password' => 'Jelszó megerősítése',
     'bio' => 'Bemutatkozás',

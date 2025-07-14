@@ -47,11 +47,15 @@ class ServiceController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'required|string',
             'price' => 'required|numeric|min:0',
-            'duration' => 'required|integer|min:1',
+            'duration' => 'required|integer|min:5|max:1440',
             'active' => 'boolean',
             'employees' => 'array',
             'employees.*' => 'exists:employees,id',
         ]);
+
+        if ($validated['duration'] % 5 !== 0) {
+            return back()->withErrors(['duration' => __('messages.duration_divisible_error', ['suggestion' => (round($validated['duration'] / 5) * 5)])])->withInput();
+        }
 
         $validated['business_id'] = $business->id;
         $service = Service::create($validated);
@@ -90,11 +94,15 @@ class ServiceController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'required|string',
             'price' => 'required|numeric|min:0',
-            'duration' => 'required|integer|min:1',
+            'duration' => 'required|integer|min:5|max:1440',
             'active' => 'boolean',
             'employees' => 'array',
             'employees.*' => 'exists:employees,id',
         ]);
+
+        if ($validated['duration'] % 5 !== 0) {
+            return back()->withErrors(['duration' => __('messages.duration_divisible_error', ['suggestion' => (round($validated['duration'] / 5) * 5)])])->withInput();
+        }
 
         $service->update($validated);
 

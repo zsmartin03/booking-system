@@ -396,6 +396,9 @@ return [
 
     // Form specific labels and messages
     'duration_minutes' => 'Duration (minutes)',
+    'duration_help_text' => 'Duration must be between 5 minutes and 24 hours (1440 minutes), and divisible by 5 minutes.',
+    'duration_minimum_error' => 'Duration must be at least 5 minutes.',
+    'duration_divisible_error' => 'Duration must be divisible by 5 minutes. Try: :suggestion minutes.',
     'assign_employees' => 'Assign Employees',
     'confirm_password' => 'Confirm Password',
     'bio' => 'Bio',
