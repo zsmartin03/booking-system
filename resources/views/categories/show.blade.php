@@ -2,7 +2,7 @@
     <x-slot name="header">
         <x-breadcrumb :items="[
             ['text' => __('messages.categories'), 'url' => route('categories.index')],
-            ['text' => $category->name, 'url' => null]
+            ['text' => $category->name, 'url' => null],
         ]" />
     </x-slot>
 
@@ -18,8 +18,8 @@
                             <h1 class="text-3xl font-bold text-frappe-text">{{ $category->name }}</h1>
                         </div>
 
-                        @if ($category->description)
-                            <p class="text-frappe-subtext1 text-base mb-4">{{ $category->description }}</p>
+                        @if ($category->translated_description)
+                            <p class="text-frappe-subtext1 text-base mb-4">{{ $category->translated_description }}</p>
                         @endif
 
                         <!-- Badge Preview -->

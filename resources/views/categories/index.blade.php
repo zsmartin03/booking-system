@@ -1,8 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <x-breadcrumb :items="[
-            ['text' => __('messages.categories'), 'url' => null]
-        ]" />
+        <x-breadcrumb :items="[['text' => __('messages.categories'), 'url' => null]]" />
     </x-slot>
 
     <div class="py-6">
@@ -28,7 +26,7 @@
                                     {{ __('messages.search_categories') }}
                                 </label>
                                 <input type="text" id="search" name="search" value="{{ request('search') }}"
-                                    placeholder="{{ __('messages.search_by_name_or_description') }}"
+                                    placeholder="{{ __('messages.search_by_slug') }}"
                                     class="w-full px-3 py-2 bg-frappe-mantle border border-frappe-surface2 rounded-lg text-frappe-text placeholder-frappe-subtext1 focus:outline-none focus:ring-2 focus:ring-frappe-blue focus:border-transparent">
                             </div>
                         </div>
@@ -78,9 +76,9 @@
                                                     </span>
                                                 </div>
 
-                                                @if ($category->description)
+                                                @if ($category->translated_description)
                                                     <p class="text-frappe-subtext1 text-sm mb-2">
-                                                        {{ $category->description }}</p>
+                                                        {{ $category->translated_description }}</p>
                                                 @endif
 
                                                 <div class="flex items-center gap-4 text-sm text-frappe-subtext1">

@@ -239,16 +239,21 @@ return [
     'no_categories_found' => 'Nem található kategória',
     'confirm_delete_category' => 'Biztosan törölni szeretnéd ezt a kategóriát?',
     'choose_color_for_badge' => 'Válassz színt a kategóriacímkéhez',
+    'category_name' => 'Kategória neve',
     'color' => 'Szín',
     'slug' => 'Slug (URL azonosító)',
     'preview' => 'Előnézet',
     'statistics' => 'Statisztika',
     'url_friendly_slug_auto_generated' => 'URL-barát azonosító a név alapján (automatikusan generálva)',
+    'url_friendly_slug_manual' => 'URL-barát azonosító (csak kisbetűk, számok és kötőjelek)',
+    'english_translation' => 'Angol fordítás',
+    'hungarian_translation' => 'Magyar fordítás',
     'businesses_count' => 'Vállalkozások száma',
     'view_public_listing' => 'Nyilvános lista megtekintése',
     'businesses_in_this_category' => 'Vállalkozások ebben a kategóriában',
     'no_businesses_in_category_yet' => 'Még nincs vállalkozás ebben a kategóriában.',
     'search_by_name_or_description' => 'Keresés név vagy leírás alapján...',
+    'search_by_slug' => 'Keresés slug alapján...',
     'category_used_by_businesses' => 'Ezt a kategóriát :count vállalkozás használja',
 
     // Confirmation messages
@@ -318,6 +323,7 @@ return [
     'email_verification_prompt' => 'Köszönjük a regisztrációt! Kérlek, erősítsd meg az emailed a kiküldött linken. Nem kaptad meg? Szívesen küldünk egy másikat.',
     'new_verification_link_sent' => 'Új megerősítő linket küldtünk a regisztrációkor megadott email-címedre.',
     'verification_email_resend' => 'Megerősítő e-mail újraküldése',
+    'verification_skipped_example' => 'E-mail megerősítés kihagyva az example.com címeknél.',
 
 
     // Messages

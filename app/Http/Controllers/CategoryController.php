@@ -23,13 +23,10 @@ class CategoryController extends Controller
         $query = Category::withCount('businesses');
 
         if ($request->filled('search')) {
-            $query->where(function ($q) use ($request) {
-                $q->where('name', 'like', '%' . $request->search . '%')
-                    ->orWhere('description', 'like', '%' . $request->search . '%');
-            });
+            $query->where('slug', 'like', '%' . $request->search . '%');
         }
 
-        $categories = $query->orderBy('name')->get();
+        $categories = $query->orderBy('slug')->get();
 
         return view('categories.index', compact('categories'));
     }
@@ -60,21 +57,31 @@ class CategoryController extends Controller
         }
 
         $validated = $request->validate([
-            'name' => 'required|string|max:255|unique:categories,name',
-            'description' => 'required|string',
+            'slug' => 'required|string|max:255|unique:categories,slug|regex:/^[a-z0-9\-]+$/',
+            'name_en' => 'required|string|max:255',
+            'name_hu' => 'required|string|max:255',
+            'description_en' => 'required|string',
+            'description_hu' => 'required|string',
             'color' => 'required|string|regex:/^#[0-9A-Fa-f]{6}$/',
         ]);
 
-        $validated['slug'] = Str::slug($validated['name']);
+        // Create the category
+        $category = Category::create([
+            'slug' => $validated['slug'],
+            'color' => $validated['color'],
+        ]);
 
-        $originalSlug = $validated['slug'];
-        $counter = 1;
-        while (Category::where('slug', $validated['slug'])->exists()) {
-            $validated['slug'] = $originalSlug . '-' . $counter;
-            $counter++;
-        }
-
-        Category::create($validated);
+        // Update translation files
+        $this->updateTranslationFiles($validated['slug'], [
+            'en' => [
+                'name' => $validated['name_en'],
+                'description' => $validated['description_en'],
+            ],
+            'hu' => [
+                'name' => $validated['name_hu'],
+                'description' => $validated['description_hu'],
+            ]
+        ]);
 
         return redirect()->route('categories.index')->with('success', 'Category created successfully.');
     }
@@ -108,7 +115,19 @@ class CategoryController extends Controller
 
         $category = Category::findOrFail($id);
 
-        return view('categories.edit', compact('category'));
+        // Get current translations
+        $translations = [
+            'en' => [
+                'name' => __("categories.{$category->slug}.name", [], 'en'),
+                'description' => __("categories.{$category->slug}.description", [], 'en'),
+            ],
+            'hu' => [
+                'name' => __("categories.{$category->slug}.name", [], 'hu'),
+                'description' => __("categories.{$category->slug}.description", [], 'hu'),
+            ]
+        ];
+
+        return view('categories.edit', compact('category', 'translations'));
     }
 
     /**
@@ -125,25 +144,53 @@ class CategoryController extends Controller
         $category = Category::findOrFail($id);
 
         $validated = $request->validate([
-            'name' => 'required|string|max:255|unique:categories,name,' . $id,
-            'description' => 'required|string',
+            'slug' => 'required|string|max:255|unique:categories,slug,' . $id . '|regex:/^[a-z0-9\-]+$/',
+            'name_en' => 'required|string|max:255',
+            'name_hu' => 'required|string|max:255',
+            'description_en' => 'required|string',
+            'description_hu' => 'required|string',
             'color' => 'required|string|regex:/^#[0-9A-Fa-f]{6}$/',
         ]);
 
-        if ($category->name !== $validated['name']) {
-            $validated['slug'] = Str::slug($validated['name']);
+        $category->update([
+            'slug' => $validated['slug'],
+            'color' => $validated['color'],
+        ]);
 
-            $originalSlug = $validated['slug'];
-            $counter = 1;
-            while (Category::where('slug', $validated['slug'])->where('id', '!=', $id)->exists()) {
-                $validated['slug'] = $originalSlug . '-' . $counter;
-                $counter++;
-            }
-        }
-
-        $category->update($validated);
+        // Update translation files
+        $this->updateTranslationFiles($validated['slug'], [
+            'en' => [
+                'name' => $validated['name_en'],
+                'description' => $validated['description_en'],
+            ],
+            'hu' => [
+                'name' => $validated['name_hu'],
+                'description' => $validated['description_hu'],
+            ]
+        ]);
 
         return redirect()->route('categories.index')->with('success', 'Category updated successfully.');
+    }
+
+    /**
+     * Update translation files with new category data
+     */
+    private function updateTranslationFiles($slug, $translations)
+    {
+        foreach ($translations as $locale => $data) {
+            $filePath = resource_path("lang/{$locale}/categories.php");
+
+            if (file_exists($filePath)) {
+                $existing = include $filePath;
+            } else {
+                $existing = [];
+            }
+
+            $existing[$slug] = $data;
+
+            $content = "<?php\n\nreturn " . var_export($existing, true) . ";\n";
+            file_put_contents($filePath, $content);
+        }
     }
 
     /**

@@ -120,7 +120,10 @@ class NotificationService
      */
     private function shouldSendEmail(Booking $booking)
     {
-        // For development, always send emails regardless of settings
+        if (str_ends_with($booking->client->email, 'example.com')) {
+            return false;
+        }
+
         return true;
 
         $emailNotificationsEnabled = $booking->service->business->settings()

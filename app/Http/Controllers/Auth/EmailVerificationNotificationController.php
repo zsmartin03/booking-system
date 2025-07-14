@@ -17,6 +17,10 @@ class EmailVerificationNotificationController extends Controller
             return redirect()->intended(route('dashboard', absolute: false));
         }
 
+        if (str_ends_with($request->user()->email, 'example.com')) {
+            return back()->with('status', 'verification-skipped-example');
+        }
+
         $request->user()->sendEmailVerificationNotification();
 
         return back()->with('status', 'verification-link-sent');

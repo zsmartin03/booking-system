@@ -241,16 +241,21 @@ return [
     'no_categories_found' => 'No categories found',
     'confirm_delete_category' => 'Are you sure you want to delete this category?',
     'choose_color_for_badge' => 'Choose a color for the category badge',
+    'category_name' => 'Category Name',
     'color' => 'Color',
     'slug' => 'Slug',
     'preview' => 'Preview',
     'statistics' => 'Statistics',
     'url_friendly_slug_auto_generated' => 'URL-friendly version of the name (auto-generated)',
+    'url_friendly_slug_manual' => 'URL-friendly identifier (lowercase letters, numbers, and hyphens only)',
+    'english_translation' => 'English Translation',
+    'hungarian_translation' => 'Hungarian Translation',
     'businesses_count' => 'Businesses Count',
     'view_public_listing' => 'View Public Listing',
     'businesses_in_this_category' => 'Businesses in this category',
     'no_businesses_in_category_yet' => 'No businesses in this category yet.',
     'search_by_name_or_description' => 'Search by name or description...',
+    'search_by_slug' => 'Search by slug...',
     'category_used_by_businesses' => 'This category is used by :count businesses',
 
     // Confirmation messages
@@ -351,6 +356,7 @@ return [
     'email_verification_prompt' => 'Thanks for signing up! Please verify your email by clicking the link we just sent. Didn’t get it? We’ll gladly send another.',
     'new_verification_link_sent' => 'A new verification link has been sent to the email address you provided during registration.',
     'verification_email_resend' => 'Resend Verification Email',
+    'verification_skipped_example' => 'Email verification skipped for example.com addresses.',
 
 
     // Messages

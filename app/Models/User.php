@@ -122,4 +122,16 @@ class User extends Authenticatable implements MustVerifyEmail
             'name' => $this->name
         ];
     }
+
+    /**
+     * Override email verification notification to skip example.com addresses
+     */
+    public function sendEmailVerificationNotification()
+    {
+        if (str_ends_with($this->email, 'example.com')) {
+            return;
+        }
+
+        parent::sendEmailVerificationNotification();
+    }
 }

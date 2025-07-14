@@ -7,23 +7,35 @@ use Illuminate\Support\Str;
 
 class Category extends Model
 {
-    protected $fillable = ['name', 'slug', 'description', 'color'];
+    protected $fillable = ['slug', 'color'];
 
     protected static function boot()
     {
         parent::boot();
+    }
 
-        static::creating(function ($category) {
-            if (!$category->slug) {
-                $category->slug = Str::slug($category->name);
-            }
-        });
+    /**
+     * Get the translated name for this category
+     */
+    public function getNameAttribute()
+    {
+        return __("categories.{$this->slug}.name", [], app()->getLocale()) ?: $this->slug;
+    }
 
-        static::updating(function ($category) {
-            if ($category->isDirty('name') && !$category->isDirty('slug')) {
-                $category->slug = Str::slug($category->name);
-            }
-        });
+    /**
+     * Get the translated description for this category
+     */
+    public function getTranslatedDescriptionAttribute()
+    {
+        return __("categories.{$this->slug}.description", [], app()->getLocale()) ?: $this->slug;
+    }
+
+    /**
+     * Check if translations exist for this category
+     */
+    public function hasTranslations()
+    {
+        return \Illuminate\Support\Facades\Lang::has("categories.{$this->slug}");
     }
 
     public function businesses()

@@ -1,8 +1,13 @@
 <x-app-layout>
     <x-slot name="header">
         <x-breadcrumb :items="[
-            ['text' => __('messages.categories'), 'url' => route('categories.index')],
-            ['text' => __('messages.create_category'), 'url' => null]
+            [
+                '                                    <span id="preview-text">{{ old('name_en', __('messages.category_name')) }}</span>ext' => __(
+                    'messages.categories',
+                ),
+                'url' => route('categories.index'),
+            ],
+            ['text' => __('messages.create_category'), 'url' => null],
         ]" />
     </x-slot>
 
@@ -14,18 +19,58 @@
                         @csrf
 
                         <div class="mb-4">
-                            <x-input-label for="name" :value="__('messages.name')" />
-                            <x-text-input id="name" name="name" type="text" class="mt-1 block w-full"
-                                :value="old('name')" required autofocus />
-                            <x-input-error :messages="$errors->get('name')" class="mt-2" />
+                            <x-input-label for="slug" :value="__('messages.slug')" />
+                            <x-text-input id="slug" name="slug" type="text" class="mt-1 block w-full"
+                                :value="old('slug')" required autofocus />
+                            <p class="mt-1 text-sm text-frappe-subtext1">{{ __('messages.url_friendly_slug_manual') }}
+                            </p>
+                            <x-input-error :messages="$errors->get('slug')" class="mt-2" />
                         </div>
 
-                        <div class="mb-4">
-                            <x-input-label for="description" :value="__('messages.description')" />
-                            <textarea id="description" name="description" rows="3"
-                                class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
-                                required>{{ old('description') }}</textarea>
-                            <x-input-error :messages="$errors->get('description')" class="mt-2" />
+                        <!-- English Translations -->
+                        <div class="mb-6">
+                            <h4 class="text-lg font-medium text-frappe-text mb-3 flex items-center gap-2">
+                                <x-flag-language-en class="w-5 h-5" />
+                                {{ __('messages.english_translation') }}
+                            </h4>
+
+                            <div class="mb-4">
+                                <x-input-label for="name_en" :value="__('messages.name') . ' (English)'" />
+                                <x-text-input id="name_en" name="name_en" type="text" class="mt-1 block w-full"
+                                    :value="old('name_en')" required />
+                                <x-input-error :messages="$errors->get('name_en')" class="mt-2" />
+                            </div>
+
+                            <div class="mb-4">
+                                <x-input-label for="description_en" :value="__('messages.description') . ' (English)'" />
+                                <textarea id="description_en" name="description_en" rows="3"
+                                    class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                                    required>{{ old('description_en') }}</textarea>
+                                <x-input-error :messages="$errors->get('description_en')" class="mt-2" />
+                            </div>
+                        </div>
+
+                        <!-- Hungarian Translations -->
+                        <div class="mb-6">
+                            <h4 class="text-lg font-medium text-frappe-text mb-3 flex items-center gap-2">
+                                <x-flag-language-hu class="w-5 h-5" />
+                                {{ __('messages.hungarian_translation') }}
+                            </h4>
+
+                            <div class="mb-4">
+                                <x-input-label for="name_hu" :value="__('messages.name') . ' (Magyar)'" />
+                                <x-text-input id="name_hu" name="name_hu" type="text" class="mt-1 block w-full"
+                                    :value="old('name_hu')" required />
+                                <x-input-error :messages="$errors->get('name_hu')" class="mt-2" />
+                            </div>
+
+                            <div class="mb-4">
+                                <x-input-label for="description_hu" :value="__('messages.description') . ' (Magyar)'" />
+                                <textarea id="description_hu" name="description_hu" rows="3"
+                                    class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                                    required>{{ old('description_hu') }}</textarea>
+                                <x-input-error :messages="$errors->get('description_hu')" class="mt-2" />
+                            </div>
                         </div>
 
                         <div class="mb-4">
@@ -47,7 +92,7 @@
                             <div class="p-4 rounded-lg">
                                 <span id="category-preview"
                                     class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium transition-all cursor-pointer border">
-                                    <span id="preview-text">{{ old('name', 'Category Name') }}</span>
+                                    <span id="preview-text">{{ old('name_en', __('messages.category_name')) }}</span>
                                 </span>
                             </div>
                         </div>
@@ -181,8 +226,8 @@
             updatePreview(this.value);
         });
 
-        document.getElementById('name').addEventListener('input', function() {
-            const name = this.value || 'Category Name';
+        document.getElementById('name_en').addEventListener('input', function() {
+            const name = this.value || '{{ __('messages.category_name') }}';
             document.getElementById('preview-text').textContent = name;
         });
 

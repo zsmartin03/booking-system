@@ -42,7 +42,7 @@ class BusinessController extends Controller
         }
 
         $businesses = $query->get();
-        $categories = Category::orderBy('name')->get();
+        $categories = Category::orderBy('slug')->get();
 
         return view('businesses.index', compact('businesses', 'categories'));
     }
@@ -101,7 +101,7 @@ class BusinessController extends Controller
             return $business;
         });
 
-        $categories = Category::orderBy('name')->get();
+        $categories = Category::orderBy('slug')->get();
 
         return view('businesses.public_index', compact('businesses', 'categories'));
     }
@@ -116,7 +116,7 @@ class BusinessController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        $categories = Category::orderBy('name')->get();
+        $categories = Category::orderBy('slug')->get();
         return view('businesses.create', compact('categories'));
     }
 
@@ -295,7 +295,7 @@ class BusinessController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        $categories = Category::orderBy('name')->get();
+        $categories = Category::orderBy('slug')->get();
         return view('businesses.edit', compact('business', 'categories'));
     }
 
