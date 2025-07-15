@@ -67,10 +67,9 @@ class BusinessController extends Controller
             });
         }
 
+        $minRating = null;
         if ($request->filled('min_rating')) {
             $minRating = floatval($request->min_rating);
-            $query->having('reviews_avg_rating', '>=', $minRating)
-                ->where('reviews_count', '>', 0);
         }
 
         $sortBy = $request->get('sort', 'name');
@@ -94,6 +93,13 @@ class BusinessController extends Controller
         }
 
         $businesses = $query->paginate(12)->appends($request->query());
+
+        if ($minRating !== null) {
+            $filtered = $businesses->getCollection()->filter(function ($business) use ($minRating) {
+                return ($business->reviews_avg_rating ?? 0) >= $minRating;
+            });
+            $businesses->setCollection($filtered->values());
+        }
 
         $businesses->getCollection()->transform(function ($business) {
             $business->average_rating = $business->reviews_avg_rating ?? 0;
@@ -239,7 +245,7 @@ class BusinessController extends Controller
                 break;
             case 'helpful':
             default:
-                // Sort by best like/dislike ratio using raw SQL for efficiency
+                // Sort by best like/dislike ratio
                 $reviewsQuery->leftJoin('review_votes', 'reviews.id', '=', 'review_votes.review_id')
                     ->selectRaw('reviews.*,
                         COALESCE(SUM(CASE WHEN review_votes.is_upvote = 1 THEN 1 ELSE 0 END), 0) as upvotes_count,
