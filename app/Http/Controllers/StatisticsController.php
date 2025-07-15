@@ -12,7 +12,7 @@ class StatisticsController extends Controller
     /**
      * Display business statistics page
      */
-    public function index(Request $request)
+    public function index(Request $request, Business $business)
     {
         $user = Auth::user();
 
@@ -20,7 +20,12 @@ class StatisticsController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        // Get available businesses based on user role
+        // Check if user has access to this business
+        if ($user->role === 'provider' && $business->user_id !== $user->id) {
+            abort(403, 'You do not have access to this business.');
+        }
+
+        // Get available businesses for the business selector (if needed)
         if ($user->role === 'admin') {
             $businesses = Business::with(['user'])->orderBy('name')->get();
         } else {
@@ -29,16 +34,6 @@ class StatisticsController extends Controller
 
         if ($businesses->isEmpty()) {
             return redirect()->route('businesses.create')->with('error', 'Please create a business first to view statistics.');
-        }
-
-        // Get selected business or default to first one
-        $selectedBusinessId = $request->get('business_id', $businesses->first()->id);
-        $business = $businesses->where('id', $selectedBusinessId)->first();
-        
-        if (!$business) {
-            // If selected business not found or not accessible, use first available
-            $business = $businesses->first();
-            $selectedBusinessId = $business->id;
         }
 
         $period = $request->get('period', 'month'); // month, week, day
@@ -68,7 +63,6 @@ class StatisticsController extends Controller
         return view('statistics.index', compact(
             'business',
             'businesses',
-            'selectedBusinessId',
             'totalBookings',
             'totalRevenue',
             'totalCustomers',
@@ -81,7 +75,7 @@ class StatisticsController extends Controller
     /**
      * Get statistics data for AJAX requests
      */
-    public function getData(Request $request)
+    public function getData(Request $request, Business $business)
     {
         try {
             $user = Auth::user();
@@ -90,17 +84,9 @@ class StatisticsController extends Controller
                 return response()->json(['error' => 'Unauthorized'], 403);
             }
 
-            // Get business based on user role and selection
-            $businessId = $request->get('business_id');
-            
-            if (!$businessId) {
-                return response()->json(['error' => 'Business ID is required'], 400);
-            }
-            
-            if ($user->role === 'admin') {
-                $business = Business::findOrFail($businessId);
-            } else {
-                $business = Business::where('user_id', $user->id)->where('id', $businessId)->firstOrFail();
+            // Check if user has access to this business
+            if ($user->role === 'provider' && $business->user_id !== $user->id) {
+                return response()->json(['error' => 'You do not have access to this business.'], 403);
             }
 
             $period = $request->get('period', 'month');
@@ -125,5 +111,31 @@ class StatisticsController extends Controller
             Log::error('Statistics getData error', ['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
             return response()->json(['error' => 'Internal server error: ' . $e->getMessage()], 500);
         }
+    }
+
+    /**
+     * Redirect to first available business statistics
+     */
+    public function redirect()
+    {
+        $user = Auth::user();
+
+        if (!in_array($user->role, ['provider', 'admin'])) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        // Get available businesses based on user role
+        if ($user->role === 'admin') {
+            $businesses = Business::orderBy('name')->get();
+        } else {
+            $businesses = Business::where('user_id', $user->id)->orderBy('name')->get();
+        }
+
+        if ($businesses->isEmpty()) {
+            return redirect()->route('businesses.create')->with('error', 'Please create a business first to view statistics.');
+        }
+
+        // Redirect to first available business statistics
+        return redirect()->route('statistics.index', ['business' => $businesses->first()]);
     }
 }

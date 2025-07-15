@@ -268,6 +268,7 @@ return [
 
     // Settings
     'booking_restrictions' => 'Foglalási korlátozások',
+    'booking_information' => 'Foglalási információk',
     'cancellation_hours_limit' => 'Lemondási órák korlátja',
     'hours_before_appointment' => 'Órák a találkozó előtt, amikor a lemondás megengedett',
     'buffer_time_minutes' => 'Puffer idő (perc)',

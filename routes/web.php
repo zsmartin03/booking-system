@@ -95,8 +95,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/settings/reset', [SettingController::class, 'reset'])->name('settings.reset');
 
         // Statistics routes
-        Route::get('/statistics', [StatisticsController::class, 'index'])->name('statistics.index');
-        Route::get('/statistics/data', [StatisticsController::class, 'getData'])->name('statistics.data');
+        Route::get('/statistics', [StatisticsController::class, 'redirect'])->name('statistics.redirect');
+        Route::get('/statistics/{business}', [StatisticsController::class, 'index'])->name('statistics.index');
+        Route::get('/statistics/{business}/data', [StatisticsController::class, 'getData'])->name('statistics.data');
     });
 
     // Admin-only routes
@@ -104,7 +105,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::resource('categories', \App\Http\Controllers\CategoryController::class);
     });
 
-    Route::get('/bookings/create', [BookingController::class, 'create'])->name('bookings.create');
+    Route::get('/bookings/create', [BookingController::class, 'redirect'])->name('bookings.redirect');
+    Route::get('/businesses/{business}/book', [BookingController::class, 'create'])->name('bookings.create');
     Route::post('/bookings', [BookingController::class, 'store'])->name('bookings.store');
     Route::get('/bookings/manage', [BookingController::class, 'manage'])->name('bookings.manage');
 
@@ -126,4 +128,8 @@ Route::get('/businesses', [BusinessController::class, 'publicIndex'])->name('bus
 
 Route::get('/booking-slots', [\App\Http\Controllers\BookingController::class, 'availableSlots'])
     ->name('booking-slots')
+    ->middleware(['auth', 'verified']);
+
+Route::get('/business-schedule', [\App\Http\Controllers\BookingController::class, 'businessSchedule'])
+    ->name('business-schedule')
     ->middleware(['auth', 'verified']);

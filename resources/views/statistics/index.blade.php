@@ -16,7 +16,7 @@
                             <select id="business" 
                                     class="frosted-input rounded-lg border-frappe-surface1 bg-frappe-base/50 text-frappe-text focus:border-frappe-lavender focus:ring-frappe-lavender min-w-[200px]">
                                 @foreach($businesses as $biz)
-                                    <option value="{{ $biz->id }}" {{ $biz->id == $selectedBusinessId ? 'selected' : '' }}>
+                                    <option value="{{ $biz->id }}" {{ $biz->id == $business->id ? 'selected' : '' }}>
                                         {{ $biz->name }}
                                         @if(auth()->user()->role === 'admin' && $biz->user)
                                             ({{ $biz->user->name }})
@@ -249,7 +249,7 @@
             revenueChart.update();
 
             // Fetch new data
-            fetch(`{{ route('statistics.data') }}?period=${period}&business_id=${businessId}`)
+            fetch(`{{ route('statistics.data', ['business' => $business]) }}?period=${period}`)
                 .then(response => response.json())
                 .then(data => {
                     // Update bookings chart
@@ -270,10 +270,10 @@
         // Attach event listeners
         document.getElementById('period').addEventListener('change', updateCharts);
         document.getElementById('business').addEventListener('change', function() {
-            // When business changes, reload the page to update all statistics
+            // When business changes, redirect to that business's statistics page
             const businessId = this.value;
             const period = document.getElementById('period').value;
-            window.location.href = `{{ route('statistics.index') }}?business_id=${businessId}&period=${period}`;
+            window.location.href = `{{ url('/statistics') }}/${businessId}?period=${period}`;
         });
     </script>
 </x-app-layout>

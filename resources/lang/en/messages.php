@@ -270,6 +270,7 @@ return [
 
     // Settings
     'booking_restrictions' => 'Booking Restrictions',
+    'booking_information' => 'Booking Information',
     'cancellation_hours_limit' => 'Cancellation Hours Limit',
     'hours_before_appointment' => 'Hours before appointment that cancellation is allowed',
     'buffer_time_minutes' => 'Buffer Time (Minutes)',

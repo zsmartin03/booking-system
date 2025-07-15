@@ -14,19 +14,30 @@ use Carbon\Carbon;
 
 class BookingController extends Controller
 {
-    public function create(Request $request)
+    public function create(Request $request, Business $business)
     {
-        $businesses = Business::with('services')->get();
-        $selectedBusiness = $request->business_id ? Business::find($request->business_id) : null;
-        $services = $selectedBusiness ? $selectedBusiness->services()->where('active', true)->get() : collect();
+        // Use the business from the route parameter
+        $selectedBusiness = $business;
+        
+        if (!$selectedBusiness) {
+            abort(404, 'Business not found');
+        }
+
+        // Get only services for this specific business
+        $services = $selectedBusiness->services()->where('active', true)->get();
         $selectedService = $request->service_id ? Service::find($request->service_id) : null;
+        
+        // Validate that the selected service belongs to this business if one is selected
+        if ($selectedService && $selectedService->business_id !== $selectedBusiness->id) {
+            $selectedService = null;
+        }
+        
         $employees = $selectedService ? $selectedService->employees()->where('active', true)->get() : collect();
         $selectedEmployee = $request->employee_id ? Employee::find($request->employee_id) : null;
 
-        $businessSettings = $selectedBusiness ? Setting::getBusinessSettings($selectedBusiness->id) : null;
+        $businessSettings = Setting::getBusinessSettings($selectedBusiness->id);
 
         return view('bookings.create', compact(
-            'businesses',
             'selectedBusiness',
             'services',
             'selectedService',
@@ -39,7 +50,6 @@ class BookingController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'business_id' => 'required|exists:businesses,id',
             'service_id' => 'required|exists:services,id',
             'employee_id' => 'required|exists:employees,id',
             'start_time' => 'required|date_format:Y-m-d\TH:i',
@@ -48,7 +58,7 @@ class BookingController extends Controller
 
         $service = Service::findOrFail($validated['service_id']);
         $employee = Employee::findOrFail($validated['employee_id']);
-        $business = Business::findOrFail($validated['business_id']);
+        $business = $service->business; // Get business from the service
 
         $settings = Setting::getBusinessSettings($business->id);
 
@@ -504,5 +514,165 @@ class BookingController extends Controller
 
         return redirect()->route('bookings.show', $booking->id)
             ->with('success', 'Booking status updated.');
+    }
+
+    public function businessSchedule(Request $request)
+    {
+        $businessId = $request->business_id;
+        if (!$businessId) {
+            return response()->json([]);
+        }
+
+        $business = Business::findOrFail($businessId);
+        $weekStart = $request->week_start
+            ? Carbon::parse($request->week_start)->startOfWeek()
+            : now()->startOfWeek();
+
+        $employees = $business->employees()->where('active', true)->get();
+        $slots = [];
+
+        $interval = 5;
+
+        foreach (range(0, 6) as $offset) {
+            $date = $weekStart->copy()->addDays($offset);
+            $dateString = $date->toDateString();
+            $dayOfWeek = strtolower($date->format('l'));
+
+            $timeSlots = [];
+
+            foreach ($employees as $employee) {
+                $workingHours = $employee->getWorkingHoursForDay($dayOfWeek);
+
+                $availableExceptions = $employee->availabilityExceptions()
+                    ->where('date', $dateString)
+                    ->where('type', 'available')
+                    ->get();
+
+                foreach ($workingHours as $workingHour) {
+                    $startTime = Carbon::parse($date->toDateString() . ' ' . $workingHour->start_time);
+
+                    $minutes = $startTime->minute;
+                    $roundedMinutes = ceil($minutes / $interval) * $interval;
+                    if ($roundedMinutes == 60) {
+                        $startTime->addHour();
+                        $roundedMinutes = 0;
+                    }
+                    $startTime->minute($roundedMinutes);
+                    $startTime->second(0);
+
+                    $endTime = Carbon::parse($date->toDateString() . ' ' . $workingHour->end_time);
+
+                    // Generate slots
+                    $current = $startTime->copy();
+                    while ($current < $endTime) {
+                        $timeKey = $current->format('Y-m-d\TH:i');
+
+                        $availabilityException = $employee->availabilityExceptions()
+                            ->where('date', $date->toDateString())
+                            ->where('start_time', '<=', $current->format('H:i:s'))
+                            ->where('end_time', '>', $current->format('H:i:s'))
+                            ->first();
+
+                        if ($availabilityException && $availabilityException->type === 'unavailable') {
+                            // skip this time slot - employee is not available
+                            $current->addMinutes($interval);
+                            continue;
+                        }
+
+                        if (!isset($timeSlots[$timeKey])) {
+                            $timeSlots[$timeKey] = [
+                                'time' => $timeKey,
+                                'label' => $current->format('H:i'),
+                                'employees' => []
+                            ];
+                        }
+
+                        // Add employee to this time slot (basic working hours only)
+                        $timeSlots[$timeKey]['employees'][] = [
+                            'employee_id' => $employee->id,
+                            'employee_name' => $employee->name,
+                            'available' => true, // Always show as working time when no service selected
+                        ];
+
+                        $current->addMinutes($interval);
+                    }
+                }
+
+                // Process 'available' type exceptions
+                foreach ($availableExceptions as $exception) {
+                    $startTime = Carbon::parse($date->toDateString() . ' ' . $exception->start_time);
+
+                    $minutes = $startTime->minute;
+                    $roundedMinutes = ceil($minutes / $interval) * $interval;
+                    if ($roundedMinutes == 60) {
+                        $startTime->addHour();
+                        $roundedMinutes = 0;
+                    }
+                    $startTime->minute($roundedMinutes);
+                    $startTime->second(0);
+
+                    $endTime = Carbon::parse($date->toDateString() . ' ' . $exception->end_time);
+
+                    $current = $startTime->copy();
+                    while ($current < $endTime) {
+                        $timeKey = $current->format('Y-m-d\TH:i');
+
+                        if (!isset($timeSlots[$timeKey])) {
+                            $timeSlots[$timeKey] = [
+                                'time' => $timeKey,
+                                'label' => $current->format('H:i'),
+                                'employees' => []
+                            ];
+                        }
+
+                        // Add employee to this time slot (basic working hours only)
+                        $timeSlots[$timeKey]['employees'][] = [
+                            'employee_id' => $employee->id,
+                            'employee_name' => $employee->name,
+                            'available' => true, // Always show as working time when no service selected
+                        ];
+
+                        $current->addMinutes($interval);
+                    }
+                }
+            }
+
+            // Convert aggregated time slots to the expected format
+            $slots[$dateString] = [];
+            foreach ($timeSlots as $timeKey => $timeSlot) {
+                // Create a slot entry for this time if any employee is working
+                if (!empty($timeSlot['employees'])) {
+                    $slots[$dateString][] = [
+                        'time' => $timeSlot['time'],
+                        'label' => $timeSlot['label'],
+                        'available' => true, // Always show as working time
+                        'employee_name' => $timeSlot['employees'][0]['employee_name'],
+                        'all_employees' => $timeSlot['employees']
+                    ];
+                }
+            }
+
+            if (isset($slots[$dateString])) {
+                usort($slots[$dateString], function ($a, $b) {
+                    return strcmp($a['time'], $b['time']);
+                });
+            }
+        }
+
+        return response()->json($slots);
+    }
+
+    public function redirect()
+    {
+        // Redirect to the first available business for booking
+        $business = Business::whereHas('services', function($query) {
+            $query->where('active', true);
+        })->first();
+
+        if (!$business) {
+            abort(404, 'No businesses available for booking');
+        }
+
+        return redirect()->route('bookings.create', $business->id);
     }
 }

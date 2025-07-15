@@ -1,115 +1,64 @@
 <x-app-layout>
     <x-slot name="header">
-        @if ($selectedBusiness)
-            <x-breadcrumb :items="[
-                ['text' => __('messages.all_businesses'), 'url' => route('businesses.public.index')],
-                ['text' => $selectedBusiness->name, 'url' => route('businesses.show', $selectedBusiness->id)],
-                ['text' => __('messages.book_service'), 'url' => null],
-            ]" />
-        @else
-            <x-breadcrumb :items="[['text' => __('messages.book_service'), 'url' => null]]" />
-        @endif
+        <x-breadcrumb :items="[
+            ['text' => __('messages.all_businesses'), 'url' => route('businesses.public.index')],
+            ['text' => $selectedBusiness->name, 'url' => route('businesses.show', $selectedBusiness->id)],
+            ['text' => __('messages.book_service'), 'url' => null],
+        ]" />
     </x-slot>
 
     <div class="py-6 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <!-- Business Status Messages (compact summary) -->
-        @if ($selectedBusiness && $businessSettings)
-            @php
-                $statusMessages = [];
-                if ($businessSettings['holiday_mode']) {
-                    $statusMessages[] = [
-                        'icon' => 'exclamation-triangle',
-                        'color' => 'orange-400',
-                        'bg' => 'bg-orange-500/20',
-                        'border' => 'border-orange-400/30',
-                        'text' => 'text-orange-300',
-                        'title' => __('messages.holiday_mode'),
-                        'desc' => __('messages.this_business_not_accepting_bookings'),
-                    ];
-                }
-                if ($businessSettings['maintenance_mode']) {
-                    $statusMessages[] = [
-                        'icon' => 'wrench-screwdriver',
-                        'color' => 'red-400',
-                        'bg' => 'bg-red-500/20',
-                        'border' => 'border-red-400/30',
-                        'text' => 'text-red-300',
-                        'title' => __('messages.maintenance_mode'),
-                        'desc' => __('messages.business_under_maintenance'),
-                    ];
-                }
-                if ($businessSettings['booking_confirmation_required']) {
-                    $statusMessages[] = [
-                        'icon' => 'clock',
-                        'color' => 'blue-400',
-                        'bg' => 'bg-blue-500/20',
-                        'border' => 'border-blue-400/30',
-                        'text' => 'text-blue-300',
-                        'title' => __('messages.booking_confirmation_required'),
-                        'desc' => __('messages.booking_pending_confirmation'),
-                    ];
-                }
-                if ($businessSettings['booking_advance_hours'] > 0 || $businessSettings['booking_advance_days'] > 0) {
-                    $statusMessages[] = [
-                        'icon' => 'information-circle',
-                        'color' => 'frappe-blue',
-                        'bg' => 'bg-frappe-blue/20',
-                        'border' => 'border-frappe-blue/30',
-                        'text' => 'text-frappe-blue',
-                        'title' => __('messages.booking_restrictions'),
-                        'desc' => __('messages.booking_advance_restrictions', [
-                            'hours' => $businessSettings['booking_advance_hours'],
-                            'days' => $businessSettings['booking_advance_days'],
-                        ]),
-                    ];
-                }
-            @endphp
-            @if (count($statusMessages) > 0)
-                <div x-data="{ open: false }" class="mb-6">
-                    <button @click="open = !open" type="button"
-                        class="frosted-card inline-flex items-center gap-2 px-4 py-2 rounded-lg text-frappe-blue font-semibold shadow transition-all border border-frappe-blue/20">
-                        <x-heroicon-o-exclamation-circle class="w-5 h-5 text-yellow-300" />
-                        <svg :class="{ 'rotate-180': open }" class="w-4 h-4 ml-1 transition-transform" fill="none"
-                            stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
-                        </svg>
-                    </button>
-                    <div x-show="open" x-transition class="mt-3 space-y-3">
-                        @foreach ($statusMessages as $msg)
-                            <div
-                                class="frosted-card flex items-start gap-3 p-3 rounded-lg border {{ $msg['border'] }} {{ $msg['text'] }} shadow-sm">
-                                <x-dynamic-component :component="'heroicon-o-' . $msg['icon']" class="w-6 h-6 text-{{ $msg['color'] }} mt-1" />
-                                <div>
-                                    <div class="font-semibold">{{ $msg['title'] }}</div>
-                                    <div class="text-sm opacity-80">{{ $msg['desc'] }}</div>
-                                </div>
+        <!-- Business Status Messages (only critical messages - holiday/maintenance mode) -->
+        @php
+            $criticalMessages = [];
+            if ($businessSettings['holiday_mode']) {
+                $criticalMessages[] = [
+                    'icon' => 'exclamation-triangle',
+                    'color' => 'orange-400',
+                    'bg' => 'bg-orange-500/20',
+                    'border' => 'border-orange-400/30',
+                    'text' => 'text-orange-300',
+                    'title' => __('messages.holiday_mode'),
+                    'desc' => __('messages.this_business_not_accepting_bookings'),
+                ];
+            }
+            if ($businessSettings['maintenance_mode']) {
+                $criticalMessages[] = [
+                    'icon' => 'wrench-screwdriver',
+                    'color' => 'red-400',
+                    'bg' => 'bg-red-500/20',
+                    'border' => 'border-red-400/30',
+                    'text' => 'text-red-300',
+                    'title' => __('messages.maintenance_mode'),
+                    'desc' => __('messages.business_under_maintenance'),
+                ];
+            }
+        @endphp
+        @if (count($criticalMessages) > 0)
+            <div class="mb-6">
+                <div class="space-y-3">
+                    @foreach ($criticalMessages as $msg)
+                        <div
+                            class="frosted-card flex items-start gap-3 p-4 rounded-lg border {{ $msg['border'] }} {{ $msg['text'] }} shadow-sm">
+                            <x-dynamic-component :component="'heroicon-o-' . $msg['icon']" class="w-6 h-6 text-{{ $msg['color'] }} mt-1" />
+                            <div>
+                                <div class="font-semibold">{{ $msg['title'] }}</div>
+                                <div class="text-sm opacity-80">{{ $msg['desc'] }}</div>
                             </div>
-                        @endforeach
-                    </div>
+                        </div>
+                    @endforeach
                 </div>
-            @endif
+            </div>
         @endif
 
         <!-- Only show service selection and booking form if business is not in holiday or maintenance mode -->
-        @if (!$selectedBusiness || (!$businessSettings['holiday_mode'] && !$businessSettings['maintenance_mode']))
-            <!-- Service Selection -->
+        @if (!$businessSettings['holiday_mode'] && !$businessSettings['maintenance_mode'])
+            <!-- Service Selection and Booking Restrictions -->
             <div class="mb-6 p-4 sm:p-6 frosted-card rounded-xl shadow-lg">
-                <form method="GET" action="{{ route('bookings.create') }}" class="flex flex-col sm:flex-row gap-4">
-                    <div class="flex-1 min-w-0">
-                        <x-input-label for="business_id" :value="__('messages.business')" />
-                        <select name="business_id" id="business_id"
-                            class="block w-full mt-1 bg-frappe-surface0/50 border-frappe-surface1/30 text-frappe-text rounded-md shadow-sm backdrop-blur-sm focus:border-frappe-blue focus:ring-frappe-blue/50"
-                            onchange="this.form.submit()">
-                            <option value="">{{ __('messages.select_business') }}</option>
-                            @foreach ($businesses as $business)
-                                <option value="{{ $business->id }}" @selected(request('business_id') == $business->id)>{{ $business->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    @if ($selectedBusiness)
-                        <div class="flex-1 min-w-0">
+                <div class="flex flex-col lg:flex-row gap-6">
+                    <!-- Service Selection (Left Side) -->
+                    <div class="flex-1">
+                        <form method="GET" action="{{ route('bookings.create', $selectedBusiness->id) }}">
                             <x-input-label for="service_id" :value="__('messages.service')" />
                             <select name="service_id" id="service_id"
                                 class="block w-full mt-1 bg-frappe-surface0/50 border-frappe-surface1/30 text-frappe-text rounded-md shadow-sm backdrop-blur-sm focus:border-frappe-blue focus:ring-frappe-blue/50"
@@ -122,9 +71,51 @@
                                     </option>
                                 @endforeach
                             </select>
+                        </form>
+                    </div>
+
+                    <!-- Booking Restrictions (Right Side) -->
+                    @php
+                        $bookingInfo = [];
+                        if ($businessSettings['booking_confirmation_required']) {
+                            $bookingInfo[] = [
+                                'icon' => 'clock',
+                                'color' => 'blue-400',
+                                'text' => 'text-blue-300',
+                                'title' => __('messages.booking_confirmation_required'),
+                                'desc' => __('messages.booking_pending_confirmation'),
+                            ];
+                        }
+                        if ($businessSettings['booking_advance_hours'] > 0 || $businessSettings['booking_advance_days'] > 0) {
+                            $bookingInfo[] = [
+                                'icon' => 'information-circle',
+                                'color' => 'frappe-blue',
+                                'text' => 'text-frappe-blue',
+                                'title' => __('messages.booking_restrictions'),
+                                'desc' => __('messages.booking_advance_restrictions', [
+                                    'hours' => $businessSettings['booking_advance_hours'],
+                                    'days' => $businessSettings['booking_advance_days'],
+                                ]),
+                            ];
+                        }
+                    @endphp
+                    @if (count($bookingInfo) > 0)
+                        <div class="flex-1">
+                            <h4 class="text-sm font-medium text-frappe-text mb-3">{{ __('messages.booking_information') }}</h4>
+                            <div class="space-y-2">
+                                @foreach ($bookingInfo as $info)
+                                    <div class="flex items-start gap-2 p-2 rounded-lg border border-{{ str_replace('text-', '', $info['text']) }}/30 {{ $info['text'] }} bg-{{ str_replace('text-', '', $info['text']) }}/10">
+                                        <x-dynamic-component :component="'heroicon-o-' . $info['icon']" class="w-4 h-4 mt-0.5 flex-shrink-0" />
+                                        <div class="text-xs">
+                                            <div class="font-medium">{{ $info['title'] }}</div>
+                                            <div class="opacity-80">{{ $info['desc'] }}</div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
                         </div>
                     @endif
-                </form>
+                </div>
             </div>
 
             <!-- Service Info (only if selected) -->
@@ -295,8 +286,6 @@
                     <form method="POST" action="{{ route('bookings.store') }}" class="space-y-4"
                         x-ref="bookingForm">
                         @csrf
-                        <input type="hidden" name="business_id"
-                            value="{{ $selectedBusiness ? $selectedBusiness->id : '' }}">
                         <input type="hidden" name="service_id"
                             value="{{ $selectedService ? $selectedService->id : '' }}">
                         <input type="hidden" name="employee_id" x-bind:value="selectedEmployeeId || ''">
@@ -343,13 +332,8 @@
                         slotHeight: 5,
                         serviceDuration: {{ $selectedService ? $selectedService->duration : 5 }},
                         canSelectSlots: {{ $selectedService ? 'true' : 'false' }},
-                        @if ($businessSettings)
-                            bookingAdvanceHours: {{ $businessSettings['booking_advance_hours'] }},
-                            bookingAdvanceDays: {{ $businessSettings['booking_advance_days'] }},
-                        @else
-                            bookingAdvanceHours: 0,
-                            bookingAdvanceDays: 365,
-                        @endif
+                        bookingAdvanceHours: {{ $businessSettings['booking_advance_hours'] }},
+                        bookingAdvanceDays: {{ $businessSettings['booking_advance_days'] }},
 
                         get slotsPerHour() {
                             return 60 / this.intervalMinutes;
@@ -466,18 +450,20 @@
                                 labels.push(hour);
                             }
                             return labels;
-                        },
-
-                        async loadSchedule() {
+                        },                        async loadSchedule() {
                             this.loading = true;
                             this.clearSelection();
 
                             try {
                                 const weekStartString = this.weekStart.toISOString().split('T')[0];
                                 let url = null;
+                                
                                 if (this.canSelectSlots && {{ $selectedService ? 'true' : 'false' }}) {
-                                    url =
-                                        `{{ route('booking-slots') }}?service_id={{ $selectedService ? $selectedService->id : '' }}&week_start=${weekStartString}`;
+                                    // Service selected: get full availability data
+                                    url = `{{ route('booking-slots') }}?service_id={{ $selectedService ? $selectedService->id : '' }}&week_start=${weekStartString}`;
+                                } else {
+                                    // No service selected: get basic working hours and booked slots
+                                    url = `{{ route('business-schedule') }}?business_id={{ $selectedBusiness->id }}&week_start=${weekStartString}`;
                                 }
 
                                 if (url) {
@@ -486,7 +472,7 @@
 
                                     this.schedule = this.transformToIntervals(data);
                                 } else {
-                                    // No service selected: just fill with empty slots
+                                    // Fallback: empty schedule
                                     this.schedule = {};
                                 }
                             } catch (error) {
@@ -560,75 +546,89 @@
 
                                             if (slot.available) {
                                                 const slotTime = new Date(timeKey);
-                                                const isWithinBookingWindow = this.isSlotWithinBookingWindow(
-                                                    dateString,
-                                                    slotTime.getHours(),
-                                                    slotTime.getMinutes()
-                                                );
 
-                                                if (!isWithinBookingWindow) {
-                                                    currentSlot.type = 'not_available';
-                                                    currentSlot.datetime = timeKey;
-                                                    currentSlot.available = false;
-                                                    currentSlot.restrictionReason = this.getRestrictionReason(dateString,
-                                                        slotTime.getHours(), slotTime.getMinutes());
-                                                } else {
-                                                    currentSlot.type = 'available';
-                                                    currentSlot.datetime = timeKey;
-                                                    currentSlot.available = true;
-                                                    currentSlot.hasFullServiceTime = slot.has_full_service_time;
-                                                    currentSlot.availableMinutes = slot.available_minutes;
-                                                }
+                                                // Check if this is service-specific data or basic business schedule
+                                                const hasServiceData = slot.hasOwnProperty('has_full_service_time');
 
-                                                if (slot.all_employees && isWithinBookingWindow) {
-                                                    // Filter employees who are available AND have enough time for full service
-                                                    const availableEmployees = slot.all_employees.filter(emp => emp
-                                                        .available && emp.has_full_service_time);
-                                                    availableEmployees.forEach(employee => {
-                                                        if (!currentSlot.employeeIds.includes(employee
+                                                if (hasServiceData) {
+                                                    // Service-specific logic with booking window validation
+                                                    const isWithinBookingWindow = this.isSlotWithinBookingWindow(
+                                                        dateString,
+                                                        slotTime.getHours(),
+                                                        slotTime.getMinutes()
+                                                    );
+
+                                                    if (!isWithinBookingWindow) {
+                                                        currentSlot.type = 'not_available';
+                                                        currentSlot.datetime = timeKey;
+                                                        currentSlot.available = false;
+                                                        currentSlot.restrictionReason = this.getRestrictionReason(dateString,
+                                                            slotTime.getHours(), slotTime.getMinutes());
+                                                    } else {
+                                                        currentSlot.type = 'available';
+                                                        currentSlot.datetime = timeKey;
+                                                        currentSlot.available = true;
+                                                        currentSlot.hasFullServiceTime = slot.has_full_service_time;
+                                                        currentSlot.availableMinutes = slot.available_minutes;
+                                                    }
+
+                                                    if (slot.all_employees && isWithinBookingWindow) {
+                                                        // Filter employees who are available AND have enough time for full service
+                                                        const availableEmployees = slot.all_employees.filter(emp => emp
+                                                            .available && emp.has_full_service_time);
+                                                        availableEmployees.forEach(employee => {
+                                                            if (!currentSlot.employeeIds.includes(employee
+                                                                    .employee_id)) {
+                                                                currentSlot.employeeIds.push(employee.employee_id);
+                                                                currentSlot.employeeData[employee.employee_id] = {
+                                                                    id: employee.employee_id,
+                                                                    name: employee.employee_name,
+                                                                    bio: employee.employee_bio || '',
+                                                                    availableMinutes: employee.available_minutes,
+                                                                    hasFullServiceTime: employee
+                                                                        .has_full_service_time
+                                                                };
+                                                            }
+                                                        });
+                                                    } else {
+                                                        // Fallback to single employee data - only if they have full service time
+                                                        if (slot.employee_id && slot.has_full_service_time && !currentSlot
+                                                            .employeeIds.includes(slot
                                                                 .employee_id)) {
-                                                            currentSlot.employeeIds.push(employee.employee_id);
-                                                            currentSlot.employeeData[employee.employee_id] = {
-                                                                id: employee.employee_id,
-                                                                name: employee.employee_name,
-                                                                bio: employee.employee_bio || '',
-                                                                availableMinutes: employee.available_minutes,
-                                                                hasFullServiceTime: employee
-                                                                    .has_full_service_time
+                                                            currentSlot.employeeIds.push(slot.employee_id);
+                                                            currentSlot.employeeData[slot.employee_id] = {
+                                                                id: slot.employee_id,
+                                                                name: slot.employee_name,
+                                                                bio: slot.employee_bio || '',
+                                                                availableMinutes: slot.available_minutes,
+                                                                hasFullServiceTime: slot.has_full_service_time
                                                             };
                                                         }
-                                                    });
-                                                } else {
-                                                    // Fallback to single employee data - only if they have full service time
-                                                    if (slot.employee_id && slot.has_full_service_time && !currentSlot
-                                                        .employeeIds.includes(slot
-                                                            .employee_id)) {
-                                                        currentSlot.employeeIds.push(slot.employee_id);
-                                                        currentSlot.employeeData[slot.employee_id] = {
-                                                            id: slot.employee_id,
-                                                            name: slot.employee_name,
-                                                            bio: slot.employee_bio || '',
-                                                            availableMinutes: slot.available_minutes,
-                                                            hasFullServiceTime: slot.has_full_service_time
-                                                        };
-                                                    }
-                                                }
-                                            } else {
-                                                const slotTime = new Date(timeKey);
-                                                const isWithinBookingWindow = this.isSlotWithinBookingWindow(
-                                                    dateString,
-                                                    slotTime.getHours(),
-                                                    slotTime.getMinutes()
-                                                );
+                                                    }                                            } else {
+                                                // Basic business schedule (no service selected) - just show as working
+                                                currentSlot.type = 'working';
+                                                currentSlot.datetime = timeKey;
+                                                currentSlot.available = false; // Not clickable when no service
+                                            }
+                                        } else {
+                                            // For basic business schedule, we don't show booked slots
+                                            const hasServiceData = slot.hasOwnProperty('has_full_service_time');
 
-                                                if (!isWithinBookingWindow) {
-                                                    // Slot is outside booking advance window - mark as not available
-                                                    currentSlot.type = 'not_available';
-                                                    currentSlot.datetime = timeKey;
-                                                    currentSlot.available = false;
-                                                    currentSlot.restrictionReason = this.getRestrictionReason(dateString,
-                                                        slotTime.getHours(), slotTime.getMinutes());
-                                                } else {
+                                            if (hasServiceData) {
+                                                    // Service-specific logic
+                                                    const isWithinBookingWindow = this.isSlotWithinBookingWindow(
+                                                        dateString,
+                                                        slotTime.getHours(),
+                                                        slotTime.getMinutes()
+                                                    );
+
+                                                    if (!isWithinBookingWindow) {
+                                                        // Slot is outside booking advance window - mark as not available
+                                                        currentSlot.type = 'not_available';
+                                                        currentSlot.datetime = timeKey;
+                                                        currentSlot.available = false;
+                                                        currentSlot.restrictionReason = this.getRestrictionReason(dateString,
+                                                            slotTime.getHours(), slotTime.getMinutes());                                                } else {
                                                     // All employees are busy - mark as booked
                                                     currentSlot.type = 'booked';
                                                     currentSlot.available = false;
@@ -636,6 +636,10 @@
                                                     currentSlot.bookedEmployees = slot.employee_name ||
                                                         'All employees booked';
                                                 }
+                                            } else {
+                                                // Basic business schedule - skip non-available slots (don't show bookings)
+                                                // These slots are already marked as 'working' from the available=true case above
+                                            }
                                             }
                                         }
                                     });
@@ -658,6 +662,9 @@
                                 case 'available':
                                     // All available slots show as green, regardless of full service time
                                     classes.push('bg-green-400', 'text-white');
+                                    if (!this.canSelectSlots) {
+                                        classes.push('cursor-default');
+                                    }
                                     break;
                                 case 'selected':
                                     classes.push('bg-blue-500', 'text-white');
@@ -673,12 +680,17 @@
                                     break;
                                 case 'working':
                                     classes.push('bg-frappe-surface1', 'text-frappe-subtext1');
+                                    if (!this.canSelectSlots) {
+                                        classes.push('cursor-default');
+                                    }
                                     break;
                                 default:
                                     classes.push('bg-frappe-surface0', 'text-frappe-subtext1');
                                     // Add cursor-not-allowed for slots with restriction reasons (booking advance violations)
                                     if (slot.restrictionReason) {
                                         classes.push('cursor-not-allowed');
+                                    } else if (!this.canSelectSlots) {
+                                        classes.push('cursor-default');
                                     }
                             }
 
@@ -702,19 +714,26 @@
                                 }
                                 return tooltip;
                             } else if (slot.type === 'booked') {
-                                return `Booked at ${slot.time}${slot.bookedEmployees ? ' by ' + slot.bookedEmployees : ''}`;
+                                return `Booked at ${slot.time}${slot.bookedEmployees ? ' - ' + slot.bookedEmployees : ''}`;
                             } else if (slot.restrictionReason) {
                                 // Slots that don't meet booking advance requirements
                                 return `${slot.time} - ${slot.restrictionReason}`;
                             } else if (slot.type === 'selected') {
                                 return `Selected: ${slot.time}`;
                             } else if (slot.type === 'working') {
+                                if (!this.canSelectSlots) {
+                                    return `Working hours: ${slot.time} - Select a service to book`;
+                                }
                                 return `Working hours: ${slot.time}`;
                             }
                             return `${slot.time}`;
                         },
 
                         handleSlotClick(slot, dateString, slotIndex) {
+                            // Don't allow slot clicking if no service is selected
+                            if (!this.canSelectSlots) {
+                                return;
+                            }
 
                             this.clearHoverEffects();
 
@@ -779,6 +798,11 @@
                         },
 
                         handleSlotHover(slot, dateString, slotIndex, isEntering) {
+                            // Don't show hover effects if no service is selected
+                            if (!this.canSelectSlots) {
+                                return;
+                            }
+
                             this.clearHoverEffects();
 
                             if (!isEntering) return;
@@ -918,7 +942,7 @@
                         },
 
                         submitBooking() {
-                            @if ($businessSettings && ($businessSettings['holiday_mode'] || $businessSettings['maintenance_mode']))
+                            @if ($businessSettings['holiday_mode'] || $businessSettings['maintenance_mode'])
                                 @if ($businessSettings['holiday_mode'])
                                     alert('{{ __('messages.this_business_not_accepting_bookings') }}');
                                 @elseif ($businessSettings['maintenance_mode'])
