@@ -133,3 +133,8 @@ Route::get('/booking-slots', [\App\Http\Controllers\BookingController::class, 'a
 Route::get('/business-schedule', [\App\Http\Controllers\BookingController::class, 'businessSchedule'])
     ->name('business-schedule')
     ->middleware(['auth', 'verified']);
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/notifications', [\App\Http\Controllers\NotificationController::class, 'index'])->name('notifications.index');
+    Route::post('/notifications/mark-all-read', [\App\Http\Controllers\NotificationController::class, 'markAllRead'])->name('notifications.markAllRead');
+});

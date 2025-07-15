@@ -13,7 +13,7 @@
                         {{ __('messages.welcome_user', ['name' => auth()->user()->name]) }}
                     </div>
 
-                    <div class="text-frappe-subtext1 text-lg mb-2">{{ __('messages.role') }}</div>
+                    <div class="text-frappe-subtpnext1 text-lg mb-2">{{ __('messages.role') }}</div>
                     <span class="font-bold text-frappe-blue text-xl mb-4">
                         {{ ucfirst(auth()->user()->role) }}
                     </span>
