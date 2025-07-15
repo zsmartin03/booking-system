@@ -7,6 +7,7 @@ use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\StatisticsController;
 use App\Http\Controllers\BusinessWorkingHourController;
 use App\Http\Controllers\EmployeeWorkingHourController;
 use App\Http\Controllers\AvailabilityExceptionController;
@@ -92,6 +93,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
         Route::put('/settings', [SettingController::class, 'update'])->name('settings.update');
         Route::post('/settings/reset', [SettingController::class, 'reset'])->name('settings.reset');
+
+        // Statistics routes
+        Route::get('/statistics', [StatisticsController::class, 'index'])->name('statistics.index');
+        Route::get('/statistics/data', [StatisticsController::class, 'getData'])->name('statistics.data');
     });
 
     // Admin-only routes

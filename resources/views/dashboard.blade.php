@@ -86,6 +86,18 @@
                             {{ __('messages.manage') }}
                         </a>
                     </div>
+
+                    <!-- Business Statistics (admin/provider only) -->
+                    <div
+                        class="frosted-card rounded-xl p-8 flex flex-col items-center justify-center shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-105 min-h-[200px]">
+                        <x-heroicon-o-chart-bar class="w-12 h-12 text-frappe-teal mb-4" />
+                        <div class="text-frappe-text text-xl mb-2">{{ __('messages.business_statistics') }}</div>
+                        <a href="{{ route('statistics.index') }}"
+                            class="mt-4 bg-gradient-to-r from-teal-500/30 to-cyan-500/30 backdrop-blur-sm border border-teal-400/40 text-teal-300 rounded-lg hover:from-teal-500/40 hover:to-cyan-500/40 transition-all px-6 py-3 flex items-center gap-2 text-lg shadow-lg">
+                            <x-heroicon-o-chart-pie class="w-6 h-6" />
+                            {{ __('messages.view_stats') }}
+                        </a>
+                    </div>
                 @endif
 
                 <!-- Manage Categories (admin only) -->

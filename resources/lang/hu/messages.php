@@ -20,6 +20,7 @@ return [
 
     // Business Management
     'businesses' => 'Vállalkozások',
+    'business' => 'Vállalkozás',
     'manage_businesses' => 'Vállalkozások kezelése',
     'create_business' => 'Vállalkozás létrehozása',
     'edit_business' => 'Vállalkozás szerkesztése',
@@ -634,4 +635,22 @@ return [
     'business_closed_on_day' => 'A vállalkozás zárva van ezen a napon: :day.',
     'employee_hours_outside_business' => 'Az alkalmazott munkaideje :day napon kívül esik a vállalkozás munkaidején (:business_start - :business_end).',
     'working_hours_updated' => 'A munkaidő sikeresen frissítve.',
+
+    // Statistics
+    'business_statistics' => 'Üzleti statisztikák',
+    'view_stats' => 'Statisztikák megtekintése',
+    'total_bookings' => 'Összes foglalás',
+    'total_revenue' => 'Összes bevétel',
+    'total_customers' => 'Összes ügyfél',
+    'avg_revenue_per_booking' => 'Átlag bevétel/foglalás',
+    'bookings_over_time' => 'Foglalások időbeli alakulása',
+    'revenue_over_time' => 'Bevétel időbeli alakulása',
+    'most_booked_services' => 'Legtöbbet foglalt szolgáltatások',
+    'period' => 'Időszak',
+    'daily' => 'Napi',
+    'weekly' => 'Heti',
+    'monthly' => 'Havi',
+    'no_services_booked' => 'Még nem foglaltak szolgáltatást.',
+    'bookings' => 'foglalás',
+    'per_service' => 'szolgáltatásonként',
 ];

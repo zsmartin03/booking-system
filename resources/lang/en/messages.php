@@ -21,6 +21,7 @@ return [
 
     // Business Management
     'businesses' => 'Businesses',
+    'business' => 'Business',
     'manage_businesses' => 'Manage Businesses',
     'create_business' => 'Create Business',
     'edit_business' => 'Edit Business',
@@ -626,4 +627,22 @@ return [
     'conflicting_employee_hours' => 'Conflicting Employee Working Hours',
     'conflicting_employee_hours_desc' => 'The following employees have working hours that would conflict with the new business hours. Do you want to delete these employee working hours and proceed?',
     'delete_and_save' => 'Delete and Save',
+
+    // Statistics
+    'business_statistics' => 'Business Statistics',
+    'view_stats' => 'View Stats',
+    'total_bookings' => 'Total Bookings',
+    'total_revenue' => 'Total Revenue',
+    'total_customers' => 'Total Customers',
+    'avg_revenue_per_booking' => 'Avg. Revenue/Booking',
+    'bookings_over_time' => 'Bookings Over Time',
+    'revenue_over_time' => 'Revenue Over Time',
+    'most_booked_services' => 'Most Booked Services',
+    'period' => 'Period',
+    'daily' => 'Daily',
+    'weekly' => 'Weekly',
+    'monthly' => 'Monthly',
+    'no_services_booked' => 'No services have been booked yet.',
+    'bookings' => 'bookings',
+    'per_service' => 'per service',
 ];
