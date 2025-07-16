@@ -64,11 +64,13 @@
                                 </label>
                                 <select id="sort" name="sort"
                                     class="w-full px-3 py-2 bg-frappe-mantle border border-frappe-surface2 rounded-lg text-frappe-text focus:outline-none focus:ring-2 focus:ring-frappe-blue focus:border-transparent">
-                                    <option value="best" {{ request('sort') == 'best' ? 'selected' : '' }}>
+                                    <option value="best"
+                                        {{ request('sort') == 'best' || !request('sort') ? 'selected' : '' }}>
                                         {{ __('messages.best') }}
                                     </option>
-                                    <option value="name"
-                                        {{ request('sort') == 'name' || !request('sort') ? 'selected' : '' }}>
+
+                                    {{ request('sort') == 'name' ? 'selected' : '' }}
+                                    <option value="name" {{ request('sort') == 'name' ? 'selected' : '' }}>
                                         {{ __('messages.name_a_to_z') }}
                                     </option>
                                     <option value="rating_high"

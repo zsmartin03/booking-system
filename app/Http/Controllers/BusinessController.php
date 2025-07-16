@@ -31,7 +31,7 @@ class BusinessController extends Controller
         }
 
         if ($request->filled('search')) {
-            $query->where('name', 'like', '%' . $request->search . '%');
+            $query->whereRaw('unaccent(name) ILIKE unaccent(?)', ['%' . $request->search . '%']);
         }
 
         if ($request->filled('category')) {
@@ -57,7 +57,7 @@ class BusinessController extends Controller
             ->withAvg('reviews', 'rating');
 
         if ($request->filled('search')) {
-            $query->where('name', 'like', '%' . $request->search . '%');
+            $query->whereRaw('unaccent(name) ILIKE unaccent(?)', ['%' . $request->search . '%']);
         }
 
         if ($request->filled('category')) {
@@ -72,7 +72,7 @@ class BusinessController extends Controller
             $minRating = floatval($request->min_rating);
         }
 
-        $sortBy = $request->get('sort', 'name');
+        $sortBy = $request->get('sort', 'best');
         switch ($sortBy) {
             case 'rating_high':
                 $query->orderBy('reviews_avg_rating', 'desc')

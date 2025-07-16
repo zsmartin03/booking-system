@@ -61,6 +61,19 @@
                                 <span class="downvote-count">{{ $review->downvotes()->count() }}</span>
                             </button>
                         </div>
+                    @elseif (auth()->id() === $business->user_id)
+                        <div class="flex items-center gap-4 mb-3">
+                            <button type="button" disabled
+                                class="vote-button flex items-center gap-1 px-3 py-1 rounded-full text-sm bg-frappe-surface0/50 text-frappe-subtext1 opacity-60 cursor-not-allowed">
+                                <x-heroicon-o-hand-thumb-up class="w-4 h-4" />
+                                <span class="upvote-count">{{ $review->upvotes()->count() }}</span>
+                            </button>
+                            <button type="button" disabled
+                                class="vote-button flex items-center gap-1 px-3 py-1 rounded-full text-sm bg-frappe-surface0/50 text-frappe-subtext1 opacity-60 cursor-not-allowed">
+                                <x-heroicon-o-hand-thumb-down class="w-4 h-4" />
+                                <span class="downvote-count">{{ $review->downvotes()->count() }}</span>
+                            </button>
+                        </div>
                     @endif
                 @endauth
 
@@ -107,7 +120,7 @@
                                     class="block text-sm font-medium text-frappe-text mb-2">{{ __('messages.respond_to_review') }}</label>
                                 <textarea name="response" rows="3"
                                     class="w-full px-3 py-2 border border-frappe-surface2/30 rounded-md bg-frappe-surface0/50 text-frappe-text focus:outline-none focus:ring-2 focus:ring-frappe-blue/50"
-                                    placeholder="{{ __('messages.write_your_response') }}"></textarea>
+                                    placeholder="{{ __('messages.write_your_response') }}" autocomplete="off"></textarea>
                             </div>
                             <button type="submit"
                                 class="frosted-button text-white px-4 py-2 rounded-lg transition-all text-sm">
