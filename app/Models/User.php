@@ -100,9 +100,33 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
+     * Check if user owns the specified business
+     */
+    public function ownsBusiness($businessId): bool
+    {
+        return $this->businesses()->where('id', $businessId)->exists();
+    }
+
+    /**
+     * Check if user is an employee of the specified business
+     */
+    public function isEmployeeOfBusiness($businessId): bool
+    {
+        return $this->employees()->where('business_id', $businessId)->exists();
+    }
+
+    /**
+     * Check if user is affiliated with the business (owner or employee)
+     */
+    public function isAffiliatedWithBusiness($businessId): bool
+    {
+        return $this->ownsBusiness($businessId) || $this->isEmployeeOfBusiness($businessId);
+    }
+
+    /**
      * Get the user's avatar URL
      */
-    public function getAvatarUrl(): string
+    public function getAvatarUrl(): ?string
     {
         if ($this->avatar) {
             return asset('storage/' . $this->avatar);

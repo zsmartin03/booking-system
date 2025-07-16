@@ -26,7 +26,7 @@ class BusinessSeeder extends Seeder
                     'description' => 'Professional hair styling and beauty services',
                     'address' => '1425 Broadway, New York, NY 10018',
                     'phone_number' => '555-0001',
-                    'email' => 'info@elitehair.com',
+                    'email' => 'info@elitehair.example.com',
                     'latitude' => 40.7551,
                     'longitude' => -73.9872,
                 ],
@@ -38,8 +38,8 @@ class BusinessSeeder extends Seeder
                     ['name' => 'Highlights', 'description' => 'Hair highlighting service', 'price' => 95.00, 'duration' => 120],
                 ],
                 'employees' => [
-                    ['name' => 'Sarah Johnson', 'email' => 'sarah@elitehair.com', 'bio' => 'Senior hair stylist with 8 years experience'],
-                    ['name' => 'Mike Chen', 'email' => 'mike@elitehair.com', 'bio' => 'Color specialist and creative director'],
+                    ['name' => 'Sarah Johnson', 'email' => 'sarah@elitehair.example.com', 'bio' => 'Senior hair stylist with 8 years experience'],
+                    ['name' => 'Mike Chen', 'email' => 'mike@elitehair.example.com', 'bio' => 'Color specialist and creative director'],
                 ]
             ],
             [
@@ -48,7 +48,7 @@ class BusinessSeeder extends Seeder
                     'description' => 'Complete automotive repair and maintenance services',
                     'address' => '2847 W Sunset Blvd, Los Angeles, CA 90026',
                     'phone_number' => '555-0002',
-                    'email' => 'service@autocareplus.com',
+                    'email' => 'service@autocareplus.example.com',
                     'latitude' => 34.0778,
                     'longitude' => -118.2726,
                 ],
@@ -59,8 +59,8 @@ class BusinessSeeder extends Seeder
                     ['name' => 'Brake Inspection & Repair', 'description' => 'Complete brake system service', 'price' => 150.00, 'duration' => 90],
                 ],
                 'employees' => [
-                    ['name' => 'Tom Rodriguez', 'email' => 'tom@autocareplus.com', 'bio' => 'ASE certified master technician'],
-                    ['name' => 'Lisa Park', 'email' => 'lisa@autocareplus.com', 'bio' => 'Electrical systems specialist'],
+                    ['name' => 'Tom Rodriguez', 'email' => 'tom@autocareplus.example.com', 'bio' => 'ASE certified master technician'],
+                    ['name' => 'Lisa Park', 'email' => 'lisa@autocareplus.example.com', 'bio' => 'Electrical systems specialist'],
                 ]
             ],
             [
@@ -69,7 +69,7 @@ class BusinessSeeder extends Seeder
                     'description' => 'Family dentistry and cosmetic dental services',
                     'address' => '875 Michigan Ave, Chicago, IL 60611',
                     'phone_number' => '555-0003',
-                    'email' => 'appointments@smiledentalcare.com',
+                    'email' => 'appointments@smiledentalcare.example.com',
                     'latitude' => 41.8976,
                     'longitude' => -87.6244,
                 ],
@@ -81,8 +81,8 @@ class BusinessSeeder extends Seeder
                     ['name' => 'Dental Filling', 'description' => 'Composite tooth filling', 'price' => 180.00, 'duration' => 45],
                 ],
                 'employees' => [
-                    ['name' => 'Dr. Emily Watson', 'email' => 'emily@smiledentalcare.com', 'bio' => 'General dentist with 12 years experience'],
-                    ['name' => 'Dr. James Liu', 'email' => 'james@smiledentalcare.com', 'bio' => 'Cosmetic dentistry specialist'],
+                    ['name' => 'Dr. Emily Watson', 'email' => 'emily@smiledentalcare.example.com', 'bio' => 'General dentist with 12 years experience'],
+                    ['name' => 'Dr. James Liu', 'email' => 'james@smiledentalcare.example.com', 'bio' => 'Cosmetic dentistry specialist'],
                 ]
             ],
             [
@@ -91,7 +91,7 @@ class BusinessSeeder extends Seeder
                     'description' => 'Personal training and fitness coaching',
                     'address' => '1150 Peachtree St NE, Atlanta, GA 30309',
                     'phone_number' => '555-0004',
-                    'email' => 'trainers@fitzonegym.com',
+                    'email' => 'trainers@fitzonegym.example.com',
                     'latitude' => 33.7850,
                     'longitude' => -84.3857,
                 ],
@@ -102,8 +102,8 @@ class BusinessSeeder extends Seeder
                     ['name' => 'Nutrition Consultation', 'description' => 'Personalized nutrition planning', 'price' => 60.00, 'duration' => 45],
                 ],
                 'employees' => [
-                    ['name' => 'Alex Thompson', 'email' => 'alex@fitzonegym.com', 'bio' => 'Certified personal trainer and nutritionist'],
-                    ['name' => 'Maria Santos', 'email' => 'maria@fitzonegym.com', 'bio' => 'Strength training and sports performance coach'],
+                    ['name' => 'Alex Thompson', 'email' => 'alex@fitzonegym.example.com', 'bio' => 'Certified personal trainer and nutritionist'],
+                    ['name' => 'Maria Santos', 'email' => 'maria@fitzonegym.example.com', 'bio' => 'Strength training and sports performance coach'],
                 ]
             ],
             [
@@ -112,7 +112,7 @@ class BusinessSeeder extends Seeder
                     'description' => 'Luxury spa and wellness treatments',
                     'address' => '1776 Ocean Dr, Miami Beach, FL 33139',
                     'phone_number' => '555-0005',
-                    'email' => 'book@serenityspa.com',
+                    'email' => 'book@serenityspa.example.com',
                     'latitude' => 25.7804,
                     'longitude' => -80.1300,
                 ],
@@ -124,8 +124,8 @@ class BusinessSeeder extends Seeder
                     ['name' => 'Manicure & Pedicure', 'description' => 'Complete nail care service', 'price' => 65.00, 'duration' => 60],
                 ],
                 'employees' => [
-                    ['name' => 'Isabella Moore', 'email' => 'isabella@serenityspa.com', 'bio' => 'Licensed massage therapist and esthetician'],
-                    ['name' => 'David Kim', 'email' => 'david@serenityspa.com', 'bio' => 'Nail technician and spa specialist'],
+                    ['name' => 'Isabella Moore', 'email' => 'isabella@serenityspa.example.com', 'bio' => 'Licensed massage therapist and esthetician'],
+                    ['name' => 'David Kim', 'email' => 'david@serenityspa.example.com', 'bio' => 'Nail technician and spa specialist'],
                 ]
             ],
             [
@@ -134,7 +134,7 @@ class BusinessSeeder extends Seeder
                     'description' => 'Computer and mobile device repair services',
                     'address' => '2101 4th Ave, Seattle, WA 98121',
                     'phone_number' => '555-0006',
-                    'email' => 'support@techfixsolutions.com',
+                    'email' => 'support@techfixsolutions.example.com',
                     'latitude' => 47.6131,
                     'longitude' => -122.3414,
                 ],
@@ -145,8 +145,8 @@ class BusinessSeeder extends Seeder
                     ['name' => 'Phone Screen Replacement', 'description' => 'Mobile device screen repair', 'price' => 120.00, 'duration' => 45],
                 ],
                 'employees' => [
-                    ['name' => 'Kevin Zhang', 'email' => 'kevin@techfixsolutions.com', 'bio' => 'Computer technician with 6 years experience'],
-                    ['name' => 'Rachel Green', 'email' => 'rachel@techfixsolutions.com', 'bio' => 'Mobile device repair specialist'],
+                    ['name' => 'Kevin Zhang', 'email' => 'kevin@techfixsolutions.example.com', 'bio' => 'Computer technician with 6 years experience'],
+                    ['name' => 'Rachel Green', 'email' => 'rachel@techfixsolutions.example.com', 'bio' => 'Mobile device repair specialist'],
                 ]
             ],
             [
@@ -155,7 +155,7 @@ class BusinessSeeder extends Seeder
                     'description' => 'Fine dining with Italian cuisine',
                     'address' => '1820 16th St NW, Washington, DC 20009',
                     'phone_number' => '555-0007',
-                    'email' => 'reservations@bellavista.com',
+                    'email' => 'reservations@bellavista.example.com',
                     'latitude' => 38.9172,
                     'longitude' => -77.0369,
                 ],
@@ -166,8 +166,8 @@ class BusinessSeeder extends Seeder
                     ['name' => 'Wine Tasting Session', 'description' => 'Guided wine tasting with sommelier', 'price' => 45.00, 'duration' => 60],
                 ],
                 'employees' => [
-                    ['name' => 'Chef Antonio Rossi', 'email' => 'antonio@bellavista.com', 'bio' => 'Executive chef with Michelin restaurant experience'],
-                    ['name' => 'Sophie Laurent', 'email' => 'sophie@bellavista.com', 'bio' => 'Certified sommelier and wine expert'],
+                    ['name' => 'Chef Antonio Rossi', 'email' => 'antonio@bellavista.example.com', 'bio' => 'Executive chef with Michelin restaurant experience'],
+                    ['name' => 'Sophie Laurent', 'email' => 'sophie@bellavista.example.com', 'bio' => 'Certified sommelier and wine expert'],
                 ]
             ],
             [

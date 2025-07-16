@@ -20,6 +20,10 @@ class ReviewController extends Controller
 
         $user = Auth::user();
 
+        if ($user->isAffiliatedWithBusiness($business->id)) {
+            return response()->json(['error' => 'Business owners and employees cannot review their own business'], 403);
+        }
+
         if ($business->reviews()->where('user_id', $user->id)->exists()) {
             return response()->json(['error' => 'You have already reviewed this business'], 400);
         }
@@ -47,6 +51,10 @@ class ReviewController extends Controller
         ]);
 
         $user = Auth::user();
+
+        if ($user->isAffiliatedWithBusiness($review->business_id)) {
+            return response()->json(['error' => 'Business owners and employees cannot vote on reviews for their own business'], 403);
+        }
 
         $existingVote = $review->votes()->where('user_id', $user->id)->first();
 

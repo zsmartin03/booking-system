@@ -46,7 +46,7 @@
 
                 <!-- Vote buttons -->
                 @auth
-                    @if (auth()->id() !== $review->user_id)
+                    @if (auth()->id() !== $review->user_id && !auth()->user()->isAffiliatedWithBusiness($review->business_id))
                         <div class="flex items-center gap-4 mb-3">
                             <button onclick="voteReview({{ $review->id }}, true)"
                                 class="vote-button flex items-center gap-1 px-3 py-1 rounded-full text-sm transition-colors

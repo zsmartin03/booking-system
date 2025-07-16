@@ -191,7 +191,7 @@
                     </div>
 
                     @auth
-                        @if (auth()->user()->role === 'client' || auth()->user()->role === 'admin')
+                        @if ((auth()->user()->role === 'client' || auth()->user()->role === 'admin') && !auth()->user()->isAffiliatedWithBusiness($business->id))
                             @if (!$userReview)
                                 <!-- Write Review Form -->
                                 <div class="bg-frappe-surface0/30 rounded-lg p-4 mb-6 border border-frappe-surface2/30">
