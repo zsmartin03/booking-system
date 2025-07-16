@@ -598,6 +598,7 @@ return [
     'rating_high_to_low' => 'Rating (High to Low)',
     'rating_low_to_high' => 'Rating (Low to High)',
     'most_reviewed' => 'Most Reviewed',
+    'best' => 'Best',
     'showing_filtered_businesses' => 'Showing filtered businesses',
     'with_rating_above' => 'with rating above :rating',
     'sorted_by' => 'sorted by',

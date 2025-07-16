@@ -601,6 +601,7 @@ return [
     'rating_high_to_low' => 'Értékelés (Magas - Alacsony)',
     'rating_low_to_high' => 'Értékelés (Alacsony - Magas)',
     'most_reviewed' => 'Legtöbb értékelés',
+    'best' => 'Legjobb',
     'showing_filtered_businesses' => 'Szűrt üzletek megjelenítése',
     'with_rating_above' => ':rating fölötti értékeléssel',
     'sorted_by' => 'rendezve',

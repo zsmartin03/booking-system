@@ -558,11 +558,22 @@
                             {{ __('messages.similar_businesses') }}
                         </h3>
                         <div class="relative">
-                            <div class="overflow-x-auto scrollbar-hide">
-                                <div class="flex gap-4 pb-4" style="width: max-content;">
+                            <!-- Navigation Arrows -->
+                            @if ($relatedBusinesses->count() > 1)
+                                <button id="prevBtn" 
+                                    class="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-frappe-surface0/90 hover:bg-frappe-surface1/90 border border-frappe-surface2 rounded-full p-2 shadow-lg transition-all duration-300">
+                                    <x-heroicon-o-chevron-left class="w-5 h-5 text-frappe-text" />
+                                </button>
+                                <button id="nextBtn" 
+                                    class="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-frappe-surface0/90 hover:bg-frappe-surface1/90 border border-frappe-surface2 rounded-full p-2 shadow-lg transition-all duration-300">
+                                    <x-heroicon-o-chevron-right class="w-5 h-5 text-frappe-text" />
+                                </button>
+                            @endif
+                            
+                            <div class="overflow-hidden mx-8">
+                                <div id="carousel" class="flex transition-transform duration-500 ease-in-out">
                                     @foreach ($relatedBusinesses as $relatedBusiness)
-                                        <div
-                                            class="flex-none w-80 bg-frappe-surface0/30 rounded-lg border border-frappe-surface2/30 hover:shadow-lg transition-all duration-300">
+                                        <div class="flex-none w-80 mx-2 bg-frappe-surface0/30 rounded-lg border border-frappe-surface2/30 hover:shadow-lg transition-all duration-300">
                                             <div class="p-4">
                                                 <h4 class="font-semibold text-frappe-text mb-2">
                                                     <a href="{{ route('businesses.show', $relatedBusiness->id) }}"
@@ -624,6 +635,141 @@
                         </div>
                     </div>
                 </div>
+                
+                <!-- Carousel JavaScript -->
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        const carousel = document.getElementById('carousel');
+                        const prevBtn = document.getElementById('prevBtn');
+                        const nextBtn = document.getElementById('nextBtn');
+                        const totalItems = {{ $relatedBusinesses->count() }};
+                        
+                        if (totalItems > 1) {
+                            const cardWidth = 336; // 320px width + 16px margins
+                            let currentIndex = 0;
+                            let cardsToShow = 1;
+                            let isTransitioning = false;
+                            
+                            // Calculate how many cards fit on screen
+                            function calculateCardsToShow() {
+                                const containerWidth = carousel.parentElement.offsetWidth;
+                                cardsToShow = Math.floor(containerWidth / cardWidth);
+                                if (cardsToShow === 0) cardsToShow = 1;
+                                
+                                // If we can show all cards, hide navigation
+                                if (cardsToShow >= totalItems) {
+                                    if (prevBtn) prevBtn.style.display = 'none';
+                                    if (nextBtn) nextBtn.style.display = 'none';
+                                    return;
+                                } else {
+                                    if (prevBtn) prevBtn.style.display = 'block';
+                                    if (nextBtn) nextBtn.style.display = 'block';
+                                }
+                            }
+                            
+                            // Clone cards for seamless infinite scrolling
+                            function setupInfiniteScroll() {
+                                const cards = carousel.children;
+                                const originalCards = Array.from(cards);
+                                
+                                // Clone last few cards and prepend them
+                                for (let i = Math.min(cardsToShow, totalItems) - 1; i >= 0; i--) {
+                                    const clone = originalCards[totalItems - 1 - i].cloneNode(true);
+                                    clone.classList.add('clone');
+                                    carousel.insertBefore(clone, carousel.firstChild);
+                                }
+                                
+                                // Clone first few cards and append them
+                                for (let i = 0; i < Math.min(cardsToShow, totalItems); i++) {
+                                    const clone = originalCards[i].cloneNode(true);
+                                    clone.classList.add('clone');
+                                    carousel.appendChild(clone);
+                                }
+                                
+                                // Set initial position to show first real card
+                                currentIndex = Math.min(cardsToShow, totalItems);
+                                updateCarousel(false);
+                            }
+                            
+                            function updateCarousel(animate = true) {
+                                const translateX = -currentIndex * cardWidth;
+                                if (animate) {
+                                    carousel.style.transition = 'transform 0.5s ease-in-out';
+                                } else {
+                                    carousel.style.transition = 'none';
+                                }
+                                carousel.style.transform = `translateX(${translateX}px)`;
+                            }
+                            
+                            function nextSlide() {
+                                if (isTransitioning) return;
+                                isTransitioning = true;
+                                
+                                currentIndex += cardsToShow;
+                                updateCarousel();
+                                
+                                setTimeout(() => {
+                                    // Check if we need to loop back to start
+                                    if (currentIndex >= totalItems + Math.min(cardsToShow, totalItems)) {
+                                        currentIndex = Math.min(cardsToShow, totalItems);
+                                        updateCarousel(false);
+                                    }
+                                    isTransitioning = false;
+                                }, 500);
+                            }
+                            
+                            function autoNextSlide() {
+                                if (isTransitioning) return;
+                                isTransitioning = true;
+                                
+                                currentIndex += 1; // Move one card at a time for auto-scroll
+                                updateCarousel();
+                                
+                                setTimeout(() => {
+                                    // Check if we need to loop back to start
+                                    if (currentIndex >= totalItems + Math.min(cardsToShow, totalItems)) {
+                                        currentIndex = Math.min(cardsToShow, totalItems);
+                                        updateCarousel(false);
+                                    }
+                                    isTransitioning = false;
+                                }, 500);
+                            }
+                            
+                            function prevSlide() {
+                                if (isTransitioning) return;
+                                isTransitioning = true;
+                                
+                                currentIndex -= cardsToShow;
+                                updateCarousel();
+                                
+                                setTimeout(() => {
+                                    // Check if we need to loop back to end
+                                    if (currentIndex < Math.min(cardsToShow, totalItems)) {
+                                        currentIndex = totalItems;
+                                        updateCarousel(false);
+                                    }
+                                    isTransitioning = false;
+                                }, 500);
+                            }
+                            
+                            // Initialize
+                            calculateCardsToShow();
+                            setupInfiniteScroll();
+                            
+                            // Event listeners
+                            if (nextBtn) nextBtn.addEventListener('click', nextSlide);
+                            if (prevBtn) prevBtn.addEventListener('click', prevSlide);
+                            
+                            // Recalculate on window resize
+                            window.addEventListener('resize', function() {
+                                calculateCardsToShow();
+                            });
+                            
+                            // Auto-scroll every 5 seconds (one card at a time)
+                            setInterval(autoNextSlide, 5000);
+                        }
+                    });
+                </script>
             @endif
         </div>
     </div>

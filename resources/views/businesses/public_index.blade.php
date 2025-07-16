@@ -64,6 +64,9 @@
                                 </label>
                                 <select id="sort" name="sort"
                                     class="w-full px-3 py-2 bg-frappe-mantle border border-frappe-surface2 rounded-lg text-frappe-text focus:outline-none focus:ring-2 focus:ring-frappe-blue focus:border-transparent">
+                                    <option value="best" {{ request('sort') == 'best' ? 'selected' : '' }}>
+                                        {{ __('messages.best') }}
+                                    </option>
                                     <option value="name"
                                         {{ request('sort') == 'name' || !request('sort') ? 'selected' : '' }}>
                                         {{ __('messages.name_a_to_z') }}
@@ -147,8 +150,12 @@
                                                     {{ __('messages.most_reviewed') }}
                                                 @break
 
+                                                @case('best')
+                                                    {{ __('messages.best') }}
+                                                @break
+
                                                 @default
-                                                    {{ __('messages.name_a_to_z') }}
+                                                    {{ __('messages.best') }}
                                             @endswitch
                                         @endif
                                     </p>

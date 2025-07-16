@@ -86,6 +86,20 @@ class BusinessController extends Controller
                 $query->orderBy('reviews_count', 'desc')
                     ->orderBy('name', 'asc');
                 break;
+            case 'best':
+                // Sort by best using Bayesian average
+                // Formula: (C * m + R * v) / (C + R)
+                // Where: C = confidence parameter (10), m = global mean (3.5), R = review count, v = business rating
+                $query->selectRaw('businesses.*,
+                    (10 * 3.5 +
+                     COALESCE((select count(*) from "reviews" where "businesses"."id" = "reviews"."business_id"), 0) *
+                     COALESCE((select avg("reviews"."rating") from "reviews" where "businesses"."id" = "reviews"."business_id"), 0)
+                    ) /
+                    (10 + COALESCE((select count(*) from "reviews" where "businesses"."id" = "reviews"."business_id"), 0)) as best_score')
+                    ->orderBy('best_score', 'desc')
+                    ->orderBy('reviews_avg_rating', 'desc')
+                    ->orderBy('name', 'asc');
+                break;
             case 'name':
             default:
                 $query->orderBy('name', 'asc');
@@ -248,10 +262,10 @@ class BusinessController extends Controller
                 // Sort by best like/dislike ratio
                 $reviewsQuery->leftJoin('review_votes', 'reviews.id', '=', 'review_votes.review_id')
                     ->selectRaw('reviews.*,
-                        COALESCE(SUM(CASE WHEN review_votes.is_upvote = 1 THEN 1 ELSE 0 END), 0) as upvotes_count,
-                        COALESCE(SUM(CASE WHEN review_votes.is_upvote = 0 THEN 1 ELSE 0 END), 0) as downvotes_count,
-                        (COALESCE(SUM(CASE WHEN review_votes.is_upvote = 1 THEN 1 ELSE 0 END), 0) -
-                         COALESCE(SUM(CASE WHEN review_votes.is_upvote = 0 THEN 1 ELSE 0 END), 0)) as net_votes')
+                        COALESCE(SUM(CASE WHEN review_votes.is_upvote = true THEN 1 ELSE 0 END), 0) as upvotes_count,
+                        COALESCE(SUM(CASE WHEN review_votes.is_upvote = false THEN 1 ELSE 0 END), 0) as downvotes_count,
+                        (COALESCE(SUM(CASE WHEN review_votes.is_upvote = true THEN 1 ELSE 0 END), 0) -
+                         COALESCE(SUM(CASE WHEN review_votes.is_upvote = false THEN 1 ELSE 0 END), 0)) as net_votes')
                     ->groupBy('reviews.id')
                     ->orderBy('net_votes', 'desc')
                     ->orderBy('reviews.created_at', 'desc');
@@ -278,12 +292,28 @@ class BusinessController extends Controller
         if ($business->categories->count() > 0) {
             $categoryIds = $business->categories->pluck('id');
             $relatedBusinesses = Business::with('categories')
+                ->withCount('reviews')
+                ->withAvg('reviews', 'rating')
                 ->whereHas('categories', function ($query) use ($categoryIds) {
                     $query->whereIn('category_id', $categoryIds);
                 })
                 ->where('id', '!=', $business->id)
-                ->limit(6)
+                ->selectRaw('businesses.*,
+                    (10 * 3.5 +
+                     COALESCE((select count(*) from "reviews" where "businesses"."id" = "reviews"."business_id"), 0) *
+                     COALESCE((select avg("reviews"."rating") from "reviews" where "businesses"."id" = "reviews"."business_id"), 0)
+                    ) /
+                    (10 + COALESCE((select count(*) from "reviews" where "businesses"."id" = "reviews"."business_id"), 0)) as best_score')
+                ->orderBy('best_score', 'desc')
+                ->limit(10)
                 ->get();
+
+            // Transform the collection to add the computed fields
+            $relatedBusinesses->transform(function ($business) {
+                $business->average_rating = $business->reviews_avg_rating ?? 0;
+                $business->reviews_count = $business->reviews_count ?? 0;
+                return $business;
+            });
         }
 
         return view('businesses.show', compact('business', 'relatedBusinesses', 'userReview', 'otherReviews'));
@@ -331,10 +361,8 @@ class BusinessController extends Controller
             'longitude' => 'nullable|numeric'
         ]);
 
-        // Handle logo upload
         if ($request->hasFile('logo')) {
             try {
-                // Delete old logo if it exists
                 if ($business->logo) {
                     Storage::disk('public')->delete($business->logo);
                 }
@@ -346,7 +374,6 @@ class BusinessController extends Controller
             }
         }
 
-        // Handle geocoding
         $geocodingService = app(GeocodingService::class);
 
         if (!empty($validated['latitude']) && !empty($validated['longitude'])) {
@@ -370,7 +397,6 @@ class BusinessController extends Controller
 
         $business->update($validated);
 
-        // Sync categories
         if (isset($validated['categories'])) {
             $business->categories()->sync($validated['categories']);
         } else {
@@ -392,12 +418,10 @@ class BusinessController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        // Delete logo file if it exists
         if ($business->logo) {
             try {
                 Storage::disk('public')->delete($business->logo);
             } catch (\Exception $e) {
-                // Log the error but don't fail the deletion
                 Log::warning('Failed to delete business logo: ' . $e->getMessage());
             }
         }

@@ -13,7 +13,7 @@ return array (
   ),
   'automotive' => 
   array (
-    'name' => 'Automotivehjgghjhjhjhj',
+    'name' => 'Automotive',
     'description' => 'Car services, repair shops, maintenance',
   ),
   'food-dining' => 
