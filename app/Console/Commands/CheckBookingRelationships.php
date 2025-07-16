@@ -67,17 +67,7 @@ class CheckBookingRelationships extends Command
 
             if ($booking->service->business) {
                 $this->info("✓ Business: {$booking->service->business->name}");
-
-                try {
-                    $emailSetting = $booking->service->business->settings()->where('key', 'notification_email')->first();
-                    if ($emailSetting) {
-                        $this->info("✓ Email notifications setting: " . ($emailSetting->value ? 'Enabled' : 'Disabled'));
-                    } else {
-                        $this->warn("⚠ Business doesn't have 'notification_email' setting");
-                    }
-                } catch (\Exception $e) {
-                    $this->error("✗ Error accessing business settings: {$e->getMessage()}");
-                }
+                $this->info("✓ Email notifications: Always enabled");
             } else {
                 $this->error("✗ Business not found for this service");
             }

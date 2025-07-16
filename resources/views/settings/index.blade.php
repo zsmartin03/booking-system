@@ -157,38 +157,6 @@
                             </div>
                         </div>
                     </div>
-
-                    <!-- Notifications -->
-                    <div class="pb-6">
-                        <h3 class="text-lg font-semibold text-frappe-lavender mb-4">
-                            <x-heroicon-o-bell class="w-5 h-5 inline mr-2" />
-                            {{ __('messages.notifications') }}
-                        </h3>
-
-                        <div class="space-y-4">
-                            <div class="flex items-center">
-                                <input id="notification_email" name="notification_email" type="checkbox"
-                                    @checked(old('notification_email', $settings['notification_email']))
-                                    class="rounded border-frappe-surface1 text-frappe-blue focus:ring-frappe-blue focus:ring-offset-0">
-                                <label for="notification_email" class="ml-3 text-frappe-text">
-                                    {{ __('messages.email_notifications') }}
-                                    <span
-                                        class="block text-sm text-frappe-subtext1">{{ __('messages.send_email_notifications') }}</span>
-                                </label>
-                            </div>
-
-                            <div class="flex items-center">
-                                <input id="notification_sms" name="notification_sms" type="checkbox"
-                                    @checked(old('notification_sms', $settings['notification_sms']))
-                                    class="rounded border-frappe-surface1 text-frappe-blue focus:ring-frappe-blue focus:ring-offset-0">
-                                <label for="notification_sms" class="ml-3 text-frappe-text">
-                                    {{ __('messages.sms_notifications') }}
-                                    <span
-                                        class="block text-sm text-frappe-subtext1">{{ __('messages.send_sms_notifications') }}</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
                 </div>
 
                 <div class="px-6 py-4 bg-frappe-surface0/20 border-t border-frappe-surface1/30 flex justify-between">
@@ -209,8 +177,9 @@
 
     <!-- Reset Confirmation Modal -->
     <div id="resetModal"
-        class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 backdrop-blur-sm z-50 hidden">
-        <div class="frosted-modal p-6 rounded-2xl shadow-2xl w-full max-w-md mx-4">
+        class="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm z-50 hidden">
+        <div class="flex items-center justify-center h-full">
+            <div class="frosted-modal p-6 rounded-2xl shadow-2xl w-full max-w-md mx-4">
             <h3 class="text-xl font-semibold mb-4 text-frappe-red">{{ __('messages.reset_settings') }}</h3>
             <p class="mb-6 text-frappe-text opacity-90">
                 {{ __('messages.reset_settings_confirmation') }}
@@ -231,6 +200,7 @@
                     </button>
                 </div>
             </form>
+        </div>
         </div>
     </div>
 

@@ -62,8 +62,6 @@ class SettingController extends Controller
             'holiday_mode',
             'maintenance_mode',
             'booking_confirmation_required',
-            'notification_email',
-            'notification_sms'
         ];
 
         foreach ($booleanFields as $field) {

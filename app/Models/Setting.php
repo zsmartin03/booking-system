@@ -76,8 +76,6 @@ class Setting extends Model
             'booking_confirmation_required' => true,
             'allow_cancellation_hours' => 24,
             'business_timezone' => 'Europe/Budapest',
-            'notification_email' => true,
-            'notification_sms' => false,
             'booking_buffer_minutes' => 0,
         ];
     }
