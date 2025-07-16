@@ -26,8 +26,11 @@ class NotificationService
         $this->createNotification(
             $booking->client_id,
             $booking->id,
-            'Booking Created',
-            "Your booking for {$booking->service->name} on {$booking->start_time->format('M d, Y')} has been created."
+            'notifications.booking_created_title',
+            'notifications.booking_created_client|' . json_encode([
+                'service' => $booking->service->name,
+                'date' => $booking->start_time->format('M d, Y')
+            ])
         );
 
         $businessOwnerId = $booking->service->business->user_id;
@@ -35,8 +38,11 @@ class NotificationService
             $this->createNotification(
                 $businessOwnerId,
                 $booking->id,
-                'New Booking',
-                "A new booking has been created for {$booking->service->name} on {$booking->start_time->format('M d, Y')}."
+                'notifications.new_booking_title',
+                'notifications.new_booking_business|' . json_encode([
+                    'service' => $booking->service->name,
+                    'date' => $booking->start_time->format('M d, Y')
+                ])
             );
         }
 
@@ -44,8 +50,11 @@ class NotificationService
             $this->createNotification(
                 $booking->employee->user_id,
                 $booking->id,
-                'New Booking Assigned',
-                "You have been assigned a new booking for {$booking->service->name} on {$booking->start_time->format('M d, Y')}."
+                'notifications.new_booking_assigned_title',
+                'notifications.new_booking_assigned_employee|' . json_encode([
+                    'service' => $booking->service->name,
+                    'date' => $booking->start_time->format('M d, Y')
+                ])
             );
         }
     }
@@ -67,8 +76,12 @@ class NotificationService
         $this->createNotification(
             $booking->client_id,
             $booking->id,
-            'Booking Status Updated',
-            "Your booking for {$booking->service->name} status has been updated from {$previousStatus} to {$booking->status}."
+            'notifications.booking_status_updated_title',
+            'notifications.booking_status_updated_client|' . json_encode([
+                'service' => $booking->service->name,
+                'previous_status' => $previousStatus,
+                'current_status' => $booking->status
+            ])
         );
 
         $businessOwnerId = $booking->service->business->user_id;
@@ -76,8 +89,12 @@ class NotificationService
             $this->createNotification(
                 $businessOwnerId,
                 $booking->id,
-                'Booking Status Changed',
-                "A booking for {$booking->service->name} has been updated from {$previousStatus} to {$booking->status}."
+                'notifications.booking_status_changed_title',
+                'notifications.booking_status_changed_business|' . json_encode([
+                    'service' => $booking->service->name,
+                    'previous_status' => $previousStatus,
+                    'current_status' => $booking->status
+                ])
             );
         }
 
@@ -85,8 +102,12 @@ class NotificationService
             $this->createNotification(
                 $booking->employee->user_id,
                 $booking->id,
-                'Booking Status Changed',
-                "A booking assigned to you for {$booking->service->name} has been updated from {$previousStatus} to {$booking->status}."
+                'notifications.booking_status_changed_title',
+                'notifications.booking_status_changed_employee|' . json_encode([
+                    'service' => $booking->service->name,
+                    'previous_status' => $previousStatus,
+                    'current_status' => $booking->status
+                ])
             );
         }
     }

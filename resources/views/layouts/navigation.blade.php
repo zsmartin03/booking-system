@@ -77,14 +77,18 @@
                         <div id="notification-dropdown"
                             class="hidden absolute right-0 mt-2 w-96 frosted-card rounded-xl shadow-2xl z-50 top-full">
                             <div class="p-4 border-b border-frappe-surface1 font-bold text-frappe-blue">
-                                {{ __('messages.notifications') }}</div>
+                                {{ __('notifications.notifications') }}</div>
                             <ul id="notification-list" class="max-h-80 overflow-y-auto">
                                 <li class="p-4 text-center text-frappe-subtpnext1">{{ __('messages.loading') }}...</li>
                             </ul>
-                            <a href="{{ route('notifications.index') }}"
-                                class="block text-center p-2 text-frappe-blue hover:underline">
-                                {{ __('messages.view_all') }}
-                            </a>
+                            <div class="border-t border-frappe-surface1 p-2 flex justify-between">
+                                <a href="{{ route('notifications.viewAll') }}" class="text-frappe-blue hover:underline">
+                                    {{ __('notifications.view_all') }}
+                                </a>
+                                <button id="clear-all-notifications" class="text-frappe-red hover:underline text-sm">
+                                    {{ __('notifications.clear_all') }}
+                                </button>
+                            </div>
                         </div>
                     </div>
                 @else
@@ -118,14 +122,18 @@
                         <div id="notification-dropdown-mobile"
                             class="hidden absolute right-0 mt-2 w-80 frosted-card rounded-xl shadow-2xl z-50 top-full">
                             <div class="p-4 border-b border-frappe-surface1 font-bold text-frappe-blue">
-                                {{ __('messages.notifications') }}</div>
+                                {{ __('notifications.notifications') }}</div>
                             <ul id="notification-list-mobile" class="max-h-60 overflow-y-auto">
                                 <li class="p-4 text-center text-frappe-subtpnext1">{{ __('messages.loading') }}...</li>
                             </ul>
-                            <a href="{{ route('notifications.index') }}"
-                                class="block text-center p-2 text-frappe-blue hover:underline">
-                                {{ __('messages.view_all') }}
-                            </a>
+                            <div class="border-t border-frappe-surface1 p-2 flex justify-between">
+                                <a href="{{ route('notifications.viewAll') }}" class="text-frappe-blue hover:underline">
+                                    {{ __('notifications.view_all') }}
+                                </a>
+                                <button id="clear-all-notifications-mobile" class="text-frappe-red hover:underline text-sm">
+                                    {{ __('notifications.clear_all') }}
+                                </button>
+                            </div>
                         </div>
                     </div>
                 @endauth
@@ -213,7 +221,6 @@
                 fetch("{{ route('notifications.index') }}")
                     .then(res => res.json())
                     .then(data => {
-                        // Set count for both desktop and mobile
                         [countSpan, countSpanMobile].forEach(span => {
                             if (data.unreadCount > 0) {
                                 span.textContent = data.unreadCount > 99 ? '99+' : data.unreadCount;
@@ -223,9 +230,8 @@
                             }
                         });
 
-                        // Render notifications
                         const notificationHTML = data.notifications.length === 0 ?
-                            `<li class='p-4 text-center text-frappe-subtpnext1'>{{ __('messages.no_notifications') }}</li>` :
+                            `<li class='p-4 text-center text-frappe-subtpnext1'>{{ __('notifications.no_notifications') }}</li>` :
                             data.notifications.map(n => `
                                 <li class='px-4 py-3 border-b ${n.is_read ? 'bg-frappe-surface0/50 opacity-75' : 'bg-frappe-blue/10'}'>
                                     <div class='font-semibold text-frappe-blue'>${n.title}</div>
@@ -246,7 +252,6 @@
                     if (!isLoaded) {
                         fetchNotifications();
                         isLoaded = true;
-                        // Mark all as read
                         fetch("{{ route('notifications.markAllRead') }}", {
                             method: 'POST',
                             headers: {
@@ -254,7 +259,7 @@
                                 'Accept': 'application/json',
                             },
                         }).then(() => {
-                            setTimeout(fetchNotifications, 500); // Refresh count
+                            setTimeout(fetchNotifications, 500);
                         });
                     }
                 };
@@ -263,7 +268,49 @@
             bell.addEventListener('click', handleBellClick(bell, dropdown, loaded));
             bellMobile.addEventListener('click', handleBellClick(bellMobile, dropdownMobile, loadedMobile));
 
-            // Hide dropdown on outside click
+            function clearAllNotifications() {
+                fetch("{{ route('notifications.clear') }}", {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                        }
+                    })
+                    .then(response => {
+                        if (response.redirected) {
+                            window.location.reload();
+                        } else {
+                            return response.json();
+                        }
+                    })
+                    .then(data => {
+                        if (data && data.success) {
+                            fetchNotifications();
+
+                            const list = document.getElementById('notification-list');
+                            const listMobile = document.getElementById('notification-list-mobile');
+                            const noNotificationsMessage =
+                                `<li class='p-4 text-center text-frappe-subtpnext1'>{{ __('notifications.no_notifications') }}</li>`;
+
+                            if (list) list.innerHTML = noNotificationsMessage;
+                            if (listMobile) listMobile.innerHTML = noNotificationsMessage;
+
+                            const countSpan = document.getElementById('notification-count');
+                            const countSpanMobile = document.getElementById('notification-count-mobile');
+                            if (countSpan) countSpan.style.display = 'none';
+                            if (countSpanMobile) countSpanMobile.style.display = 'none';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error clearing notifications:', error);
+                    });
+            }
+
+            document.getElementById('clear-all-notifications').addEventListener('click', clearAllNotifications);
+            document.getElementById('clear-all-notifications-mobile').addEventListener('click',
+                clearAllNotifications);
+
             document.addEventListener('click', function(e) {
                 if (!dropdown.classList.contains('hidden')) {
                     dropdown.classList.add('hidden');
@@ -273,7 +320,6 @@
                 }
             });
 
-            // Initial fetch for count
             fetchNotifications();
         });
     </script>
