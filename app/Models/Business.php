@@ -94,35 +94,49 @@ class Business extends Model
 
     public function getBookingsPerPeriod(string $period = 'month', int $limit = 12)
     {
-        $query = $this->bookings()
-            ->groupBy('period')
-            ->orderBy('period', 'desc')
-            ->limit($limit);
-
         // Check database driver for compatibility
         $driver = config('database.default');
         $connection = config("database.connections.{$driver}.driver");
 
+        $query = $this->bookings()
+            ->orderBy('period', 'desc')
+            ->limit($limit);
+
         switch ($period) {
             case 'week':
                 if ($connection === 'sqlite') {
-                    $query->selectRaw("strftime('%Y-W%W', start_time) as period, COUNT(*) as count");
+                    $query->selectRaw("strftime('%Y-W%W', start_time) as period, COUNT(*) as count")
+                        ->groupByRaw("strftime('%Y-W%W', start_time), services.business_id");
+                } elseif ($connection === 'pgsql') {
+                    $query->selectRaw("TO_CHAR(start_time, 'YYYY-\"W\"WW') as period, COUNT(*) as count")
+                        ->groupByRaw("TO_CHAR(start_time, 'YYYY-\"W\"WW'), services.business_id");
                 } else {
-                    $query->selectRaw("CONCAT(YEAR(start_time), '-W', LPAD(WEEK(start_time), 2, '0')) as period, COUNT(*) as count");
+                    $query->selectRaw("CONCAT(YEAR(start_time), '-W', LPAD(WEEK(start_time), 2, '0')) as period, COUNT(*) as count")
+                        ->groupByRaw("CONCAT(YEAR(start_time), '-W', LPAD(WEEK(start_time), 2, '0')), services.business_id");
                 }
                 break;
             case 'day':
                 if ($connection === 'sqlite') {
-                    $query->selectRaw("date(start_time) as period, COUNT(*) as count");
+                    $query->selectRaw("date(start_time) as period, COUNT(*) as count")
+                        ->groupByRaw("date(start_time), services.business_id");
+                } elseif ($connection === 'pgsql') {
+                    $query->selectRaw("DATE(start_time) as period, COUNT(*) as count")
+                        ->groupByRaw("DATE(start_time), services.business_id");
                 } else {
-                    $query->selectRaw("DATE(start_time) as period, COUNT(*) as count");
+                    $query->selectRaw("DATE(start_time) as period, COUNT(*) as count")
+                        ->groupByRaw("DATE(start_time), services.business_id");
                 }
                 break;
             default: // month
                 if ($connection === 'sqlite') {
-                    $query->selectRaw("strftime('%Y-%m', start_time) as period, COUNT(*) as count");
+                    $query->selectRaw("strftime('%Y-%m', start_time) as period, COUNT(*) as count")
+                        ->groupByRaw("strftime('%Y-%m', start_time), services.business_id");
+                } elseif ($connection === 'pgsql') {
+                    $query->selectRaw("TO_CHAR(start_time, 'YYYY-MM') as period, COUNT(*) as count")
+                        ->groupByRaw("TO_CHAR(start_time, 'YYYY-MM'), services.business_id");
                 } else {
-                    $query->selectRaw("DATE_FORMAT(start_time, '%Y-%m') as period, COUNT(*) as count");
+                    $query->selectRaw("DATE_FORMAT(start_time, '%Y-%m') as period, COUNT(*) as count")
+                        ->groupByRaw("DATE_FORMAT(start_time, '%Y-%m'), services.business_id");
                 }
                 break;
         }
@@ -132,36 +146,50 @@ class Business extends Model
 
     public function getRevenuePerPeriod(string $period = 'month', int $limit = 12)
     {
-        $query = $this->bookings()
-            ->where('status', 'completed')
-            ->groupBy('period')
-            ->orderBy('period', 'desc')
-            ->limit($limit);
-
         // Check database driver for compatibility
         $driver = config('database.default');
         $connection = config("database.connections.{$driver}.driver");
 
+        $query = $this->bookings()
+            ->where('status', 'completed')
+            ->orderBy('period', 'desc')
+            ->limit($limit);
+
         switch ($period) {
             case 'week':
                 if ($connection === 'sqlite') {
-                    $query->selectRaw("strftime('%Y-W%W', start_time) as period, SUM(total_price) as revenue");
+                    $query->selectRaw("strftime('%Y-W%W', start_time) as period, SUM(total_price) as revenue")
+                        ->groupByRaw("strftime('%Y-W%W', start_time), services.business_id");
+                } elseif ($connection === 'pgsql') {
+                    $query->selectRaw("TO_CHAR(start_time, 'YYYY-\"W\"WW') as period, SUM(total_price) as revenue")
+                        ->groupByRaw("TO_CHAR(start_time, 'YYYY-\"W\"WW'), services.business_id");
                 } else {
-                    $query->selectRaw("CONCAT(YEAR(start_time), '-W', LPAD(WEEK(start_time), 2, '0')) as period, SUM(total_price) as revenue");
+                    $query->selectRaw("CONCAT(YEAR(start_time), '-W', LPAD(WEEK(start_time), 2, '0')) as period, SUM(total_price) as revenue")
+                        ->groupByRaw("CONCAT(YEAR(start_time), '-W', LPAD(WEEK(start_time), 2, '0')), services.business_id");
                 }
                 break;
             case 'day':
                 if ($connection === 'sqlite') {
-                    $query->selectRaw("date(start_time) as period, SUM(total_price) as revenue");
+                    $query->selectRaw("date(start_time) as period, SUM(total_price) as revenue")
+                        ->groupByRaw("date(start_time), services.business_id");
+                } elseif ($connection === 'pgsql') {
+                    $query->selectRaw("DATE(start_time) as period, SUM(total_price) as revenue")
+                        ->groupByRaw("DATE(start_time), services.business_id");
                 } else {
-                    $query->selectRaw("DATE(start_time) as period, SUM(total_price) as revenue");
+                    $query->selectRaw("DATE(start_time) as period, SUM(total_price) as revenue")
+                        ->groupByRaw("DATE(start_time), services.business_id");
                 }
                 break;
             default: // month
                 if ($connection === 'sqlite') {
-                    $query->selectRaw("strftime('%Y-%m', start_time) as period, SUM(total_price) as revenue");
+                    $query->selectRaw("strftime('%Y-%m', start_time) as period, SUM(total_price) as revenue")
+                        ->groupByRaw("strftime('%Y-%m', start_time), services.business_id");
+                } elseif ($connection === 'pgsql') {
+                    $query->selectRaw("TO_CHAR(start_time, 'YYYY-MM') as period, SUM(total_price) as revenue")
+                        ->groupByRaw("TO_CHAR(start_time, 'YYYY-MM'), services.business_id");
                 } else {
-                    $query->selectRaw("DATE_FORMAT(start_time, '%Y-%m') as period, SUM(total_price) as revenue");
+                    $query->selectRaw("DATE_FORMAT(start_time, '%Y-%m') as period, SUM(total_price) as revenue")
+                        ->groupByRaw("DATE_FORMAT(start_time, '%Y-%m'), services.business_id");
                 }
                 break;
         }

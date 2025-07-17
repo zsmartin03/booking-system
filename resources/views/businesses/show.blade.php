@@ -2,7 +2,7 @@
     <x-slot name="header">
         <x-breadcrumb :items="[
             ['text' => __('messages.businesses'), 'url' => route('businesses.public.index')],
-            ['text' => $business->name, 'url' => null]
+            ['text' => $business->name, 'url' => null],
         ]" />
     </x-slot>
 
@@ -191,7 +191,9 @@
                     </div>
 
                     @auth
-                        @if ((auth()->user()->role === 'client' || auth()->user()->role === 'admin') && !auth()->user()->isAffiliatedWithBusiness($business->id))
+                        @if (
+                            (auth()->user()->role === 'client' || auth()->user()->role === 'admin') &&
+                                !auth()->user()->isAffiliatedWithBusiness($business->id))
                             @if (!$userReview)
                                 <!-- Write Review Form -->
                                 <div class="bg-frappe-surface0/30 rounded-lg p-4 mb-6 border border-frappe-surface2/30">
@@ -560,20 +562,21 @@
                         <div class="relative">
                             <!-- Navigation Arrows -->
                             @if ($relatedBusinesses->count() > 1)
-                                <button id="prevBtn" 
-                                    class="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-frappe-surface0/90 hover:bg-frappe-surface1/90 border border-frappe-surface2 rounded-full p-2 shadow-lg transition-all duration-300">
-                                    <x-heroicon-o-chevron-left class="w-5 h-5 text-frappe-text" />
+                                <button id="prevBtn"
+                                    class="absolute -left-4 top-1/2 -translate-y-1/2 z-20 bg-frappe-surface0/95 hover:bg-frappe-surface1/95 border border-frappe-surface2/50 rounded-full p-3 shadow-xl transition-all duration-300 hover:shadow-2xl hover:scale-110">
+                                    <x-heroicon-o-chevron-left class="w-6 h-6 text-frappe-text" />
                                 </button>
-                                <button id="nextBtn" 
-                                    class="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-frappe-surface0/90 hover:bg-frappe-surface1/90 border border-frappe-surface2 rounded-full p-2 shadow-lg transition-all duration-300">
-                                    <x-heroicon-o-chevron-right class="w-5 h-5 text-frappe-text" />
+                                <button id="nextBtn"
+                                    class="absolute -right-4 top-1/2 -translate-y-1/2 z-20 bg-frappe-surface0/95 hover:bg-frappe-surface1/95 border border-frappe-surface2/50 rounded-full p-3 shadow-xl transition-all duration-300 hover:shadow-2xl hover:scale-110">
+                                    <x-heroicon-o-chevron-right class="w-6 h-6 text-frappe-text" />
                                 </button>
                             @endif
-                            
-                            <div class="overflow-hidden mx-8">
+
+                            <div class="overflow-hidden mx-16">
                                 <div id="carousel" class="flex transition-transform duration-500 ease-in-out">
                                     @foreach ($relatedBusinesses as $relatedBusiness)
-                                        <div class="flex-none w-80 mx-2 bg-frappe-surface0/30 rounded-lg border border-frappe-surface2/30 hover:shadow-lg transition-all duration-300">
+                                        <div
+                                            class="flex-none w-80 mx-2 bg-frappe-surface0/30 rounded-lg border border-frappe-surface2/30 hover:shadow-lg transition-all duration-300">
                                             <div class="p-4">
                                                 <h4 class="font-semibold text-frappe-text mb-2">
                                                     <a href="{{ route('businesses.show', $relatedBusiness->id) }}"
@@ -635,7 +638,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Carousel JavaScript -->
                 <script>
                     document.addEventListener('DOMContentLoaded', function() {
@@ -643,54 +646,56 @@
                         const prevBtn = document.getElementById('prevBtn');
                         const nextBtn = document.getElementById('nextBtn');
                         const totalItems = {{ $relatedBusinesses->count() }};
-                        
+
                         if (totalItems > 1) {
                             const cardWidth = 336; // 320px width + 16px margins
                             let currentIndex = 0;
                             let cardsToShow = 1;
                             let isTransitioning = false;
-                            
+
                             // Calculate how many cards fit on screen
                             function calculateCardsToShow() {
                                 const containerWidth = carousel.parentElement.offsetWidth;
                                 cardsToShow = Math.floor(containerWidth / cardWidth);
                                 if (cardsToShow === 0) cardsToShow = 1;
-                                
-                                // If we can show all cards, hide navigation
-                                if (cardsToShow >= totalItems) {
-                                    if (prevBtn) prevBtn.style.display = 'none';
-                                    if (nextBtn) nextBtn.style.display = 'none';
-                                    return;
-                                } else {
+
+                                // Always show navigation arrows when there are more than 1 card
+                                if (totalItems > 1) {
                                     if (prevBtn) prevBtn.style.display = 'block';
                                     if (nextBtn) nextBtn.style.display = 'block';
+                                } else {
+                                    if (prevBtn) prevBtn.style.display = 'none';
+                                    if (nextBtn) nextBtn.style.display = 'none';
                                 }
                             }
-                            
+
                             // Clone cards for seamless infinite scrolling
                             function setupInfiniteScroll() {
                                 const cards = carousel.children;
                                 const originalCards = Array.from(cards);
-                                
+
+                                // Clear any existing clones
+                                carousel.querySelectorAll('.clone').forEach(clone => clone.remove());
+
                                 // Clone last few cards and prepend them
-                                for (let i = Math.min(cardsToShow, totalItems) - 1; i >= 0; i--) {
+                                for (let i = Math.min(3, totalItems) - 1; i >= 0; i--) {
                                     const clone = originalCards[totalItems - 1 - i].cloneNode(true);
                                     clone.classList.add('clone');
                                     carousel.insertBefore(clone, carousel.firstChild);
                                 }
-                                
+
                                 // Clone first few cards and append them
-                                for (let i = 0; i < Math.min(cardsToShow, totalItems); i++) {
+                                for (let i = 0; i < Math.min(3, totalItems); i++) {
                                     const clone = originalCards[i].cloneNode(true);
                                     clone.classList.add('clone');
                                     carousel.appendChild(clone);
                                 }
-                                
+
                                 // Set initial position to show first real card
-                                currentIndex = Math.min(cardsToShow, totalItems);
+                                currentIndex = Math.min(3, totalItems);
                                 updateCarousel(false);
                             }
-                            
+
                             function updateCarousel(animate = true) {
                                 const translateX = -currentIndex * cardWidth;
                                 if (animate) {
@@ -700,71 +705,72 @@
                                 }
                                 carousel.style.transform = `translateX(${translateX}px)`;
                             }
-                            
+
                             function nextSlide() {
                                 if (isTransitioning) return;
                                 isTransitioning = true;
-                                
-                                currentIndex += cardsToShow;
+
+                                currentIndex += 1;
                                 updateCarousel();
-                                
+
                                 setTimeout(() => {
                                     // Check if we need to loop back to start
-                                    if (currentIndex >= totalItems + Math.min(cardsToShow, totalItems)) {
-                                        currentIndex = Math.min(cardsToShow, totalItems);
+                                    if (currentIndex >= totalItems + Math.min(3, totalItems)) {
+                                        currentIndex = Math.min(3, totalItems);
                                         updateCarousel(false);
                                     }
                                     isTransitioning = false;
                                 }, 500);
                             }
-                            
+
                             function autoNextSlide() {
                                 if (isTransitioning) return;
                                 isTransitioning = true;
-                                
-                                currentIndex += 1; // Move one card at a time for auto-scroll
+
+                                currentIndex += 1;
                                 updateCarousel();
-                                
+
                                 setTimeout(() => {
                                     // Check if we need to loop back to start
-                                    if (currentIndex >= totalItems + Math.min(cardsToShow, totalItems)) {
-                                        currentIndex = Math.min(cardsToShow, totalItems);
+                                    if (currentIndex >= totalItems + Math.min(3, totalItems)) {
+                                        currentIndex = Math.min(3, totalItems);
                                         updateCarousel(false);
                                     }
                                     isTransitioning = false;
                                 }, 500);
                             }
-                            
+
                             function prevSlide() {
                                 if (isTransitioning) return;
                                 isTransitioning = true;
-                                
-                                currentIndex -= cardsToShow;
+
+                                currentIndex -= 1;
                                 updateCarousel();
-                                
+
                                 setTimeout(() => {
                                     // Check if we need to loop back to end
-                                    if (currentIndex < Math.min(cardsToShow, totalItems)) {
-                                        currentIndex = totalItems;
+                                    if (currentIndex < Math.min(3, totalItems)) {
+                                        currentIndex = totalItems + Math.min(3, totalItems) - 1;
                                         updateCarousel(false);
                                     }
                                     isTransitioning = false;
                                 }, 500);
                             }
-                            
+
                             // Initialize
                             calculateCardsToShow();
                             setupInfiniteScroll();
-                            
+
                             // Event listeners
                             if (nextBtn) nextBtn.addEventListener('click', nextSlide);
                             if (prevBtn) prevBtn.addEventListener('click', prevSlide);
-                            
+
                             // Recalculate on window resize
                             window.addEventListener('resize', function() {
                                 calculateCardsToShow();
+                                setupInfiniteScroll();
                             });
-                            
+
                             // Auto-scroll every 5 seconds (one card at a time)
                             setInterval(autoNextSlide, 5000);
                         }
@@ -1087,14 +1093,14 @@
                         alert(data.error || translations.failedToSubmitReview);
                     }
                 })
-        .catch(error => {
-                console.error('Error:', error);
-                alert(translations.failedToSubmitReview);
-            })
-            .finally(() => {
-                submitBtn.textContent = originalText;
-                submitBtn.disabled = false;
-            });
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert(translations.failedToSubmitReview);
+                })
+                .finally(() => {
+                    submitBtn.textContent = originalText;
+                    submitBtn.disabled = false;
+                });
         }
 
         function voteReview(reviewId, isUpvote) {
@@ -1348,7 +1354,9 @@
                         container.innerHTML = '<div class="text-center py-8 text-red-500">Error loading reviews</div>';
                     }
                 });
-        }        function updatePaginationControls(pagination) {
+        }
+
+        function updatePaginationControls(pagination) {
             const paginationContainer = document.getElementById('paginationContainer');
             if (!paginationContainer) return;
 
