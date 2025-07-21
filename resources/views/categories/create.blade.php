@@ -2,9 +2,7 @@
     <x-slot name="header">
         <x-breadcrumb :items="[
             [
-                '                                    <span id="preview-text">{{ old('name_en', __('messages.category_name')) }}</span>ext' => __(
-                    'messages.categories',
-                ),
+                'text' => __('messages.categories'),
                 'url' => route('categories.index'),
             ],
             ['text' => __('messages.create_category'), 'url' => null],

@@ -2,7 +2,7 @@
     <x-slot name="header">
         <x-breadcrumb :items="[
             ['text' => __('messages.businesses'), 'url' => route('businesses.index')],
-            ['text' => __('messages.employees') . ' - ' . $business->name, 'url' => null]
+            ['text' => __('messages.employees') . ' - ' . $business->name, 'url' => null],
         ]" />
     </x-slot>
 
@@ -57,7 +57,7 @@
                                                 class="action-button text-white px-4 py-2 rounded-lg text-sm flex items-center gap-2 transition-all"
                                                 title="{{ __('messages.working_hours') }}">
                                                 <x-heroicon-o-clock class="w-4 h-4" />
-                                                {{ __('messages.hours') }}
+                                                {{ __('messages.working_hours') }}
                                             </a>
                                             <a href="{{ route('availability-exceptions.index', ['employee_id' => $employee->id]) }}"
                                                 class="inline-flex items-center gap-2 bg-gradient-to-r from-orange-500/20 to-red-500/20 backdrop-blur-sm border border-orange-400/30 text-orange-300 px-4 py-2 rounded-lg text-sm hover:from-orange-500/30 hover:to-red-500/30 transition-all"
