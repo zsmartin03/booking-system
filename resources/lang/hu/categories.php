@@ -41,4 +41,14 @@ return array (
     'name' => 'Fitness és sport',
     'description' => 'Edzőtermek, személyi edzés, sportlétesítmények',
   ),
+  'test-category' => 
+  array (
+    'name' => 'Teszt Kategória',
+    'description' => 'Magyar leírás',
+  ),
+  'new-slug' => 
+  array (
+    'name' => 'Frissített HU',
+    'description' => 'Frissített leírás HU',
+  ),
 );

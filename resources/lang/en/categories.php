@@ -41,4 +41,14 @@ return array (
     'name' => 'Fitness & Sports',
     'description' => 'Gyms, personal training, sports facilities',
   ),
+  'test-category' => 
+  array (
+    'name' => 'Test Category',
+    'description' => 'English description',
+  ),
+  'new-slug' => 
+  array (
+    'name' => 'Updated EN',
+    'description' => 'Updated desc EN',
+  ),
 );
