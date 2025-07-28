@@ -7,8 +7,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+
 class Review extends Model
 {
+    use HasFactory;
     protected $fillable = [
         'business_id',
         'user_id',

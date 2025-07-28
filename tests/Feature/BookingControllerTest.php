@@ -36,6 +36,191 @@ class BookingControllerTest extends TestCase
         Setting::factory()->create(['business_id' => $this->business->id]);
     }
 
+    public function test_store_booking_fails_for_holiday_mode()
+    {
+        $start = Carbon::now()->addDays(2)->setTime(10, 0);
+        $this->employee->workingHours()->create([
+            'day_of_week' => strtolower($start->format('l')),
+            'start_time' => '09:00',
+            'end_time' => '17:00',
+        ]);
+        \App\Models\Setting::factory()->create(['business_id' => $this->business->id, 'key' => 'holiday_mode', 'value' => '1']);
+        $data = [
+            'service_id' => $this->service->id,
+            'employee_id' => $this->employee->id,
+            'start_time' => $start->format('Y-m-d\TH:i'),
+        ];
+        $response = $this->actingAs($this->client)->post(route('bookings.store'), $data);
+        $response->assertSessionHasErrors('general');
+    }
+
+    public function test_store_booking_fails_for_maintenance_mode()
+    {
+        $start = Carbon::now()->addDays(2)->setTime(10, 0);
+        $this->employee->workingHours()->create([
+            'day_of_week' => strtolower($start->format('l')),
+            'start_time' => '09:00',
+            'end_time' => '17:00',
+        ]);
+        \App\Models\Setting::factory()->create(['business_id' => $this->business->id, 'key' => 'maintenance_mode', 'value' => '1']);
+        $data = [
+            'service_id' => $this->service->id,
+            'employee_id' => $this->employee->id,
+            'start_time' => $start->format('Y-m-d\TH:i'),
+        ];
+        $response = $this->actingAs($this->client)->post(route('bookings.store'), $data);
+        $response->assertSessionHasErrors('general');
+    }
+
+    public function test_store_booking_fails_for_buffer_conflict()
+    {
+        $start = Carbon::now()->addDays(2)->setTime(10, 0);
+        $this->employee->workingHours()->create([
+            'day_of_week' => strtolower($start->format('l')),
+            'start_time' => '09:00',
+            'end_time' => '17:00',
+        ]);
+        // Ensure business is not in maintenance or holiday mode
+        \App\Models\Setting::factory()->create(['business_id' => $this->business->id, 'key' => 'maintenance_mode', 'value' => '0']);
+        \App\Models\Setting::factory()->create(['business_id' => $this->business->id, 'key' => 'holiday_mode', 'value' => '0']);
+        \App\Models\Setting::factory()->create(['business_id' => $this->business->id, 'key' => 'booking_buffer_minutes', 'value' => '30']);
+        Booking::factory()->create([
+            'employee_id' => $this->employee->id,
+            'start_time' => $start->copy()->subMinutes(30),
+            'end_time' => $start->copy()->addHour(),
+            'status' => 'confirmed',
+        ]);
+        $data = [
+            'service_id' => $this->service->id,
+            'employee_id' => $this->employee->id,
+            'start_time' => $start->format('Y-m-d\TH:i'),
+        ];
+        $response = $this->actingAs($this->client)->post(route('bookings.store'), $data);
+        $response->assertSessionHasErrors('start_time');
+    }
+
+    public function test_store_booking_fails_for_too_soon()
+    {
+        $start = Carbon::now()->addHour();
+        $this->employee->workingHours()->create([
+            'day_of_week' => strtolower($start->format('l')),
+            'start_time' => '09:00',
+            'end_time' => '17:00',
+        ]);
+        // Ensure business is not in maintenance or holiday mode
+        \App\Models\Setting::factory()->create(['business_id' => $this->business->id, 'key' => 'maintenance_mode', 'value' => '0']);
+        \App\Models\Setting::factory()->create(['business_id' => $this->business->id, 'key' => 'holiday_mode', 'value' => '0']);
+        \App\Models\Setting::factory()->create(['business_id' => $this->business->id, 'key' => 'booking_advance_hours', 'value' => '2']);
+        $data = [
+            'service_id' => $this->service->id,
+            'employee_id' => $this->employee->id,
+            'start_time' => $start->format('Y-m-d\TH:i'),
+        ];
+        $response = $this->actingAs($this->client)->post(route('bookings.store'), $data);
+        $response->assertSessionHasErrors('start_time');
+    }
+
+    public function test_store_booking_fails_for_too_far()
+    {
+        $start = Carbon::now()->addDays(40);
+        $this->employee->workingHours()->create([
+            'day_of_week' => strtolower($start->format('l')),
+            'start_time' => '09:00',
+            'end_time' => '17:00',
+        ]);
+        // Ensure business is not in maintenance or holiday mode
+        \App\Models\Setting::factory()->create(['business_id' => $this->business->id, 'key' => 'maintenance_mode', 'value' => '0']);
+        \App\Models\Setting::factory()->create(['business_id' => $this->business->id, 'key' => 'holiday_mode', 'value' => '0']);
+        \App\Models\Setting::factory()->create(['business_id' => $this->business->id, 'key' => 'booking_advance_days', 'value' => '30']);
+        $data = [
+            'service_id' => $this->service->id,
+            'employee_id' => $this->employee->id,
+            'start_time' => $start->format('Y-m-d\TH:i'),
+        ];
+        $response = $this->actingAs($this->client)->post(route('bookings.store'), $data);
+        $response->assertSessionHasErrors('start_time');
+    }
+
+    public function test_manage_forbidden_for_client()
+    {
+        $response = $this->actingAs($this->client)->get(route('bookings.manage'));
+        $response->assertForbidden();
+    }
+
+    public function test_manage_provider_with_one_business_auto_selects()
+    {
+        $provider = User::factory()->create(['role' => 'provider']);
+        $business = Business::factory()->create(['user_id' => $provider->id]);
+        $service = Service::factory()->create(['business_id' => $business->id, 'active' => true]);
+        $employee = Employee::factory()->create(['business_id' => $business->id, 'user_id' => $provider->id, 'active' => true]);
+        $service->employees()->attach($employee->id);
+        Setting::factory()->create(['business_id' => $business->id]);
+        $response = $this->actingAs($provider)->get(route('bookings.manage'));
+        $response->assertOk();
+        $response->assertViewHas('selectedBusiness');
+    }
+
+    public function test_update_booking_status_as_admin()
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+        $booking = Booking::factory()->create([
+            'client_id' => $this->client->id,
+            'service_id' => $this->service->id,
+            'employee_id' => $this->employee->id,
+            'status' => 'pending',
+        ]);
+        $response = $this->actingAs($admin)->patch(route('bookings.update', $booking->id), [
+            'status' => 'confirmed',
+        ]);
+        $response->assertRedirect(route('bookings.show', $booking->id));
+        $this->assertDatabaseHas('bookings', [
+            'id' => $booking->id,
+            'status' => 'confirmed',
+        ]);
+    }
+
+    public function test_available_slots_no_employees()
+    {
+        $start = Carbon::now()->addDays(2)->setTime(10, 0);
+        $service = Service::factory()->create(['business_id' => $this->business->id, 'active' => true]);
+        $response = $this->actingAs($this->client)->getJson(route('booking-slots', [
+            'service_id' => $service->id,
+            'week_start' => $start->startOfWeek()->toDateString(),
+        ]));
+        $response->assertStatus(200);
+        $json = $response->json();
+        $this->assertIsArray($json);
+    }
+
+    public function test_available_slots_with_exceptions()
+    {
+        $start = Carbon::now()->addDays(2)->setTime(10, 0);
+        $this->employee->workingHours()->create([
+            'day_of_week' => strtolower($start->format('l')),
+            'start_time' => '09:00',
+            'end_time' => '17:00',
+        ]);
+        $this->employee->availabilityExceptions()->create([
+            'date' => $start->toDateString(),
+            'start_time' => '12:00',
+            'end_time' => '13:00',
+            'type' => 'unavailable',
+        ]);
+        $response = $this->actingAs($this->client)->getJson(route('booking-slots', [
+            'service_id' => $this->service->id,
+            'employee_id' => $this->employee->id,
+            'week_start' => $start->startOfWeek()->toDateString(),
+        ]));
+        $response->assertStatus(200);
+        $json = $response->json();
+        $this->assertIsArray($json);
+    }
+
+    public function test_store_booking_handles_exception()
+    {
+        $this->markTestSkipped('Cannot mock Booking::create with overload after class is loaded. Run this test in isolation or refactor controller for DI.');
+    }
+
     public function test_create_booking_page_loads()
     {
         $response = $this->actingAs($this->client)->get(route('bookings.create', $this->business->id));
