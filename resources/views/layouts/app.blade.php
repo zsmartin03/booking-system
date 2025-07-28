@@ -541,7 +541,7 @@
             }
         });
     </script>
-    
+
     @stack('scripts')
 </body>
 

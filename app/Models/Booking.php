@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Booking extends Model
 {
+    use HasFactory;
+
     protected $fillable = ['client_id', 'service_id', 'employee_id', 'start_time', 'end_time', 'status', 'notes', 'total_price'];
 
     protected $casts = [
