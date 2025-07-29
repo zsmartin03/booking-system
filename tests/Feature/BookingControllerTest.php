@@ -216,11 +216,6 @@ class BookingControllerTest extends TestCase
         $this->assertIsArray($json);
     }
 
-    public function test_store_booking_handles_exception()
-    {
-        $this->markTestSkipped('Cannot mock Booking::create with overload after class is loaded. Run this test in isolation or refactor controller for DI.');
-    }
-
     public function test_create_booking_page_loads()
     {
         $response = $this->actingAs($this->client)->get(route('bookings.create', $this->business->id));
@@ -235,7 +230,7 @@ class BookingControllerTest extends TestCase
             'day_of_week' => strtolower($start->format('l')),
             'start_time' => '09:00',
             'end_time' => '17:00',
-        ]);
+    ]);
         // Ensure all required settings are present
         \App\Models\Setting::factory()->create(['business_id' => $this->business->id, 'key' => 'maintenance_mode', 'value' => '0']);
         \App\Models\Setting::factory()->create(['business_id' => $this->business->id, 'key' => 'holiday_mode', 'value' => '0']);
