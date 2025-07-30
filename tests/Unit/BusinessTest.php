@@ -77,4 +77,57 @@ class BusinessTest extends TestCase
         $this->assertEquals(3, $service1FromResult->bookings_count);
         $this->assertEquals(1, $service2FromResult->bookings_count);
     }
+    public function test_get_bookings_per_period_month()
+    {
+        $business = Business::factory()->create();
+        $service = Service::factory()->create(['business_id' => $business->id]);
+        Booking::factory()->create(['service_id' => $service->id, 'start_time' => now()]);
+        $result = $business->getBookingsPerPeriod('month', 12);
+        $this->assertTrue($result->count() >= 1);
+    }
+
+    public function test_get_bookings_per_period_day()
+    {
+        $business = Business::factory()->create();
+        $service = Service::factory()->create(['business_id' => $business->id]);
+        Booking::factory()->create(['service_id' => $service->id, 'start_time' => now()]);
+        $result = $business->getBookingsPerPeriod('day', 12);
+        $this->assertTrue($result->count() >= 1);
+    }
+
+    public function test_get_bookings_per_period_week()
+    {
+        $business = Business::factory()->create();
+        $service = Service::factory()->create(['business_id' => $business->id]);
+        Booking::factory()->create(['service_id' => $service->id, 'start_time' => now()]);
+        $result = $business->getBookingsPerPeriod('week', 12);
+        $this->assertTrue($result->count() >= 1);
+    }
+
+    public function test_get_revenue_per_period_month()
+    {
+        $business = Business::factory()->create();
+        $service = Service::factory()->create(['business_id' => $business->id]);
+        Booking::factory()->create(['service_id' => $service->id, 'start_time' => now(), 'status' => 'completed', 'total_price' => 100]);
+        $result = $business->getRevenuePerPeriod('month', 12);
+        $this->assertTrue($result->count() >= 1);
+    }
+
+    public function test_get_revenue_per_period_day()
+    {
+        $business = Business::factory()->create();
+        $service = Service::factory()->create(['business_id' => $business->id]);
+        Booking::factory()->create(['service_id' => $service->id, 'start_time' => now(), 'status' => 'completed', 'total_price' => 100]);
+        $result = $business->getRevenuePerPeriod('day', 12);
+        $this->assertTrue($result->count() >= 1);
+    }
+
+    public function test_get_revenue_per_period_week()
+    {
+        $business = Business::factory()->create();
+        $service = Service::factory()->create(['business_id' => $business->id]);
+        Booking::factory()->create(['service_id' => $service->id, 'start_time' => now(), 'status' => 'completed', 'total_price' => 100]);
+        $result = $business->getRevenuePerPeriod('week', 12);
+        $this->assertTrue($result->count() >= 1);
+    }
 }

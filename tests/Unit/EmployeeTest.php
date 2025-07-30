@@ -25,12 +25,14 @@ class EmployeeTest extends TestCase
         $employee->services()->attach($service);
         $workingHour = EmployeeWorkingHour::factory()->create(['employee_id' => $employee->id]);
         $exception = AvailabilityException::factory()->create(['employee_id' => $employee->id]);
+        $booking = \App\Models\Booking::factory()->create(['employee_id' => $employee->id]);
 
         $this->assertInstanceOf(Business::class, $employee->business);
         $this->assertInstanceOf(User::class, $employee->user);
         $this->assertTrue($employee->services->contains($service));
         $this->assertTrue($employee->workingHours->contains($workingHour));
         $this->assertTrue($employee->availabilityExceptions->contains($exception));
+        $this->assertTrue($employee->bookings->contains($booking));
     }
 
     public function test_can_provide_service()
@@ -56,9 +58,19 @@ class EmployeeTest extends TestCase
         $date = Carbon::parse('2025-07-28');
         $workingHour = EmployeeWorkingHour::factory()->create(['employee_id' => $employee->id, 'day_of_week' => 'monday', 'start_time' => '09:00', 'end_time' => '17:00']);
         $exception = AvailabilityException::factory()->create(['employee_id' => $employee->id, 'date' => '2025-07-28', 'start_time' => '12:00', 'end_time' => '13:00', 'type' => 'unavailable']);
+        $availableException = AvailabilityException::factory()->create(['employee_id' => $employee->id, 'date' => '2025-07-28', 'start_time' => '15:00', 'end_time' => '16:00', 'type' => 'available']);
         $this->assertTrue($employee->isAvailableAt($date, '10:00'));
         $this->assertFalse($employee->isAvailableAt($date, '12:30'));
+        $this->assertTrue($employee->isAvailableAt($date, '15:30'));
         $exceptions = $employee->getAvailabilityExceptionsForDate($date);
         $this->assertTrue($exceptions->contains($exception));
+        $this->assertTrue($exceptions->contains($availableException));
+    }
+
+    public function test_is_available_at_returns_false_when_no_hours_or_exceptions()
+    {
+        $employee = Employee::factory()->create(['active' => true]);
+        $date = Carbon::parse('2025-07-29'); // No working hours or exceptions for this date
+        $this->assertFalse($employee->isAvailableAt($date, '10:00'));
     }
 }
