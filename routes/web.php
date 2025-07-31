@@ -86,7 +86,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::resource('employees', EmployeeController::class);
 
         Route::resource('employee-working-hours', EmployeeWorkingHourController::class)->except(['show']);
-        Route::post('employee-working-hours/bulk-update', [EmployeeWorkingHourController::class, 'bulkUpdate'])->name('employee-working-hours.bulk-update');
+        Route::post('employee-working-hours/bulk-update', [EmployeeWorkingHourController::class, 'bulkUpdate'])->name('employee-working-hours.bulkUpdate');
         Route::resource('availability-exceptions', AvailabilityExceptionController::class)->except(['show']);
 
         // Settings management

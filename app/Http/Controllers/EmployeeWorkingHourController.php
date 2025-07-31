@@ -17,7 +17,6 @@ class EmployeeWorkingHourController extends Controller
             ->when($user->role !== 'admin', fn($q) => $q->whereHas('business', fn($q2) => $q2->where('user_id', $user->id)))
             ->firstOrFail();
 
-
         $businessWorkingHours = $employee->business->workingHours->keyBy('day_of_week');
         $employeeWorkingHours = $employee->workingHours->keyBy('day_of_week');
         $days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
@@ -36,6 +35,14 @@ class EmployeeWorkingHourController extends Controller
                 'start_time' => $ewh->start_time ?? '',
                 'end_time' => $ewh->end_time ?? '',
             ];
+        }
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'employee' => $employee,
+                'businessWorkingHours' => $businessHoursArr,
+                'employeeWorkingHours' => $employeeHoursArr,
+            ]);
         }
 
         return view('employee-working-hours.index', [
@@ -84,6 +91,13 @@ class EmployeeWorkingHourController extends Controller
         $employee = Employee::where('id', $workingHour->employee_id)
             ->when($user->role !== 'admin', fn($q) => $q->whereHas('business', fn($q2) => $q2->where('user_id', $user->id)))
             ->firstOrFail();
+
+        if (request()->expectsJson()) {
+            return response()->json([
+                'employee' => $employee,
+                'workingHour' => $workingHour,
+            ]);
+        }
 
         return view('employee-working-hours.edit', compact('employee', 'workingHour'));
     }

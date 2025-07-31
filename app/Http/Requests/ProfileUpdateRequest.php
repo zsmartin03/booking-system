@@ -13,6 +13,15 @@ class ProfileUpdateRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
+    protected function prepareForValidation()
+    {
+        if ($this->has('email')) {
+            $this->merge([
+                'email' => strtolower($this->input('email')),
+            ]);
+        }
+    }
+
     public function rules(): array
     {
         return [
@@ -20,7 +29,6 @@ class ProfileUpdateRequest extends FormRequest
             'email' => [
                 'required',
                 'string',
-                'lowercase',
                 'email',
                 'max:255',
                 Rule::unique(User::class)->ignore($this->user()->id),
