@@ -144,7 +144,7 @@ class EmployeeWorkingHourControllerTest extends TestCase
                 ],
             ],
         ];
-        $response = $this->post(route('employee-working-hours.bulkUpdate'), $data);
+        $response = $this->post(route('employee-working-hours.bulk-update'), $data);
         $response->assertRedirect(route('employee-working-hours.index', ['employee_id' => $this->employee->id]));
         $this->assertDatabaseHas('employee_working_hours', [
             'employee_id' => $this->employee->id,
