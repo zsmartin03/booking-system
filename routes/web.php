@@ -21,7 +21,6 @@ if (App::environment('production')) {
 
 require __DIR__ . '/auth.php';
 
-// Language switching route
 Route::post('/locale', function (Request $request) {
     $supportedLocales = ['en', 'hu'];
     $locale = $request->input('locale');
@@ -33,7 +32,6 @@ Route::post('/locale', function (Request $request) {
     return response()->json(['success' => true, 'locale' => session('locale')]);
 })->name('locale.switch');
 
-// Route to set locale from localStorage on initial page load
 Route::get('/locale/init/{locale}', function ($locale) {
     $supportedLocales = ['en', 'hu'];
 
@@ -57,7 +55,6 @@ Route::middleware('guest')->group(function () {
     })->name('home');
 });
 
-// Authenticated Routes
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', function () {
         return view('dashboard');
@@ -70,7 +67,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::middleware('role:provider,admin')->group(function () {
 
-        // Business management
         Route::get('/manage/businesses', [BusinessController::class, 'index'])->name('businesses.index');
         Route::get('/manage/businesses/create', [BusinessController::class, 'create'])->name('businesses.create');
         Route::post('/manage/businesses', [BusinessController::class, 'store'])->name('businesses.store');
@@ -89,18 +85,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('employee-working-hours/bulk-update', [EmployeeWorkingHourController::class, 'bulkUpdate'])->name('employee-working-hours.bulk-update');
         Route::resource('availability-exceptions', AvailabilityExceptionController::class)->except(['show']);
 
-        // Settings management
         Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
         Route::put('/settings', [SettingController::class, 'update'])->name('settings.update');
         Route::post('/settings/reset', [SettingController::class, 'reset'])->name('settings.reset');
 
-        // Statistics routes
         Route::get('/statistics', [StatisticsController::class, 'redirect'])->name('statistics.redirect');
         Route::get('/statistics/{business}', [StatisticsController::class, 'index'])->name('statistics.index');
         Route::get('/statistics/{business}/data', [StatisticsController::class, 'getData'])->name('statistics.data');
     });
 
-    // Admin-only routes
     Route::middleware('role:admin')->group(function () {
         Route::resource('categories', \App\Http\Controllers\CategoryController::class);
     });
@@ -112,7 +105,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::resource('bookings', BookingController::class)->except(['create', 'store']);
 
-    // Review routes
     Route::post('/businesses/{business}/reviews', [\App\Http\Controllers\ReviewController::class, 'store'])->name('reviews.store');
     Route::put('/reviews/{review}', [\App\Http\Controllers\ReviewController::class, 'update'])->name('reviews.update');
     Route::delete('/reviews/{review}', [\App\Http\Controllers\ReviewController::class, 'destroy'])->name('reviews.destroy');
@@ -122,7 +114,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('/review-responses/{reviewResponse}', [\App\Http\Controllers\ReviewController::class, 'destroyResponse'])->name('review-responses.destroy');
 });
 
-// Public Business View
 Route::get('/businesses/{id}', [BusinessController::class, 'show'])->name('businesses.show');
 Route::get('/businesses', [BusinessController::class, 'publicIndex'])->name('businesses.public.index');
 

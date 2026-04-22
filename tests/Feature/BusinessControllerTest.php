@@ -5,9 +5,11 @@ namespace Tests\Feature;
 use App\Models\Business;
 use App\Models\Category;
 use App\Models\User;
+use App\Services\GeocodingService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use Mockery;
 use Tests\TestCase;
 
 class BusinessControllerTest extends TestCase
@@ -68,6 +70,16 @@ class BusinessControllerTest extends TestCase
         $user = User::factory()->create(['role' => 'provider']);
         $category = Category::factory()->create();
         $this->actingAs($user);
+        
+        // Mock the GeocodingService
+        $mockGeocoder = Mockery::mock(GeocodingService::class);
+        $mockGeocoder->shouldReceive('geocode')->andReturn([
+            'latitude' => 40.7128,
+            'longitude' => -74.0060,
+            'formatted_address' => '123 Main St, New York, NY',
+        ]);
+        $this->app->instance(GeocodingService::class, $mockGeocoder);
+        
         $file = UploadedFile::fake()->image('logo.jpg');
         $data = [
             'name' => 'Test Biz',
@@ -117,6 +129,16 @@ class BusinessControllerTest extends TestCase
         $user = User::factory()->create(['role' => 'provider']);
         $business = Business::factory()->create(['user_id' => $user->id]);
         $this->actingAs($user);
+        
+        // Mock the GeocodingService
+        $mockGeocoder = Mockery::mock(GeocodingService::class);
+        $mockGeocoder->shouldReceive('geocode')->andReturn([
+            'latitude' => 40.7128,
+            'longitude' => -74.0060,
+            'formatted_address' => '123 Main St, New York, NY',
+        ]);
+        $this->app->instance(GeocodingService::class, $mockGeocoder);
+        
         $file = UploadedFile::fake()->image('logo2.jpg');
         $data = [
             'name' => 'Updated',

@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <title>Dashboard for C:\Users\rht1h\Documents\Projects\booking-system\app</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="_css/bootstrap.min.css?v=11.0.9" rel="stylesheet" type="text/css">
+  <link href="_css/nv.d3.min.css?v=11.0.9" rel="stylesheet" type="text/css">
+  <link href="_css/style.css?v=11.0.9" rel="stylesheet" type="text/css">
+  <link href="_css/custom.css" rel="stylesheet" type="text/css">
+ </head>
+ <body>
+  <header>
+   <div class="container-fluid">
+    <div class="row">
+     <div class="col-md-12">
+      <nav aria-label="breadcrumb">
+       <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="index.html">C:\Users\rht1h\Documents\Projects\booking-system\app</a></li>
+         <li class="breadcrumb-item active">(Dashboard)</li>
+
+       </ol>
+      </nav>
+     </div>
+    </div>
+   </div>
+  </header>
+  <div class="container-fluid">
+   <div class="row">
+    <div class="col-md-12">
+     <h2>Classes</h2>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Coverage Distribution</h3>
+     <div id="classCoverageDistribution" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Complexity</h3>
+     <div id="classComplexity" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Insufficient Coverage</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Class</th>
+         <th class="text-right">Coverage</th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Http/Controllers/NotificationController.php.html#9">App\Http\Controllers\NotificationController</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Services/GeocodingService.php.html#8">App\Services\GeocodingService</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Console/Commands/CheckBookingRelationships.php.html#8">App\Console\Commands\CheckBookingRelationships</a></td><td class="text-right">20%</td></tr>
+       <tr><td><a href="Http/Controllers/BusinessController.php.html#13">App\Http\Controllers\BusinessController</a></td><td class="text-right">61%</td></tr>
+       <tr><td><a href="Http/Requests/Auth/LoginRequest.php.html#12">App\Http\Requests\Auth\LoginRequest</a></td><td class="text-right">65%</td></tr>
+       <tr><td><a href="Models/Business.php.html#10">App\Models\Business</a></td><td class="text-right">66%</td></tr>
+       <tr><td><a href="Http/Middleware/SetLocale.php.html#9">App\Http\Middleware\SetLocale</a></td><td class="text-right">70%</td></tr>
+       <tr><td><a href="Http/Requests/ProfileUpdateRequest.php.html#9">App\Http\Requests\ProfileUpdateRequest</a></td><td class="text-right">71%</td></tr>
+       <tr><td><a href="Http/Controllers/BookingController.php.html#15">App\Http\Controllers\BookingController</a></td><td class="text-right">74%</td></tr>
+       <tr><td><a href="Models/Booking.php.html#8">App\Models\Booking</a></td><td class="text-right">75%</td></tr>
+       <tr><td><a href="Providers/AppServiceProvider.php.html#10">App\Providers\AppServiceProvider</a></td><td class="text-right">75%</td></tr>
+       <tr><td><a href="Http/Controllers/EmployeeWorkingHourController.php.html#10">App\Http\Controllers\EmployeeWorkingHourController</a></td><td class="text-right">82%</td></tr>
+       <tr><td><a href="Http/Controllers/BusinessWorkingHourController.php.html#10">App\Http\Controllers\BusinessWorkingHourController</a></td><td class="text-right">83%</td></tr>
+       <tr><td><a href="Http/Middleware/CheckRole.php.html#10">App\Http\Middleware\CheckRole</a></td><td class="text-right">85%</td></tr>
+       <tr><td><a href="Http/Controllers/CategoryController.php.html#10">App\Http\Controllers\CategoryController</a></td><td class="text-right">87%</td></tr>
+       <tr><td><a href="Http/Controllers/StatisticsController.php.html#10">App\Http\Controllers\StatisticsController</a></td><td class="text-right">88%</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Project Risks</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Class</th>
+         <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Http/Controllers/BusinessController.php.html#13">App\Http\Controllers\BusinessController</a></td><td class="text-right">303</td></tr>
+       <tr><td><a href="Http/Controllers/BookingController.php.html#15">App\Http\Controllers\BookingController</a></td><td class="text-right">252</td></tr>
+       <tr><td><a href="Services/GeocodingService.php.html#8">App\Services\GeocodingService</a></td><td class="text-right">182</td></tr>
+       <tr><td><a href="Models/Business.php.html#10">App\Models\Business</a></td><td class="text-right">85</td></tr>
+       <tr><td><a href="Console/Commands/CheckBookingRelationships.php.html#8">App\Console\Commands\CheckBookingRelationships</a></td><td class="text-right">61</td></tr>
+       <tr><td><a href="Http/Controllers/NotificationController.php.html#9">App\Http\Controllers\NotificationController</a></td><td class="text-right">56</td></tr>
+       <tr><td><a href="Http/Controllers/BusinessWorkingHourController.php.html#10">App\Http\Controllers\BusinessWorkingHourController</a></td><td class="text-right">42</td></tr>
+       <tr><td><a href="Http/Controllers/EmployeeWorkingHourController.php.html#10">App\Http\Controllers\EmployeeWorkingHourController</a></td><td class="text-right">41</td></tr>
+       <tr><td><a href="Http/Controllers/CategoryController.php.html#10">App\Http\Controllers\CategoryController</a></td><td class="text-right">19</td></tr>
+       <tr><td><a href="Http/Controllers/StatisticsController.php.html#10">App\Http\Controllers\StatisticsController</a></td><td class="text-right">15</td></tr>
+       <tr><td><a href="Http/Requests/Auth/LoginRequest.php.html#12">App\Http\Requests\Auth\LoginRequest</a></td><td class="text-right">9</td></tr>
+       <tr><td><a href="Http/Middleware/SetLocale.php.html#9">App\Http\Middleware\SetLocale</a></td><td class="text-right">5</td></tr>
+       <tr><td><a href="Http/Middleware/CheckRole.php.html#10">App\Http\Middleware\CheckRole</a></td><td class="text-right">4</td></tr>
+       <tr><td><a href="Http/Requests/ProfileUpdateRequest.php.html#9">App\Http\Requests\ProfileUpdateRequest</a></td><td class="text-right">3</td></tr>
+       <tr><td><a href="Providers/AppServiceProvider.php.html#10">App\Providers\AppServiceProvider</a></td><td class="text-right">3</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-12">
+     <h2>Methods</h2>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Coverage Distribution</h3>
+     <div id="methodCoverageDistribution" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Complexity</h3>
+     <div id="methodComplexity" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Insufficient Coverage</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Method</th>
+         <th class="text-right">Coverage</th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Console/Commands/CheckBookingRelationships.php.html#54"><abbr title="App\Console\Commands\CheckBookingRelationships::checkBooking">checkBooking</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Http/Controllers/AvailabilityExceptionController.php.html#81"><abbr title="App\Http\Controllers\AvailabilityExceptionController::edit">edit</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Http/Controllers/CategoryController.php.html#92"><abbr title="App\Http\Controllers\CategoryController::show">show</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Http/Controllers/EmployeeWorkingHourController.php.html#55"><abbr title="App\Http\Controllers\EmployeeWorkingHourController::create">create</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Http/Controllers/NotificationController.php.html#14"><abbr title="App\Http\Controllers\NotificationController::index">index</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Http/Controllers/NotificationController.php.html#43"><abbr title="App\Http\Controllers\NotificationController::viewAll">viewAll</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Http/Controllers/NotificationController.php.html#60"><abbr title="App\Http\Controllers\NotificationController::markAllRead">markAllRead</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Http/Controllers/NotificationController.php.html#72"><abbr title="App\Http\Controllers\NotificationController::clearAll">clearAll</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Http/Requests/ProfileUpdateRequest.php.html#16"><abbr title="App\Http\Requests\ProfileUpdateRequest::prepareForValidation">prepareForValidation</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Models/Booking.php.html#35"><abbr title="App\Models\Booking::notifications">notifications</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Services/GeocodingService.php.html#13"><abbr title="App\Services\GeocodingService::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Services/GeocodingService.php.html#18"><abbr title="App\Services\GeocodingService::geocode">geocode</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Services/GeocodingService.php.html#55"><abbr title="App\Services\GeocodingService::reverseGeocode">reverseGeocode</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Http/Requests/Auth/LoginRequest.php.html#60"><abbr title="App\Http\Requests\Auth\LoginRequest::ensureIsNotRateLimited">ensureIsNotRateLimited</abbr></a></td><td class="text-right">20%</td></tr>
+       <tr><td><a href="Console/Commands/CheckBookingRelationships.php.html#27"><abbr title="App\Console\Commands\CheckBookingRelationships::handle">handle</abbr></a></td><td class="text-right">40%</td></tr>
+       <tr><td><a href="Http/Controllers/BusinessController.php.html#212"><abbr title="App\Http\Controllers\BusinessController::show">show</abbr></a></td><td class="text-right">42%</td></tr>
+       <tr><td><a href="Http/Controllers/BusinessController.php.html#53"><abbr title="App\Http\Controllers\BusinessController::publicIndex">publicIndex</abbr></a></td><td class="text-right">55%</td></tr>
+       <tr><td><a href="Models/Business.php.html#99"><abbr title="App\Models\Business::getBookingsPerPeriod">getBookingsPerPeriod</abbr></a></td><td class="text-right">57%</td></tr>
+       <tr><td><a href="Http/Controllers/BookingController.php.html#420"><abbr title="App\Http\Controllers\BookingController::manage">manage</abbr></a></td><td class="text-right">57%</td></tr>
+       <tr><td><a href="Models/Business.php.html#151"><abbr title="App\Models\Business::getRevenuePerPeriod">getRevenuePerPeriod</abbr></a></td><td class="text-right">58%</td></tr>
+       <tr><td><a href="Http/Controllers/BusinessController.php.html#437"><abbr title="App\Http\Controllers\BusinessController::removeLogo">removeLogo</abbr></a></td><td class="text-right">61%</td></tr>
+       <tr><td><a href="Http/Controllers/BusinessController.php.html#18"><abbr title="App\Http\Controllers\BusinessController::index">index</abbr></a></td><td class="text-right">62%</td></tr>
+       <tr><td><a href="Models/Business.php.html#61"><abbr title="App\Models\Business::getLogoUrlAttribute">getLogoUrlAttribute</abbr></a></td><td class="text-right">66%</td></tr>
+       <tr><td><a href="Providers/AppServiceProvider.php.html#23"><abbr title="App\Providers\AppServiceProvider::boot">boot</abbr></a></td><td class="text-right">66%</td></tr>
+       <tr><td><a href="Http/Controllers/BookingController.php.html#519"><abbr title="App\Http\Controllers\BookingController::businessSchedule">businessSchedule</abbr></a></td><td class="text-right">69%</td></tr>
+       <tr><td><a href="Http/Controllers/BookingController.php.html#161"><abbr title="App\Http\Controllers\BookingController::availableSlots">availableSlots</abbr></a></td><td class="text-right">69%</td></tr>
+       <tr><td><a href="Http/Controllers/BusinessController.php.html#412"><abbr title="App\Http\Controllers\BusinessController::destroy">destroy</abbr></a></td><td class="text-right">70%</td></tr>
+       <tr><td><a href="Http/Middleware/SetLocale.php.html#16"><abbr title="App\Http\Middleware\SetLocale::handle">handle</abbr></a></td><td class="text-right">70%</td></tr>
+       <tr><td><a href="Models/Category.php.html#153"><abbr title="App\Models\Category::rgbToHsl">rgbToHsl</abbr></a></td><td class="text-right">72%</td></tr>
+       <tr><td><a href="Http/Controllers/BusinessWorkingHourController.php.html#84"><abbr title="App\Http\Controllers\BusinessWorkingHourController::bulkUpdate">bulkUpdate</abbr></a></td><td class="text-right">73%</td></tr>
+       <tr><td><a href="Http/Controllers/CategoryController.php.html#15"><abbr title="App\Http\Controllers\CategoryController::index">index</abbr></a></td><td class="text-right">75%</td></tr>
+       <tr><td><a href="Http/Controllers/CategoryController.php.html#37"><abbr title="App\Http\Controllers\CategoryController::create">create</abbr></a></td><td class="text-right">75%</td></tr>
+       <tr><td><a href="Http/Controllers/BusinessController.php.html#341"><abbr title="App\Http\Controllers\BusinessController::update">update</abbr></a></td><td class="text-right">77%</td></tr>
+       <tr><td><a href="Http/Controllers/EmployeeWorkingHourController.php.html#139"><abbr title="App\Http\Controllers\EmployeeWorkingHourController::bulkUpdate">bulkUpdate</abbr></a></td><td class="text-right">77%</td></tr>
+       <tr><td><a href="Http/Controllers/StatisticsController.php.html#119"><abbr title="App\Http\Controllers\StatisticsController::redirect">redirect</abbr></a></td><td class="text-right">77%</td></tr>
+       <tr><td><a href="Http/Controllers/BusinessController.php.html#132"><abbr title="App\Http\Controllers\BusinessController::create">create</abbr></a></td><td class="text-right">80%</td></tr>
+       <tr><td><a href="Http/Controllers/BusinessController.php.html#146"><abbr title="App\Http\Controllers\BusinessController::store">store</abbr></a></td><td class="text-right">81%</td></tr>
+       <tr><td><a href="Http/Controllers/StatisticsController.php.html#78"><abbr title="App\Http\Controllers\StatisticsController::getData">getData</abbr></a></td><td class="text-right">81%</td></tr>
+       <tr><td><a href="Http/Controllers/BookingController.php.html#50"><abbr title="App\Http\Controllers\BookingController::store">store</abbr></a></td><td class="text-right">82%</td></tr>
+       <tr><td><a href="Http/Controllers/EmployeeWorkingHourController.php.html#12"><abbr title="App\Http\Controllers\EmployeeWorkingHourController::index">index</abbr></a></td><td class="text-right">85%</td></tr>
+       <tr><td><a href="Http/Controllers/ReviewController.php.html#47"><abbr title="App\Http\Controllers\ReviewController::vote">vote</abbr></a></td><td class="text-right">85%</td></tr>
+       <tr><td><a href="Http/Middleware/CheckRole.php.html#17"><abbr title="App\Http\Middleware\CheckRole::handle">handle</abbr></a></td><td class="text-right">85%</td></tr>
+       <tr><td><a href="Http/Controllers/CategoryController.php.html#178"><abbr title="App\Http\Controllers\CategoryController::updateTranslationFiles">updateTranslationFiles</abbr></a></td><td class="text-right">87%</td></tr>
+       <tr><td><a href="Http/Controllers/CategoryController.php.html#199"><abbr title="App\Http\Controllers\CategoryController::destroy">destroy</abbr></a></td><td class="text-right">87%</td></tr>
+       <tr><td><a href="Models/Category.php.html#109"><abbr title="App\Models\Category::hexToRgb">hexToRgb</abbr></a></td><td class="text-right">87%</td></tr>
+       <tr><td><a href="Http/Controllers/BookingController.php.html#17"><abbr title="App\Http\Controllers\BookingController::create">create</abbr></a></td><td class="text-right">88%</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Project Risks</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Method</th>
+         <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Http/Controllers/BookingController.php.html#161"><abbr title="App\Http\Controllers\BookingController::availableSlots">availableSlots</abbr></a></td><td class="text-right">58</td></tr>
+       <tr><td><a href="Http/Controllers/BusinessWorkingHourController.php.html#84"><abbr title="App\Http\Controllers\BusinessWorkingHourController::bulkUpdate">bulkUpdate</abbr></a></td><td class="text-right">52</td></tr>
+       <tr><td><a href="Services/GeocodingService.php.html#18"><abbr title="App\Services\GeocodingService::geocode">geocode</abbr></a></td><td class="text-right">42</td></tr>
+       <tr><td><a href="Services/GeocodingService.php.html#55"><abbr title="App\Services\GeocodingService::reverseGeocode">reverseGeocode</abbr></a></td><td class="text-right">42</td></tr>
+       <tr><td><a href="Http/Controllers/BusinessController.php.html#212"><abbr title="App\Http\Controllers\BusinessController::show">show</abbr></a></td><td class="text-right">38</td></tr>
+       <tr><td><a href="Http/Controllers/EmployeeWorkingHourController.php.html#139"><abbr title="App\Http\Controllers\EmployeeWorkingHourController::bulkUpdate">bulkUpdate</abbr></a></td><td class="text-right">33</td></tr>
+       <tr><td><a href="Console/Commands/CheckBookingRelationships.php.html#54"><abbr title="App\Console\Commands\CheckBookingRelationships::checkBooking">checkBooking</abbr></a></td><td class="text-right">30</td></tr>
+       <tr><td><a href="Http/Controllers/BookingController.php.html#420"><abbr title="App\Http\Controllers\BookingController::manage">manage</abbr></a></td><td class="text-right">28</td></tr>
+       <tr><td><a href="Http/Controllers/BookingController.php.html#519"><abbr title="App\Http\Controllers\BookingController::businessSchedule">businessSchedule</abbr></a></td><td class="text-right">27</td></tr>
+       <tr><td><a href="Http/Controllers/BusinessController.php.html#53"><abbr title="App\Http\Controllers\BusinessController::publicIndex">publicIndex</abbr></a></td><td class="text-right">21</td></tr>
+       <tr><td><a href="Http/Controllers/NotificationController.php.html#72"><abbr title="App\Http\Controllers\NotificationController::clearAll">clearAll</abbr></a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="Models/Business.php.html#99"><abbr title="App\Models\Business::getBookingsPerPeriod">getBookingsPerPeriod</abbr></a></td><td class="text-right">17</td></tr>
+       <tr><td><a href="Models/Business.php.html#151"><abbr title="App\Models\Business::getRevenuePerPeriod">getRevenuePerPeriod</abbr></a></td><td class="text-right">17</td></tr>
+       <tr><td><a href="Http/Controllers/BusinessController.php.html#341"><abbr title="App\Http\Controllers\BusinessController::update">update</abbr></a></td><td class="text-right">13</td></tr>
+       <tr><td><a href="Http/Controllers/BookingController.php.html#50"><abbr title="App\Http\Controllers\BookingController::store">store</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Http/Controllers/BusinessController.php.html#146"><abbr title="App\Http\Controllers\BusinessController::store">store</abbr></a></td><td class="text-right">10</td></tr>
+       <tr><td><a href="Console/Commands/CheckBookingRelationships.php.html#27"><abbr title="App\Console\Commands\CheckBookingRelationships::handle">handle</abbr></a></td><td class="text-right">10</td></tr>
+       <tr><td><a href="Models/Category.php.html#153"><abbr title="App\Models\Category::rgbToHsl">rgbToHsl</abbr></a></td><td class="text-right">8</td></tr>
+       <tr><td><a href="Http/Controllers/BookingController.php.html#17"><abbr title="App\Http\Controllers\BookingController::create">create</abbr></a></td><td class="text-right">7</td></tr>
+       <tr><td><a href="Http/Controllers/BusinessController.php.html#437"><abbr title="App\Http\Controllers\BusinessController::removeLogo">removeLogo</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Http/Controllers/BusinessController.php.html#18"><abbr title="App\Http\Controllers\BusinessController::index">index</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Http/Controllers/CategoryController.php.html#92"><abbr title="App\Http\Controllers\CategoryController::show">show</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Http/Requests/ProfileUpdateRequest.php.html#16"><abbr title="App\Http\Requests\ProfileUpdateRequest::prepareForValidation">prepareForValidation</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Http/Controllers/BusinessController.php.html#412"><abbr title="App\Http\Controllers\BusinessController::destroy">destroy</abbr></a></td><td class="text-right">5</td></tr>
+       <tr><td><a href="Http/Middleware/SetLocale.php.html#16"><abbr title="App\Http\Middleware\SetLocale::handle">handle</abbr></a></td><td class="text-right">5</td></tr>
+       <tr><td><a href="Http/Controllers/StatisticsController.php.html#78"><abbr title="App\Http\Controllers\StatisticsController::getData">getData</abbr></a></td><td class="text-right">5</td></tr>
+       <tr><td><a href="Http/Controllers/StatisticsController.php.html#119"><abbr title="App\Http\Controllers\StatisticsController::redirect">redirect</abbr></a></td><td class="text-right">4</td></tr>
+       <tr><td><a href="Http/Controllers/ReviewController.php.html#47"><abbr title="App\Http\Controllers\ReviewController::vote">vote</abbr></a></td><td class="text-right">4</td></tr>
+       <tr><td><a href="Http/Middleware/CheckRole.php.html#17"><abbr title="App\Http\Middleware\CheckRole::handle">handle</abbr></a></td><td class="text-right">4</td></tr>
+       <tr><td><a href="Http/Requests/Auth/LoginRequest.php.html#60"><abbr title="App\Http\Requests\Auth\LoginRequest::ensureIsNotRateLimited">ensureIsNotRateLimited</abbr></a></td><td class="text-right">4</td></tr>
+       <tr><td><a href="Http/Controllers/CategoryController.php.html#15"><abbr title="App\Http\Controllers\CategoryController::index">index</abbr></a></td><td class="text-right">3</td></tr>
+       <tr><td><a href="Http/Controllers/EmployeeWorkingHourController.php.html#12"><abbr title="App\Http\Controllers\EmployeeWorkingHourController::index">index</abbr></a></td><td class="text-right">3</td></tr>
+       <tr><td><a href="Http/Controllers/CategoryController.php.html#178"><abbr title="App\Http\Controllers\CategoryController::updateTranslationFiles">updateTranslationFiles</abbr></a></td><td class="text-right">3</td></tr>
+       <tr><td><a href="Http/Controllers/CategoryController.php.html#199"><abbr title="App\Http\Controllers\CategoryController::destroy">destroy</abbr></a></td><td class="text-right">3</td></tr>
+       <tr><td><a href="Models/Business.php.html#61"><abbr title="App\Models\Business::getLogoUrlAttribute">getLogoUrlAttribute</abbr></a></td><td class="text-right">2</td></tr>
+       <tr><td><a href="Providers/AppServiceProvider.php.html#23"><abbr title="App\Providers\AppServiceProvider::boot">boot</abbr></a></td><td class="text-right">2</td></tr>
+       <tr><td><a href="Http/Controllers/CategoryController.php.html#37"><abbr title="App\Http\Controllers\CategoryController::create">create</abbr></a></td><td class="text-right">2</td></tr>
+       <tr><td><a href="Http/Controllers/BusinessController.php.html#132"><abbr title="App\Http\Controllers\BusinessController::create">create</abbr></a></td><td class="text-right">2</td></tr>
+       <tr><td><a href="Models/Category.php.html#109"><abbr title="App\Models\Category::hexToRgb">hexToRgb</abbr></a></td><td class="text-right">2</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <footer>
+    <hr/>
+    <p>
+     <small>Generated by <a href="https://github.com/sebastianbergmann/php-code-coverage" target="_top">php-code-coverage 11.0.9</a> using <a href="https://www.php.net/" target="_top">PHP 8.2.10</a> and <a href="https://phpunit.de/">PHPUnit 11.5.3</a> at Wed Apr 22 19:52:30 UTC 2026.</small>
+    </p>
+   </footer>
+  </div>
+  <script src="_js/jquery.min.js?v=11.0.9" type="text/javascript"></script>
+  <script src="_js/d3.min.js?v=11.0.9" type="text/javascript"></script>
+  <script src="_js/nv.d3.min.js?v=11.0.9" type="text/javascript"></script>
+  <script type="text/javascript">
+$(document).ready(function() {
+  nv.addGraph(function() {
+    var chart = nv.models.multiBarChart();
+    chart.tooltips(false)
+      .showControls(false)
+      .showLegend(false)
+      .reduceXTicks(false)
+      .staggerLabels(true)
+      .yAxis.tickFormat(d3.format('d'));
+
+    d3.select('#classCoverageDistribution svg')
+      .datum(getCoverageDistributionData([2,0,0,1,0,0,0,3,5,5,4,30], "Class Coverage"))
+      .transition().duration(500).call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  nv.addGraph(function() {
+    var chart = nv.models.multiBarChart();
+    chart.tooltips(false)
+      .showControls(false)
+      .showLegend(false)
+      .reduceXTicks(false)
+      .staggerLabels(true)
+      .yAxis.tickFormat(d3.format('d'));
+
+    d3.select('#methodCoverageDistribution svg')
+      .datum(getCoverageDistributionData([13,0,0,1,0,2,4,6,9,11,9,167], "Method Coverage"))
+      .transition().duration(500).call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  function getCoverageDistributionData(data, label) {
+    var labels = [
+      '0%',
+      '0-10%',
+      '10-20%',
+      '20-30%',
+      '30-40%',
+      '40-50%',
+      '50-60%',
+      '60-70%',
+      '70-80%',
+      '80-90%',
+      '90-100%',
+      '100%'
+    ];
+    var values = [];
+    $.each(labels, function(key) {
+      values.push({x: labels[key], y: data[key]});
+    });
+
+    return [
+      {
+        key: label,
+        values: values,
+        color: "#4572A7"
+      }
+    ];
+  }
+  nv.addGraph(function() {
+    var chart = nv.models.scatterChart()
+      .showDistX(true)
+      .showDistY(true)
+      .showLegend(false)
+      .forceX([0, 100]);
+    chart.tooltipContent(function(graph) {
+      return '<p>' + graph.point.class + '</p>';
+    });
+
+    chart.xAxis.axisLabel('Code Coverage (in percent)');
+    chart.yAxis.axisLabel('Cyclomatic Complexity');
+
+    d3.select('#classComplexity svg')
+      .datum(getComplexityData([[20,10,"<a href=\"Console\/Commands\/CheckBookingRelationships.php.html#8\">App\\Console\\Commands\\CheckBookingRelationships<\/a>"],[100,3,"<a href=\"Http\/Controllers\/Auth\/AuthenticatedSessionController.php.html#12\">App\\Http\\Controllers\\Auth\\AuthenticatedSessionController<\/a>"],[100,3,"<a href=\"Http\/Controllers\/Auth\/ConfirmablePasswordController.php.html#12\">App\\Http\\Controllers\\Auth\\ConfirmablePasswordController<\/a>"],[100,3,"<a href=\"Http\/Controllers\/Auth\/EmailVerificationNotificationController.php.html#9\">App\\Http\\Controllers\\Auth\\EmailVerificationNotificationController<\/a>"],[100,2,"<a href=\"Http\/Controllers\/Auth\/EmailVerificationPromptController.php.html#10\">App\\Http\\Controllers\\Auth\\EmailVerificationPromptController<\/a>"],[100,3,"<a href=\"Http\/Controllers\/Auth\/NewPasswordController.php.html#16\">App\\Http\\Controllers\\Auth\\NewPasswordController<\/a>"],[100,1,"<a href=\"Http\/Controllers\/Auth\/PasswordController.php.html#11\">App\\Http\\Controllers\\Auth\\PasswordController<\/a>"],[100,3,"<a href=\"Http\/Controllers\/Auth\/PasswordResetLinkController.php.html#11\">App\\Http\\Controllers\\Auth\\PasswordResetLinkController<\/a>"],[100,3,"<a href=\"Http\/Controllers\/Auth\/RegisteredUserController.php.html#15\">App\\Http\\Controllers\\Auth\\RegisteredUserController<\/a>"],[100,3,"<a href=\"Http\/Controllers\/Auth\/VerifyEmailController.php.html#10\">App\\Http\\Controllers\\Auth\\VerifyEmailController<\/a>"],[92.13483146067416,8,"<a href=\"Http\/Controllers\/AvailabilityExceptionController.php.html#11\">App\\Http\\Controllers\\AvailabilityExceptionController<\/a>"],[74.04761904761905,95,"<a href=\"Http\/Controllers\/BookingController.php.html#15\">App\\Http\\Controllers\\BookingController<\/a>"],[61.6600790513834,65,"<a href=\"Http\/Controllers\/BusinessController.php.html#13\">App\\Http\\Controllers\\BusinessController<\/a>"],[83.9622641509434,37,"<a href=\"Http\/Controllers\/BusinessWorkingHourController.php.html#10\">App\\Http\\Controllers\\BusinessWorkingHourController<\/a>"],[87.12871287128714,19,"<a href=\"Http\/Controllers\/CategoryController.php.html#10\">App\\Http\\Controllers\\CategoryController<\/a>"],[100,0,"<a href=\"Http\/Controllers\/Controller.php.html#5\">App\\Http\\Controllers\\Controller<\/a>"],[100,8,"<a href=\"Http\/Controllers\/EmployeeController.php.html#12\">App\\Http\\Controllers\\EmployeeController<\/a>"],[82.73381294964028,35,"<a href=\"Http\/Controllers\/EmployeeWorkingHourController.php.html#10\">App\\Http\\Controllers\\EmployeeWorkingHourController<\/a>"],[0,7,"<a href=\"Http\/Controllers\/NotificationController.php.html#9\">App\\Http\\Controllers\\NotificationController<\/a>"],[100,8,"<a href=\"Http\/Controllers\/ProfileController.php.html#16\">App\\Http\\Controllers\\ProfileController<\/a>"],[96.22641509433963,18,"<a href=\"Http\/Controllers\/ReviewController.php.html#12\">App\\Http\\Controllers\\ReviewController<\/a>"],[98.64864864864865,10,"<a href=\"Http\/Controllers\/ServiceController.php.html#11\">App\\Http\\Controllers\\ServiceController<\/a>"],[100,13,"<a href=\"Http\/Controllers\/SettingController.php.html#12\">App\\Http\\Controllers\\SettingController<\/a>"],[88.23529411764706,15,"<a href=\"Http\/Controllers\/StatisticsController.php.html#10\">App\\Http\\Controllers\\StatisticsController<\/a>"],[85.71428571428571,4,"<a href=\"Http\/Middleware\/CheckRole.php.html#10\">App\\Http\\Middleware\\CheckRole<\/a>"],[70,5,"<a href=\"Http\/Middleware\/SetLocale.php.html#9\">App\\Http\\Middleware\\SetLocale<\/a>"],[65.21739130434783,7,"<a href=\"Http\/Requests\/Auth\/LoginRequest.php.html#12\">App\\Http\\Requests\\Auth\\LoginRequest<\/a>"],[71.42857142857143,3,"<a href=\"Http\/Requests\/ProfileUpdateRequest.php.html#9\">App\\Http\\Requests\\ProfileUpdateRequest<\/a>"],[100,4,"<a href=\"Mail\/BookingCreated.php.html#25\">App\\Mail\\BookingCreated<\/a>"],[100,4,"<a href=\"Mail\/BookingStatusUpdated.php.html#25\">App\\Mail\\BookingStatusUpdated<\/a>"],[100,1,"<a href=\"Models\/AvailabilityException.php.html#8\">App\\Models\\AvailabilityException<\/a>"],[75,4,"<a href=\"Models\/Booking.php.html#8\">App\\Models\\Booking<\/a>"],[66.30434782608695,36,"<a href=\"Models\/Business.php.html#10\">App\\Models\\Business<\/a>"],[100,1,"<a href=\"Models\/BusinessWorkingHour.php.html#8\">App\\Models\\BusinessWorkingHour<\/a>"],[91.42857142857143,32,"<a href=\"Models\/Category.php.html#11\">App\\Models\\Category<\/a>"],[100,15,"<a href=\"Models\/Employee.php.html#8\">App\\Models\\Employee<\/a>"],[100,1,"<a href=\"Models\/EmployeeWorkingHour.php.html#8\">App\\Models\\EmployeeWorkingHour<\/a>"],[100,7,"<a href=\"Models\/Notification.php.html#8\">App\\Models\\Notification<\/a>"],[100,12,"<a href=\"Models\/Review.php.html#12\">App\\Models\\Review<\/a>"],[100,2,"<a href=\"Models\/ReviewResponse.php.html#10\">App\\Models\\ReviewResponse<\/a>"],[100,2,"<a href=\"Models\/ReviewVote.php.html#9\">App\\Models\\ReviewVote<\/a>"],[100,7,"<a href=\"Models\/Service.php.html#8\">App\\Models\\Service<\/a>"],[100,9,"<a href=\"Models\/Setting.php.html#9\">App\\Models\\Setting<\/a>"],[100,19,"<a href=\"Models\/User.php.html#10\">App\\Models\\User<\/a>"],[100,6,"<a href=\"Observers\/BookingObserver.php.html#9\">App\\Observers\\BookingObserver<\/a>"],[75,3,"<a href=\"Providers\/AppServiceProvider.php.html#10\">App\\Providers\\AppServiceProvider<\/a>"],[0,13,"<a href=\"Services\/GeocodingService.php.html#8\">App\\Services\\GeocodingService<\/a>"],[100,11,"<a href=\"Services\/NotificationService.php.html#11\">App\\Services\\NotificationService<\/a>"],[100,1,"<a href=\"View\/Components\/AppLayout.php.html#8\">App\\View\\Components\\AppLayout<\/a>"],[100,1,"<a href=\"View\/Components\/GuestLayout.php.html#8\">App\\View\\Components\\GuestLayout<\/a>"]], 'Class Complexity'))
+      .transition()
+      .duration(500)
+      .call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  nv.addGraph(function() {
+    var chart = nv.models.scatterChart()
+      .showDistX(true)
+      .showDistY(true)
+      .showLegend(false)
+      .forceX([0, 100]);
+    chart.tooltipContent(function(graph) {
+      return '<p>' + graph.point.class + '</p>';
+    });
+
+    chart.xAxis.axisLabel('Code Coverage (in percent)');
+    chart.yAxis.axisLabel('Method Complexity');
+
+    d3.select('#methodComplexity svg')
+      .datum(getComplexityData([[40,5,"<a href=\"Console\/Commands\/CheckBookingRelationships.php.html#27\">App\\Console\\Commands\\CheckBookingRelationships::handle<\/a>"],[0,5,"<a href=\"Console\/Commands\/CheckBookingRelationships.php.html#54\">App\\Console\\Commands\\CheckBookingRelationships::checkBooking<\/a>"],[100,1,"<a href=\"Http\/Controllers\/Auth\/AuthenticatedSessionController.php.html#17\">App\\Http\\Controllers\\Auth\\AuthenticatedSessionController::create<\/a>"],[100,1,"<a href=\"Http\/Controllers\/Auth\/AuthenticatedSessionController.php.html#25\">App\\Http\\Controllers\\Auth\\AuthenticatedSessionController::store<\/a>"],[100,1,"<a href=\"Http\/Controllers\/Auth\/AuthenticatedSessionController.php.html#37\">App\\Http\\Controllers\\Auth\\AuthenticatedSessionController::destroy<\/a>"],[100,1,"<a href=\"Http\/Controllers\/Auth\/ConfirmablePasswordController.php.html#17\">App\\Http\\Controllers\\Auth\\ConfirmablePasswordController::show<\/a>"],[100,2,"<a href=\"Http\/Controllers\/Auth\/ConfirmablePasswordController.php.html#25\">App\\Http\\Controllers\\Auth\\ConfirmablePasswordController::store<\/a>"],[100,3,"<a href=\"Http\/Controllers\/Auth\/EmailVerificationNotificationController.php.html#14\">App\\Http\\Controllers\\Auth\\EmailVerificationNotificationController::store<\/a>"],[100,2,"<a href=\"Http\/Controllers\/Auth\/EmailVerificationPromptController.php.html#15\">App\\Http\\Controllers\\Auth\\EmailVerificationPromptController::__invoke<\/a>"],[100,1,"<a href=\"Http\/Controllers\/Auth\/NewPasswordController.php.html#21\">App\\Http\\Controllers\\Auth\\NewPasswordController::create<\/a>"],[100,2,"<a href=\"Http\/Controllers\/Auth\/NewPasswordController.php.html#31\">App\\Http\\Controllers\\Auth\\NewPasswordController::store<\/a>"],[100,1,"<a href=\"Http\/Controllers\/Auth\/PasswordController.php.html#16\">App\\Http\\Controllers\\Auth\\PasswordController::update<\/a>"],[100,1,"<a href=\"Http\/Controllers\/Auth\/PasswordResetLinkController.php.html#16\">App\\Http\\Controllers\\Auth\\PasswordResetLinkController::create<\/a>"],[100,2,"<a href=\"Http\/Controllers\/Auth\/PasswordResetLinkController.php.html#26\">App\\Http\\Controllers\\Auth\\PasswordResetLinkController::store<\/a>"],[100,1,"<a href=\"Http\/Controllers\/Auth\/RegisteredUserController.php.html#21\">App\\Http\\Controllers\\Auth\\RegisteredUserController::create<\/a>"],[100,2,"<a href=\"Http\/Controllers\/Auth\/RegisteredUserController.php.html#32\">App\\Http\\Controllers\\Auth\\RegisteredUserController::store<\/a>"],[100,3,"<a href=\"Http\/Controllers\/Auth\/VerifyEmailController.php.html#15\">App\\Http\\Controllers\\Auth\\VerifyEmailController::__invoke<\/a>"],[100,1,"<a href=\"Http\/Controllers\/AvailabilityExceptionController.php.html#13\">App\\Http\\Controllers\\AvailabilityExceptionController::index<\/a>"],[100,1,"<a href=\"Http\/Controllers\/AvailabilityExceptionController.php.html#29\">App\\Http\\Controllers\\AvailabilityExceptionController::create<\/a>"],[100,2,"<a href=\"Http\/Controllers\/AvailabilityExceptionController.php.html#40\">App\\Http\\Controllers\\AvailabilityExceptionController::store<\/a>"],[0,1,"<a href=\"Http\/Controllers\/AvailabilityExceptionController.php.html#81\">App\\Http\\Controllers\\AvailabilityExceptionController::edit<\/a>"],[96.66666666666667,2,"<a href=\"Http\/Controllers\/AvailabilityExceptionController.php.html#92\">App\\Http\\Controllers\\AvailabilityExceptionController::update<\/a>"],[100,1,"<a href=\"Http\/Controllers\/AvailabilityExceptionController.php.html#133\">App\\Http\\Controllers\\AvailabilityExceptionController::destroy<\/a>"],[88.88888888888889,7,"<a href=\"Http\/Controllers\/BookingController.php.html#17\">App\\Http\\Controllers\\BookingController::create<\/a>"],[82.1917808219178,12,"<a href=\"Http\/Controllers\/BookingController.php.html#50\">App\\Http\\Controllers\\BookingController::store<\/a>"],[69.27710843373494,31,"<a href=\"Http\/Controllers\/BookingController.php.html#161\">App\\Http\\Controllers\\BookingController::availableSlots<\/a>"],[100,3,"<a href=\"Http\/Controllers\/BookingController.php.html#404\">App\\Http\\Controllers\\BookingController::index<\/a>"],[57.57575757575758,14,"<a href=\"Http\/Controllers\/BookingController.php.html#420\">App\\Http\\Controllers\\BookingController::manage<\/a>"],[100,5,"<a href=\"Http\/Controllers\/BookingController.php.html#479\">App\\Http\\Controllers\\BookingController::show<\/a>"],[100,3,"<a href=\"Http\/Controllers\/BookingController.php.html#494\">App\\Http\\Controllers\\BookingController::update<\/a>"],[69.14893617021278,18,"<a href=\"Http\/Controllers\/BookingController.php.html#519\">App\\Http\\Controllers\\BookingController::businessSchedule<\/a>"],[100,2,"<a href=\"Http\/Controllers\/BookingController.php.html#665\">App\\Http\\Controllers\\BookingController::redirect<\/a>"],[62.5,5,"<a href=\"Http\/Controllers\/BusinessController.php.html#18\">App\\Http\\Controllers\\BusinessController::index<\/a>"],[55.10204081632652,11,"<a href=\"Http\/Controllers\/BusinessController.php.html#53\">App\\Http\\Controllers\\BusinessController::publicIndex<\/a>"],[80,2,"<a href=\"Http\/Controllers\/BusinessController.php.html#132\">App\\Http\\Controllers\\BusinessController::create<\/a>"],[81.08108108108108,10,"<a href=\"Http\/Controllers\/BusinessController.php.html#146\">App\\Http\\Controllers\\BusinessController::store<\/a>"],[42.857142857142854,12,"<a href=\"Http\/Controllers\/BusinessController.php.html#212\">App\\Http\\Controllers\\BusinessController::show<\/a>"],[100,3,"<a href=\"Http\/Controllers\/BusinessController.php.html#325\">App\\Http\\Controllers\\BusinessController::edit<\/a>"],[77.5,12,"<a href=\"Http\/Controllers\/BusinessController.php.html#341\">App\\Http\\Controllers\\BusinessController::update<\/a>"],[70,5,"<a href=\"Http\/Controllers\/BusinessController.php.html#412\">App\\Http\\Controllers\\BusinessController::destroy<\/a>"],[61.53846153846154,5,"<a href=\"Http\/Controllers\/BusinessController.php.html#437\">App\\Http\\Controllers\\BusinessController::removeLogo<\/a>"],[100,1,"<a href=\"Http\/Controllers\/BusinessWorkingHourController.php.html#12\">App\\Http\\Controllers\\BusinessWorkingHourController::index<\/a>"],[100,1,"<a href=\"Http\/Controllers\/BusinessWorkingHourController.php.html#27\">App\\Http\\Controllers\\BusinessWorkingHourController::store<\/a>"],[100,1,"<a href=\"Http\/Controllers\/BusinessWorkingHourController.php.html#50\">App\\Http\\Controllers\\BusinessWorkingHourController::update<\/a>"],[100,1,"<a href=\"Http\/Controllers\/BusinessWorkingHourController.php.html#70\">App\\Http\\Controllers\\BusinessWorkingHourController::destroy<\/a>"],[73.84615384615385,33,"<a href=\"Http\/Controllers\/BusinessWorkingHourController.php.html#84\">App\\Http\\Controllers\\BusinessWorkingHourController::bulkUpdate<\/a>"],[75,3,"<a href=\"Http\/Controllers\/CategoryController.php.html#15\">App\\Http\\Controllers\\CategoryController::index<\/a>"],[75,2,"<a href=\"Http\/Controllers\/CategoryController.php.html#37\">App\\Http\\Controllers\\CategoryController::create<\/a>"],[96.15384615384616,2,"<a href=\"Http\/Controllers\/CategoryController.php.html#51\">App\\Http\\Controllers\\CategoryController::store<\/a>"],[0,2,"<a href=\"Http\/Controllers\/CategoryController.php.html#92\">App\\Http\\Controllers\\CategoryController::show<\/a>"],[93.33333333333333,2,"<a href=\"Http\/Controllers\/CategoryController.php.html#108\">App\\Http\\Controllers\\CategoryController::edit<\/a>"],[96.29629629629629,2,"<a href=\"Http\/Controllers\/CategoryController.php.html#136\">App\\Http\\Controllers\\CategoryController::update<\/a>"],[87.5,3,"<a href=\"Http\/Controllers\/CategoryController.php.html#178\">App\\Http\\Controllers\\CategoryController::updateTranslationFiles<\/a>"],[87.5,3,"<a href=\"Http\/Controllers\/CategoryController.php.html#199\">App\\Http\\Controllers\\CategoryController::destroy<\/a>"],[100,1,"<a href=\"Http\/Controllers\/EmployeeController.php.html#14\">App\\Http\\Controllers\\EmployeeController::index<\/a>"],[100,1,"<a href=\"Http\/Controllers\/EmployeeController.php.html#27\">App\\Http\\Controllers\\EmployeeController::create<\/a>"],[100,2,"<a href=\"Http\/Controllers\/EmployeeController.php.html#38\">App\\Http\\Controllers\\EmployeeController::store<\/a>"],[100,1,"<a href=\"Http\/Controllers\/EmployeeController.php.html#77\">App\\Http\\Controllers\\EmployeeController::edit<\/a>"],[100,2,"<a href=\"Http\/Controllers\/EmployeeController.php.html#88\">App\\Http\\Controllers\\EmployeeController::update<\/a>"],[100,1,"<a href=\"Http\/Controllers\/EmployeeController.php.html#114\">App\\Http\\Controllers\\EmployeeController::destroy<\/a>"],[85.29411764705883,3,"<a href=\"Http\/Controllers\/EmployeeWorkingHourController.php.html#12\">App\\Http\\Controllers\\EmployeeWorkingHourController::index<\/a>"],[0,1,"<a href=\"Http\/Controllers\/EmployeeWorkingHourController.php.html#55\">App\\Http\\Controllers\\EmployeeWorkingHourController::create<\/a>"],[100,1,"<a href=\"Http\/Controllers\/EmployeeWorkingHourController.php.html#66\">App\\Http\\Controllers\\EmployeeWorkingHourController::store<\/a>"],[90.9090909090909,2,"<a href=\"Http\/Controllers\/EmployeeWorkingHourController.php.html#87\">App\\Http\\Controllers\\EmployeeWorkingHourController::edit<\/a>"],[100,1,"<a href=\"Http\/Controllers\/EmployeeWorkingHourController.php.html#105\">App\\Http\\Controllers\\EmployeeWorkingHourController::update<\/a>"],[100,1,"<a href=\"Http\/Controllers\/EmployeeWorkingHourController.php.html#125\">App\\Http\\Controllers\\EmployeeWorkingHourController::destroy<\/a>"],[77.77777777777779,26,"<a href=\"Http\/Controllers\/EmployeeWorkingHourController.php.html#139\">App\\Http\\Controllers\\EmployeeWorkingHourController::bulkUpdate<\/a>"],[0,1,"<a href=\"Http\/Controllers\/NotificationController.php.html#14\">App\\Http\\Controllers\\NotificationController::index<\/a>"],[0,1,"<a href=\"Http\/Controllers\/NotificationController.php.html#43\">App\\Http\\Controllers\\NotificationController::viewAll<\/a>"],[0,1,"<a href=\"Http\/Controllers\/NotificationController.php.html#60\">App\\Http\\Controllers\\NotificationController::markAllRead<\/a>"],[0,4,"<a href=\"Http\/Controllers\/NotificationController.php.html#72\">App\\Http\\Controllers\\NotificationController::clearAll<\/a>"],[100,1,"<a href=\"Http\/Controllers\/ProfileController.php.html#18\">App\\Http\\Controllers\\ProfileController::edit<\/a>"],[100,4,"<a href=\"Http\/Controllers\/ProfileController.php.html#25\">App\\Http\\Controllers\\ProfileController::update<\/a>"],[100,1,"<a href=\"Http\/Controllers\/ProfileController.php.html#56\">App\\Http\\Controllers\\ProfileController::updatePassword<\/a>"],[100,2,"<a href=\"Http\/Controllers\/ProfileController.php.html#70\">App\\Http\\Controllers\\ProfileController::removeAvatar<\/a>"],[100,3,"<a href=\"Http\/Controllers\/ReviewController.php.html#14\">App\\Http\\Controllers\\ReviewController::store<\/a>"],[85.71428571428571,4,"<a href=\"Http\/Controllers\/ReviewController.php.html#47\">App\\Http\\Controllers\\ReviewController::vote<\/a>"],[94.44444444444444,3,"<a href=\"Http\/Controllers\/ReviewController.php.html#82\">App\\Http\\Controllers\\ReviewController::respond<\/a>"],[100,2,"<a href=\"Http\/Controllers\/ReviewController.php.html#113\">App\\Http\\Controllers\\ReviewController::update<\/a>"],[100,2,"<a href=\"Http\/Controllers\/ReviewController.php.html#138\">App\\Http\\Controllers\\ReviewController::destroy<\/a>"],[100,2,"<a href=\"Http\/Controllers\/ReviewController.php.html#154\">App\\Http\\Controllers\\ReviewController::updateResponse<\/a>"],[100,2,"<a href=\"Http\/Controllers\/ReviewController.php.html#177\">App\\Http\\Controllers\\ReviewController::destroyResponse<\/a>"],[100,1,"<a href=\"Http\/Controllers\/ServiceController.php.html#13\">App\\Http\\Controllers\\ServiceController::index<\/a>"],[100,1,"<a href=\"Http\/Controllers\/ServiceController.php.html#27\">App\\Http\\Controllers\\ServiceController::create<\/a>"],[100,3,"<a href=\"Http\/Controllers\/ServiceController.php.html#39\">App\\Http\\Controllers\\ServiceController::store<\/a>"],[100,1,"<a href=\"Http\/Controllers\/ServiceController.php.html#72\">App\\Http\\Controllers\\ServiceController::edit<\/a>"],[95.65217391304348,3,"<a href=\"Http\/Controllers\/ServiceController.php.html#85\">App\\Http\\Controllers\\ServiceController::update<\/a>"],[100,1,"<a href=\"Http\/Controllers\/ServiceController.php.html#120\">App\\Http\\Controllers\\ServiceController::destroy<\/a>"],[100,4,"<a href=\"Http\/Controllers\/SettingController.php.html#17\">App\\Http\\Controllers\\SettingController::index<\/a>"],[100,6,"<a href=\"Http\/Controllers\/SettingController.php.html#41\">App\\Http\\Controllers\\SettingController::update<\/a>"],[100,3,"<a href=\"Http\/Controllers\/SettingController.php.html#88\">App\\Http\\Controllers\\SettingController::reset<\/a>"],[94.5945945945946,6,"<a href=\"Http\/Controllers\/StatisticsController.php.html#15\">App\\Http\\Controllers\\StatisticsController::index<\/a>"],[81.81818181818183,5,"<a href=\"Http\/Controllers\/StatisticsController.php.html#78\">App\\Http\\Controllers\\StatisticsController::getData<\/a>"],[77.77777777777779,4,"<a href=\"Http\/Controllers\/StatisticsController.php.html#119\">App\\Http\\Controllers\\StatisticsController::redirect<\/a>"],[85.71428571428571,4,"<a href=\"Http\/Middleware\/CheckRole.php.html#17\">App\\Http\\Middleware\\CheckRole::handle<\/a>"],[70,5,"<a href=\"Http\/Middleware\/SetLocale.php.html#16\">App\\Http\\Middleware\\SetLocale::handle<\/a>"],[100,1,"<a href=\"Http\/Requests\/Auth\/LoginRequest.php.html#17\">App\\Http\\Requests\\Auth\\LoginRequest::authorize<\/a>"],[100,1,"<a href=\"Http\/Requests\/Auth\/LoginRequest.php.html#27\">App\\Http\\Requests\\Auth\\LoginRequest::rules<\/a>"],[100,2,"<a href=\"Http\/Requests\/Auth\/LoginRequest.php.html#40\">App\\Http\\Requests\\Auth\\LoginRequest::authenticate<\/a>"],[20,2,"<a href=\"Http\/Requests\/Auth\/LoginRequest.php.html#60\">App\\Http\\Requests\\Auth\\LoginRequest::ensureIsNotRateLimited<\/a>"],[100,1,"<a href=\"Http\/Requests\/Auth\/LoginRequest.php.html#81\">App\\Http\\Requests\\Auth\\LoginRequest::throttleKey<\/a>"],[0,2,"<a href=\"Http\/Requests\/ProfileUpdateRequest.php.html#16\">App\\Http\\Requests\\ProfileUpdateRequest::prepareForValidation<\/a>"],[100,1,"<a href=\"Http\/Requests\/ProfileUpdateRequest.php.html#25\">App\\Http\\Requests\\ProfileUpdateRequest::rules<\/a>"],[100,1,"<a href=\"Mail\/BookingCreated.php.html#39\">App\\Mail\\BookingCreated::__construct<\/a>"],[100,1,"<a href=\"Mail\/BookingCreated.php.html#47\">App\\Mail\\BookingCreated::envelope<\/a>"],[100,1,"<a href=\"Mail\/BookingCreated.php.html#57\">App\\Mail\\BookingCreated::content<\/a>"],[100,1,"<a href=\"Mail\/BookingCreated.php.html#69\">App\\Mail\\BookingCreated::attachments<\/a>"],[100,1,"<a href=\"Mail\/BookingStatusUpdated.php.html#46\">App\\Mail\\BookingStatusUpdated::__construct<\/a>"],[100,1,"<a href=\"Mail\/BookingStatusUpdated.php.html#55\">App\\Mail\\BookingStatusUpdated::envelope<\/a>"],[100,1,"<a href=\"Mail\/BookingStatusUpdated.php.html#65\">App\\Mail\\BookingStatusUpdated::content<\/a>"],[100,1,"<a href=\"Mail\/BookingStatusUpdated.php.html#77\">App\\Mail\\BookingStatusUpdated::attachments<\/a>"],[100,1,"<a href=\"Models\/AvailabilityException.php.html#14\">App\\Models\\AvailabilityException::employee<\/a>"],[100,1,"<a href=\"Models\/Booking.php.html#20\">App\\Models\\Booking::client<\/a>"],[100,1,"<a href=\"Models\/Booking.php.html#25\">App\\Models\\Booking::service<\/a>"],[100,1,"<a href=\"Models\/Booking.php.html#30\">App\\Models\\Booking::employee<\/a>"],[0,1,"<a href=\"Models\/Booking.php.html#35\">App\\Models\\Booking::notifications<\/a>"],[100,1,"<a href=\"Models\/Business.php.html#16\">App\\Models\\Business::user<\/a>"],[100,1,"<a href=\"Models\/Business.php.html#21\">App\\Models\\Business::workingHours<\/a>"],[100,1,"<a href=\"Models\/Business.php.html#26\">App\\Models\\Business::services<\/a>"],[100,1,"<a href=\"Models\/Business.php.html#31\">App\\Models\\Business::employees<\/a>"],[100,1,"<a href=\"Models\/Business.php.html#36\">App\\Models\\Business::settings<\/a>"],[100,1,"<a href=\"Models\/Business.php.html#41\">App\\Models\\Business::categories<\/a>"],[100,1,"<a href=\"Models\/Business.php.html#46\">App\\Models\\Business::reviews<\/a>"],[100,1,"<a href=\"Models\/Business.php.html#51\">App\\Models\\Business::getAverageRatingAttribute<\/a>"],[100,1,"<a href=\"Models\/Business.php.html#56\">App\\Models\\Business::getReviewsCountAttribute<\/a>"],[66.66666666666666,2,"<a href=\"Models\/Business.php.html#61\">App\\Models\\Business::getLogoUrlAttribute<\/a>"],[100,1,"<a href=\"Models\/Business.php.html#70\">App\\Models\\Business::bookings<\/a>"],[100,1,"<a href=\"Models\/Business.php.html#75\">App\\Models\\Business::getTotalBookingsAttribute<\/a>"],[100,1,"<a href=\"Models\/Business.php.html#80\">App\\Models\\Business::getTotalRevenueAttribute<\/a>"],[100,1,"<a href=\"Models\/Business.php.html#85\">App\\Models\\Business::getTotalCustomersAttribute<\/a>"],[100,1,"<a href=\"Models\/Business.php.html#90\">App\\Models\\Business::getMostBookedServicesAttribute<\/a>"],[57.14285714285714,10,"<a href=\"Models\/Business.php.html#99\">App\\Models\\Business::getBookingsPerPeriod<\/a>"],[58.333333333333336,10,"<a href=\"Models\/Business.php.html#151\">App\\Models\\Business::getRevenuePerPeriod<\/a>"],[100,1,"<a href=\"Models\/BusinessWorkingHour.php.html#13\">App\\Models\\BusinessWorkingHour::business<\/a>"],[100,1,"<a href=\"Models\/Category.php.html#17\">App\\Models\\Category::boot<\/a>"],[100,2,"<a href=\"Models\/Category.php.html#25\">App\\Models\\Category::getNameAttribute<\/a>"],[100,2,"<a href=\"Models\/Category.php.html#33\">App\\Models\\Category::getTranslatedDescriptionAttribute<\/a>"],[100,1,"<a href=\"Models\/Category.php.html#41\">App\\Models\\Category::hasTranslations<\/a>"],[100,1,"<a href=\"Models\/Category.php.html#46\">App\\Models\\Category::businesses<\/a>"],[100,1,"<a href=\"Models\/Category.php.html#54\">App\\Models\\Category::getBadgeStyleAttribute<\/a>"],[100,1,"<a href=\"Models\/Category.php.html#69\">App\\Models\\Category::getBadgeCssAttribute<\/a>"],[100,1,"<a href=\"Models\/Category.php.html#83\">App\\Models\\Category::getBadgeHoverCssAttribute<\/a>"],[100,1,"<a href=\"Models\/Category.php.html#93\">App\\Models\\Category::getTailwindClassesAttribute<\/a>"],[87.5,2,"<a href=\"Models\/Category.php.html#109\">App\\Models\\Category::hexToRgb<\/a>"],[100,1,"<a href=\"Models\/Category.php.html#127\">App\\Models\\Category::generateInlineStyles<\/a>"],[72,7,"<a href=\"Models\/Category.php.html#153\">App\\Models\\Category::rgbToHsl<\/a>"],[95.65217391304348,8,"<a href=\"Models\/Category.php.html#193\">App\\Models\\Category::hslToRgb<\/a>"],[100,1,"<a href=\"Models\/Category.php.html#229\">App\\Models\\Category::getBadgeClassesAttribute<\/a>"],[100,1,"<a href=\"Models\/Category.php.html#237\">App\\Models\\Category::getBadgeStylesAttribute<\/a>"],[100,1,"<a href=\"Models\/Category.php.html#247\">App\\Models\\Category::getBadgeHoverStylesAttribute<\/a>"],[100,1,"<a href=\"Models\/Employee.php.html#14\">App\\Models\\Employee::business<\/a>"],[100,1,"<a href=\"Models\/Employee.php.html#19\">App\\Models\\Employee::user<\/a>"],[100,1,"<a href=\"Models\/Employee.php.html#24\">App\\Models\\Employee::workingHours<\/a>"],[100,1,"<a href=\"Models\/Employee.php.html#29\">App\\Models\\Employee::availabilityExceptions<\/a>"],[100,1,"<a href=\"Models\/Employee.php.html#34\">App\\Models\\Employee::services<\/a>"],[100,1,"<a href=\"Models\/Employee.php.html#39\">App\\Models\\Employee::bookings<\/a>"],[100,2,"<a href=\"Models\/Employee.php.html#47\">App\\Models\\Employee::canProvideService<\/a>"],[100,1,"<a href=\"Models\/Employee.php.html#55\">App\\Models\\Employee::getWorkingHoursForDay<\/a>"],[100,5,"<a href=\"Models\/Employee.php.html#63\">App\\Models\\Employee::isAvailableAt<\/a>"],[100,1,"<a href=\"Models\/Employee.php.html#91\">App\\Models\\Employee::getAvailabilityExceptionsForDate<\/a>"],[100,1,"<a href=\"Models\/EmployeeWorkingHour.php.html#13\">App\\Models\\EmployeeWorkingHour::employee<\/a>"],[100,1,"<a href=\"Models\/Notification.php.html#19\">App\\Models\\Notification::user<\/a>"],[100,1,"<a href=\"Models\/Notification.php.html#24\">App\\Models\\Notification::booking<\/a>"],[100,1,"<a href=\"Models\/Notification.php.html#32\">App\\Models\\Notification::getTranslatedTitleAttribute<\/a>"],[100,4,"<a href=\"Models\/Notification.php.html#40\">App\\Models\\Notification::getTranslatedContentAttribute<\/a>"],[100,1,"<a href=\"Models\/Review.php.html#28\">App\\Models\\Review::business<\/a>"],[100,1,"<a href=\"Models\/Review.php.html#33\">App\\Models\\Review::user<\/a>"],[100,1,"<a href=\"Models\/Review.php.html#38\">App\\Models\\Review::response<\/a>"],[100,1,"<a href=\"Models\/Review.php.html#43\">App\\Models\\Review::votes<\/a>"],[100,1,"<a href=\"Models\/Review.php.html#48\">App\\Models\\Review::upvotes<\/a>"],[100,1,"<a href=\"Models\/Review.php.html#53\">App\\Models\\Review::downvotes<\/a>"],[100,1,"<a href=\"Models\/Review.php.html#58\">App\\Models\\Review::getUpvotesCountAttribute<\/a>"],[100,1,"<a href=\"Models\/Review.php.html#63\">App\\Models\\Review::getDownvotesCountAttribute<\/a>"],[100,1,"<a href=\"Models\/Review.php.html#68\">App\\Models\\Review::getNetVotesAttribute<\/a>"],[100,1,"<a href=\"Models\/Review.php.html#73\">App\\Models\\Review::userHasVoted<\/a>"],[100,2,"<a href=\"Models\/Review.php.html#78\">App\\Models\\Review::getUserVoteType<\/a>"],[100,1,"<a href=\"Models\/ReviewResponse.php.html#19\">App\\Models\\ReviewResponse::review<\/a>"],[100,1,"<a href=\"Models\/ReviewResponse.php.html#24\">App\\Models\\ReviewResponse::user<\/a>"],[100,1,"<a href=\"Models\/ReviewVote.php.html#22\">App\\Models\\ReviewVote::review<\/a>"],[100,1,"<a href=\"Models\/ReviewVote.php.html#27\">App\\Models\\ReviewVote::user<\/a>"],[100,1,"<a href=\"Models\/Service.php.html#19\">App\\Models\\Service::business<\/a>"],[100,1,"<a href=\"Models\/Service.php.html#24\">App\\Models\\Service::employees<\/a>"],[100,1,"<a href=\"Models\/Service.php.html#29\">App\\Models\\Service::bookings<\/a>"],[100,1,"<a href=\"Models\/Service.php.html#37\">App\\Models\\Service::getAvailableCurrencies<\/a>"],[100,3,"<a href=\"Models\/Service.php.html#66\">App\\Models\\Service::formatPrice<\/a>"],[100,1,"<a href=\"Models\/Setting.php.html#15\">App\\Models\\Setting::business<\/a>"],[100,2,"<a href=\"Models\/Setting.php.html#23\">App\\Models\\Setting::getValue<\/a>"],[100,1,"<a href=\"Models\/Setting.php.html#39\">App\\Models\\Setting::setValue<\/a>"],[100,2,"<a href=\"Models\/Setting.php.html#52\">App\\Models\\Setting::getBusinessSettings<\/a>"],[100,1,"<a href=\"Models\/Setting.php.html#71\">App\\Models\\Setting::getDefaultSettings<\/a>"],[100,2,"<a href=\"Models\/Setting.php.html#89\">App\\Models\\Setting::clearBusinessCache<\/a>"],[100,1,"<a href=\"Models\/User.php.html#44\">App\\Models\\User::casts<\/a>"],[100,1,"<a href=\"Models\/User.php.html#52\">App\\Models\\User::businesses<\/a>"],[100,1,"<a href=\"Models\/User.php.html#57\">App\\Models\\User::employees<\/a>"],[100,1,"<a href=\"Models\/User.php.html#62\">App\\Models\\User::employee<\/a>"],[100,1,"<a href=\"Models\/User.php.html#67\">App\\Models\\User::clientBookings<\/a>"],[100,1,"<a href=\"Models\/User.php.html#72\">App\\Models\\User::notifications<\/a>"],[100,1,"<a href=\"Models\/User.php.html#77\">App\\Models\\User::reviews<\/a>"],[100,1,"<a href=\"Models\/User.php.html#82\">App\\Models\\User::reviewVotes<\/a>"],[100,1,"<a href=\"Models\/User.php.html#87\">App\\Models\\User::reviewResponses<\/a>"],[100,1,"<a href=\"Models\/User.php.html#92\">App\\Models\\User::hasBookingWithBusiness<\/a>"],[100,1,"<a href=\"Models\/User.php.html#105\">App\\Models\\User::ownsBusiness<\/a>"],[100,1,"<a href=\"Models\/User.php.html#113\">App\\Models\\User::isEmployeeOfBusiness<\/a>"],[100,2,"<a href=\"Models\/User.php.html#121\">App\\Models\\User::isAffiliatedWithBusiness<\/a>"],[100,2,"<a href=\"Models\/User.php.html#129\">App\\Models\\User::getAvatarUrl<\/a>"],[100,1,"<a href=\"Models\/User.php.html#141\">App\\Models\\User::getAvatarOrInitials<\/a>"],[100,2,"<a href=\"Models\/User.php.html#153\">App\\Models\\User::sendEmailVerificationNotification<\/a>"],[100,1,"<a href=\"Observers\/BookingObserver.php.html#22\">App\\Observers\\BookingObserver::__construct<\/a>"],[100,1,"<a href=\"Observers\/BookingObserver.php.html#33\">App\\Observers\\BookingObserver::created<\/a>"],[100,1,"<a href=\"Observers\/BookingObserver.php.html#44\">App\\Observers\\BookingObserver::updating<\/a>"],[100,3,"<a href=\"Observers\/BookingObserver.php.html#58\">App\\Observers\\BookingObserver::updated<\/a>"],[100,1,"<a href=\"Providers\/AppServiceProvider.php.html#15\">App\\Providers\\AppServiceProvider::register<\/a>"],[66.66666666666666,2,"<a href=\"Providers\/AppServiceProvider.php.html#23\">App\\Providers\\AppServiceProvider::boot<\/a>"],[0,1,"<a href=\"Services\/GeocodingService.php.html#13\">App\\Services\\GeocodingService::__construct<\/a>"],[0,6,"<a href=\"Services\/GeocodingService.php.html#18\">App\\Services\\GeocodingService::geocode<\/a>"],[0,6,"<a href=\"Services\/GeocodingService.php.html#55\">App\\Services\\GeocodingService::reverseGeocode<\/a>"],[100,4,"<a href=\"Services\/NotificationService.php.html#19\">App\\Services\\NotificationService::sendBookingCreatedNotifications<\/a>"],[100,4,"<a href=\"Services\/NotificationService.php.html#69\">App\\Services\\NotificationService::sendBookingStatusUpdatedNotifications<\/a>"],[100,1,"<a href=\"Services\/NotificationService.php.html#124\">App\\Services\\NotificationService::createNotification<\/a>"],[100,2,"<a href=\"Services\/NotificationService.php.html#142\">App\\Services\\NotificationService::shouldSendEmail<\/a>"],[100,1,"<a href=\"View\/Components\/AppLayout.php.html#13\">App\\View\\Components\\AppLayout::render<\/a>"],[100,1,"<a href=\"View\/Components\/GuestLayout.php.html#13\">App\\View\\Components\\GuestLayout::render<\/a>"]], 'Method Complexity'))
+      .transition()
+      .duration(500)
+      .call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  function getComplexityData(data, label) {
+    var values = [];
+    $.each(data, function(key) {
+      var value = Math.round(data[key][0]*100) / 100;
+      values.push({
+        x: value,
+        y: data[key][1],
+        class: data[key][2],
+        size: 0.05,
+        shape: 'diamond'
+      });
+    });
+
+    return [
+      {
+        key: label,
+        values: values,
+        color: "#4572A7"
+      }
+    ];
+  }
+});
+  </script>
+ </body>
+</html>

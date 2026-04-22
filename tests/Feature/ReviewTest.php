@@ -6,12 +6,12 @@ use App\Models\Business;
 use App\Models\Employee;
 use App\Models\Review;
 use App\Models\User;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class ReviewTest extends TestCase
 {
-    use DatabaseTransactions;
+    use RefreshDatabase;
 
     protected $businessOwner;
     protected $client;

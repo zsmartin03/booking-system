@@ -125,6 +125,7 @@ class ServiceController extends Controller
             ->when($user->role !== 'admin', fn($q) => $q->where('user_id', $user->id))
             ->firstOrFail();
 
+        $service->employees()->detach();
         $service->delete();
 
         return redirect()->route('services.index', ['business_id' => $business->id])

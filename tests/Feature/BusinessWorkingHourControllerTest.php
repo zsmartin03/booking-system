@@ -79,8 +79,8 @@ class BusinessWorkingHourControllerTest extends TestCase
         $response->assertRedirect(route('business-working-hours.index', ['business_id' => $this->business->id]));
         $this->assertDatabaseHas('business_working_hours', [
             'id' => $hour->id,
-            'start_time' => '10:00:00',
-            'end_time' => '18:00:00',
+            'start_time' => '10:00',
+            'end_time' => '18:00',
         ]);
     }
 

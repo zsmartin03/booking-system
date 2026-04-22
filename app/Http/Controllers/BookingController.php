@@ -163,7 +163,7 @@ class BookingController extends Controller
         $service = Service::findOrFail($request->service_id);
         $employeeId = $request->employee_id;
         $weekStart = $request->week_start
-            ? Carbon::parse($request->week_start)->startOfWeek()
+            ? Carbon::parse($request->week_start)
             : now()->startOfWeek();
 
         $employees = $employeeId
@@ -525,7 +525,7 @@ class BookingController extends Controller
 
         $business = Business::findOrFail($businessId);
         $weekStart = $request->week_start
-            ? Carbon::parse($request->week_start)->startOfWeek()
+            ? Carbon::parse($request->week_start)
             : now()->startOfWeek();
 
         $employees = $business->employees()->where('active', true)->get();
@@ -665,7 +665,7 @@ class BookingController extends Controller
     public function redirect()
     {
         // Redirect to the first available business for booking
-        $business = Business::whereHas('services', function($query) {
+        $business = Business::whereHas('services', function ($query) {
             $query->where('active', true);
         })->first();
 
