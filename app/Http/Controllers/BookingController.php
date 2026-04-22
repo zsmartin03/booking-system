@@ -19,10 +19,6 @@ class BookingController extends Controller
         // Use the business from the route parameter
         $selectedBusiness = $business;
 
-        if (!$selectedBusiness) {
-            abort(404, 'Business not found');
-        }
-
         // Get only services for this specific business
         $services = $selectedBusiness->services()->where('active', true)->get();
         $selectedService = $request->service_id ? Service::find($request->service_id) : null;
