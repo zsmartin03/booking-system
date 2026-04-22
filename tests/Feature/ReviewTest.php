@@ -19,7 +19,7 @@ class ReviewTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         // Create a business owner with verified email
         $this->businessOwner = User::create([
             'name' => 'Business Owner',

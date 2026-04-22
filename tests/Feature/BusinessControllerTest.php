@@ -70,7 +70,7 @@ class BusinessControllerTest extends TestCase
         $user = User::factory()->create(['role' => 'provider']);
         $category = Category::factory()->create();
         $this->actingAs($user);
-        
+
         // Mock the GeocodingService
         $mockGeocoder = Mockery::mock(GeocodingService::class);
         $mockGeocoder->shouldReceive('geocode')->andReturn([
@@ -79,7 +79,7 @@ class BusinessControllerTest extends TestCase
             'formatted_address' => '123 Main St, New York, NY',
         ]);
         $this->app->instance(GeocodingService::class, $mockGeocoder);
-        
+
         $file = UploadedFile::fake()->image('logo.jpg');
         $data = [
             'name' => 'Test Biz',
@@ -129,7 +129,7 @@ class BusinessControllerTest extends TestCase
         $user = User::factory()->create(['role' => 'provider']);
         $business = Business::factory()->create(['user_id' => $user->id]);
         $this->actingAs($user);
-        
+
         // Mock the GeocodingService
         $mockGeocoder = Mockery::mock(GeocodingService::class);
         $mockGeocoder->shouldReceive('geocode')->andReturn([
@@ -138,7 +138,7 @@ class BusinessControllerTest extends TestCase
             'formatted_address' => '123 Main St, New York, NY',
         ]);
         $this->app->instance(GeocodingService::class, $mockGeocoder);
-        
+
         $file = UploadedFile::fake()->image('logo2.jpg');
         $data = [
             'name' => 'Updated',
