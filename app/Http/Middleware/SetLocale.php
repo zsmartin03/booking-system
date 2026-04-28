@@ -18,17 +18,12 @@ class SetLocale
         $supportedLocales = ['en', 'hu'];
         $locale = null;
 
-        // Check if locale is provided in the request
         if ($request->has('locale') && in_array($request->get('locale'), $supportedLocales)) {
             $locale = $request->get('locale');
             session(['locale' => $locale]);
-        }
-        // Check session
-        elseif (session()->has('locale') && in_array(session('locale'), $supportedLocales)) {
+        } elseif (session()->has('locale') && in_array(session('locale'), $supportedLocales)) {
             $locale = session('locale');
-        }
-        // Fallback to default
-        else {
+        } else {
             $locale = config('app.locale', 'en');
         }
 

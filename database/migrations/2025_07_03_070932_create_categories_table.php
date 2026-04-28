@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
             $table->string('slug')->unique();
-            $table->string('color', 7)->default('#3B82F6'); // Default blue color
+            $table->string('color', 7)->default('#3B82F6');
             $table->timestamps();
         });
     }

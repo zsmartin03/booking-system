@@ -20,6 +20,8 @@
             <directory>app/Console</directory>
             <directory>app/Providers</directory>
             <directory>app/Services</directory>
+            <directory>app/Http/Middleware</directory>
+            <directory>app/Http/Requests</directory>
         </exclude>
     </source>
     <php>

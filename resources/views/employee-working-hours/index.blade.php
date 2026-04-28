@@ -26,7 +26,6 @@
             </div>
         @endif
         <div class="flex flex-col md:flex-row gap-6">
-            <!-- Business Hours Card -->
             <div class="frosted-card rounded-xl shadow-lg p-6 w-full md:w-1/3">
                 <h2 class="text-lg font-semibold mb-4">{{ __('messages.business_hours') }}</h2>
                 <ul class="space-y-2">
@@ -45,7 +44,6 @@
                     @endforeach
                 </ul>
             </div>
-            <!-- Employee Working Hours Form Card -->
             <div class="frosted-card rounded-xl shadow-lg p-6 w-full md:w-2/3 flex flex-col justify-between">
                 <form method="POST"
                     action="{{ route('employee-working-hours.bulk-update', ['employee_id' => $employee->id]) }}"

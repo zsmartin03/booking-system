@@ -18,10 +18,8 @@ return new class extends Migration
             $table->boolean('is_upvote'); // true = upvote, false = downvote
             $table->timestamps();
 
-            // Ensure one vote per user per review
             $table->unique(['review_id', 'user_id']);
 
-            // Add indexes for better performance
             $table->index(['review_id', 'is_upvote']);
         });
     }

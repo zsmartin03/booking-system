@@ -16,14 +16,11 @@ class BookingController extends Controller
 {
     public function create(Request $request, Business $business)
     {
-        // Use the business from the route parameter
         $selectedBusiness = $business;
 
-        // Get only services for this specific business
         $services = $selectedBusiness->services()->where('active', true)->get();
         $selectedService = $request->service_id ? Service::find($request->service_id) : null;
 
-        // Validate that the selected service belongs to this business if one is selected
         if ($selectedService && $selectedService->business_id !== $selectedBusiness->id) {
             $selectedService = null;
         }
@@ -54,7 +51,7 @@ class BookingController extends Controller
 
         $service = Service::findOrFail($validated['service_id']);
         $employee = Employee::findOrFail($validated['employee_id']);
-        $business = $service->business; // Get business from the service
+        $business = $service->business;
 
         $settings = Setting::getBusinessSettings($business->id);
 
@@ -118,7 +115,6 @@ class BookingController extends Controller
             }
         }
 
-        // Verify employee is working at this time
         $dayOfWeek = strtolower($start->format('l'));
         $workingHours = $employee->getWorkingHoursForDay($dayOfWeek);
 
@@ -133,7 +129,6 @@ class BookingController extends Controller
         }
 
         try {
-            // Set status to 'pending' by default regardless of settings
             $booking = Booking::create([
                 'client_id' => Auth::id(),
                 'service_id' => $service->id,
@@ -199,7 +194,6 @@ class BookingController extends Controller
 
                     $endTime = Carbon::parse($date->toDateString() . ' ' . $workingHour->end_time);
 
-                    // Generate slots
                     $current = $startTime->copy();
                     while ($current < $endTime) {
                         $timeKey = $current->format('Y-m-d\TH:i');
@@ -215,11 +209,11 @@ class BookingController extends Controller
 
                         if ($availabilityException) {
                             if ($availabilityException->type === 'unavailable') {
-                                // skip this time slot - employee is not available
+                                // skip this time slot, employee is not available
                                 $current->addMinutes($interval);
                                 continue;
                             } elseif ($availabilityException->type === 'available') {
-                                // override working hours - employee is available
+                                // override working hours, employee is available
                                 $exceptionEndTime = Carbon::parse($date->toDateString() . ' ' . $availabilityException->end_time);
                                 $effectiveEndTime = min($effectiveEndTime, $exceptionEndTime);
                             }
@@ -240,7 +234,6 @@ class BookingController extends Controller
                             ];
                         }
 
-                        // Calculate how much time is available from this slot until employee becomes unavailable
                         $nextBooking = Booking::where('employee_id', $employee->id)
                             ->where('status', '!=', 'cancelled')
                             ->where('start_time', '>', $current)
@@ -267,7 +260,6 @@ class BookingController extends Controller
                         $availableMinutes = $current->diffInMinutes($availableUntil);
                         $hasFullServiceTime = $availableMinutes >= $service->duration;
 
-                        // Add employee availability to this time slot
                         $timeSlots[$timeKey]['employees'][] = [
                             'employee_id' => $employee->id,
                             'employee_name' => $employee->name,
@@ -282,7 +274,6 @@ class BookingController extends Controller
                     }
                 }
 
-                // Process 'available' type exceptions
                 foreach ($availableExceptions as $exception) {
                     $startTime = Carbon::parse($date->toDateString() . ' ' . $exception->start_time);
 
@@ -316,14 +307,13 @@ class BookingController extends Controller
                             ];
                         }
 
-                        // Calculate availability for exception period
                         $nextBooking = Booking::where('employee_id', $employee->id)
                             ->where('status', '!=', 'cancelled')
                             ->where('start_time', '>', $current)
                             ->orderBy('start_time')
                             ->first();
 
-                        $availableUntil = $endTime; // Default to end of exception period
+                        $availableUntil = $endTime;
                         if ($nextBooking) {
                             $availableUntil = min($availableUntil, Carbon::parse($nextBooking->start_time));
                         }
@@ -331,7 +321,6 @@ class BookingController extends Controller
                         $availableMinutes = $current->diffInMinutes($availableUntil);
                         $hasFullServiceTime = $availableMinutes >= $service->duration;
 
-                        // Add employee availability to this time slot
                         $timeSlots[$timeKey]['employees'][] = [
                             'employee_id' => $employee->id,
                             'employee_name' => $employee->name,
@@ -347,15 +336,12 @@ class BookingController extends Controller
                 }
             }
 
-            // Convert aggregated time slots to the expected format
             $slots[$dateString] = [];
             foreach ($timeSlots as $timeKey => $timeSlot) {
-                // Check if ANY employee is available at this time
                 $availableEmployees = array_filter($timeSlot['employees'], function ($emp) {
                     return $emp['available'];
                 });
 
-                // Find the best available employee (one with most available time)
                 $bestEmployee = null;
                 $maxAvailableMinutes = 0;
                 $hasAnyFullServiceTime = false;
@@ -370,7 +356,6 @@ class BookingController extends Controller
                     }
                 }
 
-                // Create a slot entry for this time if any employee is working
                 if (!empty($timeSlot['employees'])) {
                     $slots[$dateString][] = [
                         'time' => $timeSlot['time'],
@@ -452,7 +437,6 @@ class BookingController extends Controller
             }
         }
 
-        // For providers with only one business, auto-select it
         if ($user->role === 'provider' && $businesses->count() === 1 && !$selectedBusiness) {
             $selectedBusiness = $businesses->first();
             $businessSettings = Setting::getBusinessSettings($selectedBusiness->id);
@@ -558,7 +542,6 @@ class BookingController extends Controller
 
                     $endTime = Carbon::parse($date->toDateString() . ' ' . $workingHour->end_time);
 
-                    // Generate slots
                     $current = $startTime->copy();
                     while ($current < $endTime) {
                         $timeKey = $current->format('Y-m-d\TH:i');
@@ -570,7 +553,7 @@ class BookingController extends Controller
                             ->first();
 
                         if ($availabilityException && $availabilityException->type === 'unavailable') {
-                            // skip this time slot - employee is not available
+                            // skip this time slot, employee is not available
                             $current->addMinutes($interval);
                             continue;
                         }
@@ -583,18 +566,16 @@ class BookingController extends Controller
                             ];
                         }
 
-                        // Add employee to this time slot (basic working hours only)
                         $timeSlots[$timeKey]['employees'][] = [
                             'employee_id' => $employee->id,
                             'employee_name' => $employee->name,
-                            'available' => true, // Always show as working time when no service selected
+                            'available' => true,
                         ];
 
                         $current->addMinutes($interval);
                     }
                 }
 
-                // Process 'available' type exceptions
                 foreach ($availableExceptions as $exception) {
                     $startTime = Carbon::parse($date->toDateString() . ' ' . $exception->start_time);
 
@@ -621,11 +602,10 @@ class BookingController extends Controller
                             ];
                         }
 
-                        // Add employee to this time slot (basic working hours only)
                         $timeSlots[$timeKey]['employees'][] = [
                             'employee_id' => $employee->id,
                             'employee_name' => $employee->name,
-                            'available' => true, // Always show as working time when no service selected
+                            'available' => true,
                         ];
 
                         $current->addMinutes($interval);
@@ -633,15 +613,13 @@ class BookingController extends Controller
                 }
             }
 
-            // Convert aggregated time slots to the expected format
             $slots[$dateString] = [];
             foreach ($timeSlots as $timeKey => $timeSlot) {
-                // Create a slot entry for this time if any employee is working
                 if (!empty($timeSlot['employees'])) {
                     $slots[$dateString][] = [
                         'time' => $timeSlot['time'],
                         'label' => $timeSlot['label'],
-                        'available' => true, // Always show as working time
+                        'available' => true,
                         'employee_name' => $timeSlot['employees'][0]['employee_name'],
                         'all_employees' => $timeSlot['employees']
                     ];
@@ -660,7 +638,6 @@ class BookingController extends Controller
 
     public function redirect()
     {
-        // Redirect to the first available business for booking
         $business = Business::whereHas('services', function ($query) {
             $query->where('active', true);
         })->first();

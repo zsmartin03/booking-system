@@ -10,7 +10,6 @@ class UserSeeder extends Seeder
 {
     public function run(): void
     {
-        // Create admin user
         User::create([
             'name' => 'Admin',
             'email' => 'admin@example.com',
@@ -20,7 +19,6 @@ class UserSeeder extends Seeder
             'phone_number' => '1234567890',
         ]);
 
-        // Create provider users
         $providers = [
             ['name' => 'Provider One', 'email' => 'provider@example.com', 'phone' => '2345678901'],
             ['name' => 'Provider Two', 'email' => 'provider2@example.com', 'phone' => '3456789012'],
@@ -55,7 +53,6 @@ class UserSeeder extends Seeder
             ]);
         }
 
-        // Create client users
         $clients = [
             ['name' => 'Client', 'email' => 'client@example.com', 'phone' => '7890123456'],
             ['name' => 'Maria Garcia', 'email' => 'maria.garcia@example.com', 'phone' => '8901234567'],

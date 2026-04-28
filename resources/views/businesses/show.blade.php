@@ -28,7 +28,6 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="frosted-card overflow-hidden shadow-lg sm:rounded-xl">
                 <div class="p-4 sm:p-6">
-                    <!-- Business Name -->
                     <div class="mb-6">
                         <h1 class="text-3xl font-bold text-frappe-text mb-2">{{ $business->name }}</h1>
                     </div>
@@ -81,7 +80,6 @@
                         </div>
                     </div>
 
-                    <!-- Categories -->
                     @if ($business->categories->count() > 0)
                         <div class="mb-6">
                             <h3 class="text-lg font-semibold text-frappe-text mb-3">{{ __('messages.categories') }}
@@ -99,7 +97,6 @@
                         </div>
                     @endif
 
-                    <!-- Location Map -->
                     @if ($business->latitude && $business->longitude)
                         <div class="mb-6">
                             <h3 class="text-lg font-semibold text-frappe-text mb-3">{{ __('messages.location') }}</h3>
@@ -143,7 +140,6 @@
                 </div>
             </div>
 
-            <!-- Services Section -->
             @if ($business->services->count() > 0)
                 <div class="frosted-card overflow-hidden shadow-lg sm:rounded-xl mt-6">
                     <div class="p-4 sm:p-6">
@@ -166,7 +162,6 @@
                 </div>
             @endif
 
-            <!-- Reviews Section -->
             <div class="frosted-card overflow-hidden shadow-lg sm:rounded-xl mt-6">
                 <div class="p-4 sm:p-6">
                     <div class="flex items-center justify-between mb-6">
@@ -195,7 +190,6 @@
                             (auth()->user()->role === 'client' || auth()->user()->role === 'admin') &&
                                 !auth()->user()->isAffiliatedWithBusiness($business->id))
                             @if (!$userReview)
-                                <!-- Write Review Form -->
                                 <div class="bg-frappe-surface0/30 rounded-lg p-4 mb-6 border border-frappe-surface2/30">
                                     <h4 class="font-semibold text-frappe-text mb-4">{{ __('messages.write_review') }}</h4>
                                     <form id="reviewForm" onsubmit="submitReview(event)" autocomplete="off">
@@ -230,7 +224,6 @@
                                     </form>
                                 </div>
                             @else
-                                <!-- User has already reviewed - show message -->
                                 <div class="bg-frappe-surface0/30 rounded-lg p-4 mb-6 border border-frappe-surface2/30">
                                     <div class="flex items-center gap-2">
                                         <x-heroicon-o-check-circle class="w-5 h-5 text-green-400" />
@@ -245,10 +238,8 @@
                         @endif
                     @endauth
 
-                    <!-- Sort and Filter Controls -->
                     @if ((isset($otherReviews) && $otherReviews->count() > 0) || (isset($userReview) && $userReview))
                         <div class="mb-6 p-4 bg-frappe-surface0/20 rounded-lg border border-frappe-surface2/20">
-                            <!-- Filter Status Info -->
                             @if (request('sort') || request('rating') || request('booking'))
                                 <div class="mb-3 p-2 bg-frappe-blue/10 border border-frappe-blue/20 rounded-md">
                                     <div class="flex items-center justify-between">
@@ -279,7 +270,7 @@
 
                             <div class="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
                                 <div class="flex flex-col sm:flex-row gap-4">
-                                    <!-- Sort Options -->
+
                                     <div class="flex items-center gap-2">
                                         <label
                                             class="text-sm font-medium text-frappe-text">{{ __('messages.sort_reviews') }}:</label>
@@ -303,7 +294,6 @@
                                         </select>
                                     </div>
 
-                                    <!-- Filter by Rating -->
                                     <div class="flex items-center gap-2">
                                         <label
                                             class="text-sm font-medium text-frappe-text">{{ __('messages.filter_reviews') }}:</label>
@@ -324,7 +314,6 @@
                                         </select>
                                     </div>
 
-                                    <!-- Filter by Booking Status -->
                                     <div class="flex items-center gap-2">
                                         <label
                                             class="flex items-center gap-2 text-sm font-medium text-frappe-text cursor-pointer">
@@ -339,11 +328,10 @@
                         </div>
                     @endif
 
-                    <!-- Reviews List -->
                     <div class="space-y-4" id="reviewsList">
                         @auth
                             @if ($userReview)
-                                <!-- User's Own Review (shown first) -->
+                                <!-- own review first -->
                                 <div class="bg-frappe-surface0/30 rounded-lg p-4 border border-frappe-surface2/30 ring-2 ring-frappe-blue/30"
                                     data-review-id="{{ $userReview->id }}">
                                     <div class="flex items-start justify-between mb-3">
@@ -390,7 +378,6 @@
                                             </div>
                                         </div>
                                         @if (auth()->id() === $userReview->user_id)
-                                            <!-- Edit/Delete buttons for review owner -->
                                             <div class="flex items-center gap-2">
                                                 <button onclick="editReview({{ $userReview->id }})"
                                                     data-rating="{{ $userReview->rating }}"
@@ -411,12 +398,10 @@
                                         @endif
                                     </div>
 
-                                    <!-- Review Content -->
                                     <div class="review-content-{{ $userReview->id }}">
                                         <p class="text-frappe-text mb-3">{{ $userReview->comment }}</p>
                                     </div>
 
-                                    <!-- Edit Form (initially hidden) -->
                                     <div class="review-edit-form-{{ $userReview->id }} hidden">
                                         <form onsubmit="updateReview(event, {{ $userReview->id }})">
                                             @csrf
@@ -458,7 +443,6 @@
                                         </form>
                                     </div>
 
-                                    <!-- Business Response -->
                                     @if ($userReview->response)
                                         <div
                                             class="response-content-{{ $userReview->response->id }} bg-frappe-surface1/30 rounded-lg p-3 border-l-4 border-frappe-blue mt-3">
@@ -495,7 +479,6 @@
                                             <p class="text-frappe-text text-sm">{{ $userReview->response->response }}</p>
                                         </div>
                                     @elseif (auth()->check() && auth()->id() === $business->user_id)
-                                        <!-- Response Form for Business Owner -->
                                         <div
                                             class="bg-frappe-surface1/30 rounded-lg p-3 border-l-4 border-frappe-blue mt-3">
                                             <form onsubmit="submitResponse(event, {{ $userReview->id }})">
@@ -519,7 +502,6 @@
                         @endauth
 
                         @if (isset($otherReviews) && $otherReviews->count() > 0)
-                            <!-- Other Reviews Container -->
                             <div id="otherReviewsContainer">
                                 @include('businesses.partials.reviews-list', [
                                     'otherReviews' => $otherReviews,
@@ -538,7 +520,6 @@
                         @endif
                     </div>
 
-                    <!-- Pagination Controls -->
                     <div id="paginationContainer"
                         class="mt-6 flex flex-col sm:flex-row items-center justify-between gap-4"
                         style="display: none;">
@@ -547,12 +528,11 @@
                                 id="paginationInfo">{{ __('messages.showing_reviews', ['from' => 'FROM_PLACEHOLDER', 'to' => 'TO_PLACEHOLDER', 'total' => 'TOTAL_PLACEHOLDER']) }}</span>
                         </div>
                         <div class="flex items-center gap-2" id="paginationButtons">
-                            <!-- Pagination buttons will be dynamically generated -->
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- Related Businesses Carousel -->
+
             @if ($relatedBusinesses->count() > 0)
                 <div class="frosted-card overflow-hidden shadow-lg sm:rounded-xl mt-6">
                     <div class="p-4 sm:p-6">
@@ -560,7 +540,6 @@
                             {{ __('messages.similar_businesses') }}
                         </h3>
                         <div class="relative">
-                            <!-- Navigation Arrows -->
                             @if ($relatedBusinesses->count() > 1)
                                 <button id="prevBtn"
                                     class="absolute -left-4 top-1/2 -translate-y-1/2 z-20 bg-frappe-surface0/95 hover:bg-frappe-surface1/95 border border-frappe-surface2/50 rounded-full p-3 shadow-xl transition-all duration-300 hover:shadow-2xl hover:scale-110">
@@ -585,7 +564,6 @@
                                                     </a>
                                                 </h4>
 
-                                                <!-- Average Rating Display -->
                                                 <div class="flex items-center gap-2 mb-3">
                                                     <div class="flex items-center">
                                                         @for ($i = 1; $i <= 5; $i++)
@@ -639,7 +617,6 @@
                     </div>
                 </div>
 
-                <!-- Carousel JavaScript -->
                 <script>
                     document.addEventListener('DOMContentLoaded', function() {
                         const carousel = document.getElementById('carousel');
@@ -653,13 +630,11 @@
                             let cardsToShow = 1;
                             let isTransitioning = false;
 
-                            // Calculate how many cards fit on screen
                             function calculateCardsToShow() {
                                 const containerWidth = carousel.parentElement.offsetWidth;
                                 cardsToShow = Math.floor(containerWidth / cardWidth);
                                 if (cardsToShow === 0) cardsToShow = 1;
 
-                                // Always show navigation arrows when there are more than 1 card
                                 if (totalItems > 1) {
                                     if (prevBtn) prevBtn.style.display = 'block';
                                     if (nextBtn) nextBtn.style.display = 'block';
@@ -669,29 +644,24 @@
                                 }
                             }
 
-                            // Clone cards for seamless infinite scrolling
                             function setupInfiniteScroll() {
                                 const cards = carousel.children;
                                 const originalCards = Array.from(cards);
 
-                                // Clear any existing clones
                                 carousel.querySelectorAll('.clone').forEach(clone => clone.remove());
 
-                                // Clone last few cards and prepend them
                                 for (let i = Math.min(3, totalItems) - 1; i >= 0; i--) {
                                     const clone = originalCards[totalItems - 1 - i].cloneNode(true);
                                     clone.classList.add('clone');
                                     carousel.insertBefore(clone, carousel.firstChild);
                                 }
 
-                                // Clone first few cards and append them
                                 for (let i = 0; i < Math.min(3, totalItems); i++) {
                                     const clone = originalCards[i].cloneNode(true);
                                     clone.classList.add('clone');
                                     carousel.appendChild(clone);
                                 }
 
-                                // Set initial position to show first real card
                                 currentIndex = Math.min(3, totalItems);
                                 updateCarousel(false);
                             }
@@ -714,7 +684,6 @@
                                 updateCarousel();
 
                                 setTimeout(() => {
-                                    // Check if we need to loop back to start
                                     if (currentIndex >= totalItems + Math.min(3, totalItems)) {
                                         currentIndex = Math.min(3, totalItems);
                                         updateCarousel(false);
@@ -731,7 +700,6 @@
                                 updateCarousel();
 
                                 setTimeout(() => {
-                                    // Check if we need to loop back to start
                                     if (currentIndex >= totalItems + Math.min(3, totalItems)) {
                                         currentIndex = Math.min(3, totalItems);
                                         updateCarousel(false);
@@ -748,7 +716,6 @@
                                 updateCarousel();
 
                                 setTimeout(() => {
-                                    // Check if we need to loop back to end
                                     if (currentIndex < Math.min(3, totalItems)) {
                                         currentIndex = totalItems + Math.min(3, totalItems) - 1;
                                         updateCarousel(false);
@@ -757,21 +724,17 @@
                                 }, 500);
                             }
 
-                            // Initialize
                             calculateCardsToShow();
                             setupInfiniteScroll();
 
-                            // Event listeners
                             if (nextBtn) nextBtn.addEventListener('click', nextSlide);
                             if (prevBtn) prevBtn.addEventListener('click', prevSlide);
 
-                            // Recalculate on window resize
                             window.addEventListener('resize', function() {
                                 calculateCardsToShow();
                                 setupInfiniteScroll();
                             });
 
-                            // Auto-scroll every 5 seconds (one card at a time)
                             setInterval(autoNextSlide, 5000);
                         }
                     });
@@ -780,7 +743,6 @@
         </div>
     </div>
 
-    <!-- Delete Review Confirmation Modal -->
     <div id="deleteReviewModal"
         class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 backdrop-blur-sm z-50 hidden">
         <div class="frosted-modal p-6 rounded-2xl shadow-2xl w-full max-w-md mx-4">
@@ -800,7 +762,6 @@
         </div>
     </div>
 
-    <!-- Delete Response Confirmation Modal -->
     <div id="deleteResponseModal" class="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm z-50 hidden">
         <div class="flex items-center justify-center min-h-screen p-4">
             <div class="frosted-modal p-6 rounded-2xl shadow-2xl w-full max-w-md">
@@ -1442,7 +1403,6 @@
         });
     </script>
 
-    <!-- Business Location Map Script -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             @if ($business->latitude && $business->longitude)

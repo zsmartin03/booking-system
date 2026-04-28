@@ -1,12 +1,10 @@
 <nav x-data="{ open: false }" class="nav-container nav-frosted">
-    <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
             <div class="flex items-center">
-                <!-- Logo -->
+
                 <div class="shrink-0">
                     <a href="{{ auth()->check() ? route('dashboard') : route('home') }}" class="flex items-center">
-                        <!-- Booking icon: calendar -->
                         <svg class="block h-9 w-auto text-frappe-lavender" fill="none" viewBox="0 0 40 40"
                             stroke="currentColor" stroke-width="1.5">
                             <rect x="6" y="10" width="28" height="22" rx="5" fill="rgba(139,92,246,0.10)"
@@ -24,9 +22,7 @@
                 </div>
             </div>
 
-            <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ml-6 gap-4">
-                <!-- Language Switcher -->
                 <x-language-switcher />
 
                 @auth
@@ -64,16 +60,13 @@
                         </x-slot>
                     </x-dropdown>
 
-                    <!-- Notification Bell -->
                     <div class="relative flex items-center">
                         <button id="notification-bell" class="relative p-2 focus:outline-none" aria-label="Notifications">
-                            <!-- Bell Icon -->
                             <x-heroicon-o-bell class="w-6 h-6 text-frappe-blue" />
                             <span id="notification-count"
                                 class="absolute top-0 right-0 bg-frappe-red text-white text-xs rounded-full px-2 py-0.5 font-bold min-w-[1.25rem] text-center"
                                 style="display:none;">0</span>
                         </button>
-                        <!-- Dropdown -->
                         <div id="notification-dropdown"
                             class="hidden absolute right-0 mt-2 w-96 frosted-card rounded-xl shadow-2xl z-50 top-full">
                             <div class="p-4 border-b border-frappe-surface1 font-bold text-frappe-blue">
@@ -105,20 +98,18 @@
                 @endauth
             </div>
 
-            <!-- Mobile Navigation Controls -->
             <div class="flex items-center gap-2 sm:hidden">
                 @auth
-                    <!-- Notification Bell for Mobile -->
                     <div class="relative">
                         <button id="notification-bell-mobile" class="relative p-2 focus:outline-none"
                             aria-label="Notifications">
-                            <!-- Bell Icon -->
+
                             <x-heroicon-o-bell class="w-6 h-6 text-frappe-blue" />
                             <span id="notification-count-mobile"
                                 class="absolute top-0 right-0 bg-frappe-red text-white text-xs rounded-full px-2 py-0.5 font-bold min-w-[1.25rem] text-center"
                                 style="display:none;">0</span>
                         </button>
-                        <!-- Dropdown -->
+
                         <div id="notification-dropdown-mobile"
                             class="hidden absolute right-0 mt-2 w-80 frosted-card rounded-xl shadow-2xl z-50 top-full">
                             <div class="p-4 border-b border-frappe-surface1 font-bold text-frappe-blue">
@@ -138,7 +129,6 @@
                     </div>
                 @endauth
 
-                <!-- Hamburger -->
                 <button @click="open = ! open"
                     class="inline-flex items-center justify-center p-2 rounded-md text-frappe-text hover:text-frappe-text hover:bg-frappe-surface1 focus:outline-none transition duration-150">
                     <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
@@ -153,9 +143,7 @@
         </div>
     </div>
 
-    <!-- Responsive Navigation Menu -->
     <div :class="{ 'block': open, 'hidden': !open }" class="hidden sm:hidden nav">
-        <!-- Language Switcher for Mobile -->
         <div class="pt-2 pb-3 border-b border-frappe-surface1">
             <div class="px-4 flex justify-end">
                 <x-language-switcher alignment="right" />
@@ -170,7 +158,6 @@
                 </x-responsive-nav-link>
             </div>
 
-            <!-- Responsive Settings Options -->
             <div class="pb-1 border-t border-frappe-surface1">
                 <div class="space-y-1">
                     <x-responsive-nav-link :href="route('profile.edit')" class="text-frappe-text hover:bg-frappe-surface1">
@@ -188,7 +175,6 @@
                 </div>
             </div>
         @else
-            <!-- Guest responsive navigation -->
             <div class="pt-2 pb-3 space-y-1">
                 <x-responsive-nav-link :href="route('login')" class="text-frappe-text hover:bg-frappe-surface1">
                     {{ __('messages.login') }}

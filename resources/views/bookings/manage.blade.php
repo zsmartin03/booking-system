@@ -6,11 +6,9 @@
     </x-slot>
 
     <div class="py-6 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <!-- Business Selection/Info Card -->
         <div class="mb-6">
             <div class="frosted-card rounded-xl shadow-lg p-6">
                 @if (auth()->user()->role === 'admin' || $businesses->count() > 1)
-                    <!-- Show business selector for admins or providers with multiple businesses -->
                     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
                         <div>
                             <h3 class="text-lg font-semibold text-frappe-lavender">
@@ -41,7 +39,6 @@
                         </div>
                     </div>
                 @else
-                    <!-- Single business or no businesses -->
                     <div>
                         <h3 class="text-lg font-semibold text-frappe-lavender mb-2">
                             {{ __('messages.manage_bookings') }}
@@ -63,10 +60,8 @@
             </div>
         </div>
 
-        <!-- Bookings Table -->
         <div class="frosted-card rounded-xl shadow-lg overflow-hidden">
             @if ($bookings->count() > 0)
-                <!-- Desktop Table View -->
                 <div class="hidden md:block">
                     <div class="overflow-x-auto">
                         <table class="w-full min-w-full">
@@ -153,7 +148,6 @@
                     </div>
                 </div>
 
-                <!-- Mobile Card View -->
                 <div class="md:hidden">
                     <div class="divide-y divide-frappe-surface1/20">
                         @foreach ($bookings as $booking)
@@ -211,7 +205,6 @@
                     </div>
                 </div>
 
-                <!-- Pagination -->
                 @if ($bookings->hasPages())
                     <div class="px-6 py-4 border-t border-frappe-surface1/30">
                         {{ $bookings->appends(request()->query())->links() }}

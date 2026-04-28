@@ -3,24 +3,20 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Custom form components */
 [x-cloak] {
     display: none !important;
 }
 
-/* Input styles */
 input:not([type="checkbox"]):not([type="radio"]),
 textarea,
 select {
     @apply rounded-md shadow-sm bg-frappe-surface0 border-frappe-surface1 text-frappe-text focus:border-frappe-blue focus:ring-frappe-blue;
 }
 
-/* Buttons */
 .btn-primary {
     @apply bg-frappe-blue text-frappe-crust hover:bg-frappe-sapphire transition-colors;
 }
 
-/* Alerts and validation */
 .alert-success {
     @apply bg-frappe-green/20 text-frappe-green border border-frappe-green;
 }

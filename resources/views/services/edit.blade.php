@@ -84,29 +84,28 @@
         document.getElementById('duration').addEventListener('input', function() {
             const value = parseInt(this.value);
             const helpText = document.getElementById('duration-help');
-            
+
             if (value && value < 5) {
-                // Show error for values less than 5 minutes
-                this.setCustomValidity('{{ __("messages.duration_minimum_error") }}');
+                this.setCustomValidity('{{ __('messages.duration_minimum_error') }}');
                 if (helpText) {
-                    helpText.textContent = '{{ __("messages.duration_minimum_error") }}';
+                    helpText.textContent = '{{ __('messages.duration_minimum_error') }}';
                     helpText.classList.add('text-frappe-red');
                     helpText.classList.remove('text-frappe-subtext1');
                 }
             } else if (value && value >= 5 && value % 5 !== 0) {
-                // Show error for invalid values (not divisible by 5)
                 const suggestion = Math.max(5, Math.round(value / 5) * 5);
-                this.setCustomValidity('{{ __("messages.duration_divisible_error", ["suggestion" => "XX"]) }}'.replace('XX', suggestion));
+                this.setCustomValidity('{{ __('messages.duration_divisible_error', ['suggestion' => 'XX']) }}'
+                    .replace('XX', suggestion));
                 if (helpText) {
-                    helpText.textContent = '{{ __("messages.duration_divisible_error") }}'.replace(':suggestion', suggestion);
+                    helpText.textContent = '{{ __('messages.duration_divisible_error') }}'.replace(':suggestion',
+                        suggestion);
                     helpText.classList.add('text-frappe-red');
                     helpText.classList.remove('text-frappe-subtext1');
                 }
             } else {
-                // Clear error for valid values or empty input
                 this.setCustomValidity('');
                 if (helpText) {
-                    helpText.textContent = '{{ __("messages.duration_help_text") }}';
+                    helpText.textContent = '{{ __('messages.duration_help_text') }}';
                     helpText.classList.remove('text-frappe-red');
                     helpText.classList.add('text-frappe-subtext1');
                 }

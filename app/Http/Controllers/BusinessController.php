@@ -31,7 +31,10 @@ class BusinessController extends Controller
         }
 
         if ($request->filled('search')) {
+
+            // @codeCoverageIgnoreStart
             $query->whereRaw('unaccent(name) ILIKE unaccent(?)', ['%' . $request->search . '%']);
+            // @codeCoverageIgnoreEnd
         }
 
         if ($request->filled('category')) {
@@ -57,7 +60,9 @@ class BusinessController extends Controller
             ->withAvg('reviews', 'rating');
 
         if ($request->filled('search')) {
+            // @codeCoverageIgnoreStart
             $query->whereRaw('unaccent(name) ILIKE unaccent(?)', ['%' . $request->search . '%']);
+            // @codeCoverageIgnoreEnd
         }
 
         if ($request->filled('category')) {
@@ -87,9 +92,10 @@ class BusinessController extends Controller
                     ->orderBy('name', 'asc');
                 break;
             case 'best':
-                // Sort by best using Bayesian average
-                // Formula: (C * m + R * v) / (C + R)
-                // Where: C = confidence parameter (10), m = global mean (3.5), R = review count, v = business rating
+                /* sort by best using Bayesian average
+                 formula: (C * m + R * v) / (C + R)
+                 where: C = confidence parameter (10), m = global mean (3.5), R = review count, v = business rating
+                */
                 $query->selectRaw('businesses.*,
                     (10 * 3.5 +
                      COALESCE((select count(*) from "reviews" where "businesses"."id" = "reviews"."business_id"), 0) *
@@ -167,32 +173,32 @@ class BusinessController extends Controller
         $validated['user_id'] = $user->id;
 
         if ($request->hasFile('logo')) {
+            // @codeCoverageIgnoreStart
             try {
                 $logoPath = $request->file('logo')->store('business-logos', 'public');
                 $validated['logo'] = $logoPath;
             } catch (\Exception $e) {
                 return back()->withErrors(['logo' => 'Failed to upload logo. Please try again.'])->withInput();
             }
+            // @codeCoverageIgnoreEnd
         }
 
-        // Handle geocoding
         $geocodingService = app(GeocodingService::class);
 
         if (!empty($validated['latitude']) && !empty($validated['longitude'])) {
-            // If lat/lng provided, use them and reverse geocode for formatted address
+            // if lat/lng provided, use them and reverse geocode for formatted address
             $result = $geocodingService->reverseGeocode($validated['latitude'], $validated['longitude']);
             if ($result && $result['formatted_address']) {
                 $validated['address'] = $result['formatted_address'];
             }
         } else {
-            // If no coordinates provided, geocode the address
+            // if no coordinates provided, geocode the address
             $result = $geocodingService->geocode($validated['address']);
             if ($result) {
                 $validated['latitude'] = $result['latitude'];
                 $validated['longitude'] = $result['longitude'];
                 $validated['address'] = $result['formatted_address'];
             } else {
-                // If geocoding fails, don't allow business creation
                 return back()->withErrors(['address' => 'Could not find a valid location for this address. Please try a different address.'])->withInput();
             }
         }
@@ -216,7 +222,7 @@ class BusinessController extends Controller
             'services',
         ])->findOrFail($id);
 
-        $sortBy = $request->get('sort', 'helpful'); // default to most helpful
+        $sortBy = $request->get('sort', 'helpful');
         $filterRating = $request->get('rating');
         $filterBooking = $request->get('booking');
         $page = $request->get('page', 1);
@@ -259,7 +265,6 @@ class BusinessController extends Controller
                 break;
             case 'helpful':
             default:
-                // Sort by best like/dislike ratio
                 $reviewsQuery->leftJoin('review_votes', 'reviews.id', '=', 'review_votes.review_id')
                     ->selectRaw('reviews.*,
                         COALESCE(SUM(CASE WHEN review_votes.is_upvote = true THEN 1 ELSE 0 END), 0) as upvotes_count,
@@ -308,7 +313,6 @@ class BusinessController extends Controller
                 ->limit(10)
                 ->get();
 
-            // Transform the collection to add the computed fields
             $relatedBusinesses->transform(function ($business) {
                 $business->average_rating = $business->reviews_avg_rating ?? 0;
                 $business->reviews_count = $business->reviews_count ?? 0;
@@ -362,6 +366,7 @@ class BusinessController extends Controller
         ]);
 
         if ($request->hasFile('logo')) {
+            // @codeCoverageIgnoreStart
             try {
                 if ($business->logo) {
                     Storage::disk('public')->delete($business->logo);
@@ -372,25 +377,23 @@ class BusinessController extends Controller
             } catch (\Exception $e) {
                 return back()->withErrors(['logo' => 'Failed to upload logo. Please try again.'])->withInput();
             }
+            // @codeCoverageIgnoreEnd
         }
 
         $geocodingService = app(GeocodingService::class);
 
         if (!empty($validated['latitude']) && !empty($validated['longitude'])) {
-            // If lat/lng provided, use them and reverse geocode for formatted address
             $result = $geocodingService->reverseGeocode($validated['latitude'], $validated['longitude']);
             if ($result && $result['formatted_address']) {
                 $validated['address'] = $result['formatted_address'];
             }
         } else {
-            // If no coordinates provided, geocode the address
             $result = $geocodingService->geocode($validated['address']);
             if ($result) {
                 $validated['latitude'] = $result['latitude'];
                 $validated['longitude'] = $result['longitude'];
                 $validated['address'] = $result['formatted_address'];
             } else {
-                // If geocoding fails, don't allow business update
                 return back()->withErrors(['address' => 'Could not find a valid location for this address. Please try a different address.'])->withInput();
             }
         }

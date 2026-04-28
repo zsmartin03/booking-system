@@ -8,11 +8,9 @@
 
     <title>{{ config('app.name', 'BookingSystem') }}</title>
 
-    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
-    <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <style>
@@ -116,13 +114,11 @@
             z-index: 10;
         }
 
-        /* Language switcher needs higher z-index */
         .language-switcher {
             position: relative;
             z-index: 1000;
         }
 
-        /* Dropdown menu needs high z-index */
         .dropdown-menu {
             z-index: 1001 !important;
         }
@@ -163,7 +159,6 @@
             z-index: 51;
         }
 
-        /* Add missing styles from app.blade.php */
         .nav-container {
             position: fixed !important;
             top: 0 !important;
@@ -175,7 +170,6 @@
             transform: translateZ(0) !important;
         }
 
-        /* Force navbar to stay fixed - override any conflicting styles */
         nav.nav-container,
         .nav-container {
             position: fixed !important;
@@ -201,7 +195,6 @@
             padding-top: 0 !important;
         }
 
-        /* Standardized input styling */
         input[type="text"],
         input[type="email"],
         input[type="password"],
@@ -237,7 +230,6 @@
             resize: vertical !important;
         }
 
-        /* Select dropdown styling */
         select {
             background: rgba(30, 30, 46, 0.8) !important;
             backdrop-filter: blur(10px) !important;
@@ -264,7 +256,6 @@
             border-color: rgba(186, 194, 222, 0.3) !important;
         }
 
-        /* Option styling */
         select option {
             background: rgba(30, 30, 46, 0.95) !important;
             color: #cdd6f4 !important;
@@ -283,12 +274,10 @@
             color: #ffffff !important;
         }
 
-        /* WebKit specific option styling */
         select option:checked {
             background: rgba(137, 180, 250, 0.4) linear-gradient(0deg, rgba(137, 180, 250, 0.4) 0%, rgba(137, 180, 250, 0.4) 100%) !important;
         }
 
-        /* Custom dropdown arrow styling */
         .custom-select {
             position: relative;
         }
@@ -336,7 +325,7 @@
             const menu = document.getElementById('mobile-menu');
             const openBtn = document.getElementById('mobile-menu-toggle');
             const closeBtn = document.getElementById('mobile-menu-close');
-            
+
             if (openBtn && menu) {
                 openBtn.addEventListener('click', () => {
                     menu.classList.remove('hidden');

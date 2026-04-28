@@ -66,7 +66,6 @@ class Business extends Model
         return null;
     }
 
-    // Statistics methods
     public function bookings()
     {
         return $this->hasManyThrough(Booking::class, Service::class);
@@ -98,7 +97,6 @@ class Business extends Model
 
     public function getBookingsPerPeriod(string $period = 'month', int $limit = 12)
     {
-        // Check database driver for compatibility
         $driver = config('database.default');
         $connection = config("database.connections.{$driver}.driver");
 
@@ -150,7 +148,6 @@ class Business extends Model
 
     public function getRevenuePerPeriod(string $period = 'month', int $limit = 12)
     {
-        // Check database driver for compatibility
         $driver = config('database.default');
         $connection = config("database.connections.{$driver}.driver");
 

@@ -29,7 +29,6 @@ class CheckRole
             }
         }
 
-        // user doesn't have the required roles
         abort(403, 'Unauthorized action.');
     }
 }

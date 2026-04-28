@@ -17,13 +17,11 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->unsignedTinyInteger('rating'); // 1-5 stars
             $table->text('comment');
-            $table->boolean('has_booking')->default(false); // Whether user has had a booking
+            $table->boolean('has_booking')->default(false);
             $table->timestamps();
 
-            // Ensure one review per user per business
             $table->unique(['business_id', 'user_id']);
 
-            // Add indexes for better performance
             $table->index(['business_id', 'created_at']);
             $table->index('rating');
         });

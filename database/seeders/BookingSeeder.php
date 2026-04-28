@@ -20,34 +20,27 @@ class BookingSeeder extends Seeder
 
         $bookings = [];
 
-        // Create bookings for the next few days
         foreach ($employees as $employee) {
             $services = $employee->services;
             if ($services->isEmpty()) continue;
 
-            // Today's bookings
             $todayBookings = $this->createBookingsForDay($employee, $services, $clients, $today, 2);
             $bookings = array_merge($bookings, $todayBookings);
 
-            // Tomorrow's bookings
             $tomorrowBookings = $this->createBookingsForDay($employee, $services, $clients, $today->copy()->addDay(), 3);
             $bookings = array_merge($bookings, $tomorrowBookings);
 
-            // Day after tomorrow
             $dayAfterBookings = $this->createBookingsForDay($employee, $services, $clients, $today->copy()->addDays(2), 2);
             $bookings = array_merge($bookings, $dayAfterBookings);
 
-            // Next week bookings (fewer)
             for ($i = 7; $i <= 10; $i++) {
                 $futureBookings = $this->createBookingsForDay($employee, $services, $clients, $today->copy()->addDays($i), 1);
                 $bookings = array_merge($bookings, $futureBookings);
             }
         }
 
-        // Create overlapping bookings (conflicts)
         $this->createOverlappingBookings($employees, $clients, $today);
 
-        // Insert all bookings
         foreach ($bookings as $booking) {
             Booking::create($booking);
         }
@@ -58,12 +51,11 @@ class BookingSeeder extends Seeder
         $bookings = [];
         $numBookings = rand(0, $maxBookings);
 
-        // Get employee working hours for this day
         $dayOfWeek = strtolower($date->format('l'));
         $workingHour = $employee->workingHours()->where('day_of_week', $dayOfWeek)->first();
 
         if (!$workingHour) {
-            return $bookings; // Employee doesn't work this day
+            return $bookings;
         }
 
         $startHour = Carbon::parse($workingHour->start_time)->hour;
@@ -75,7 +67,6 @@ class BookingSeeder extends Seeder
             $service = $services->random();
             $client = $clients->random();
 
-            // Find an available time slot
             $attempts = 0;
             do {
                 $startTime = $date->copy()->setHour(rand($startHour, $endHour - 2))->setMinute(rand(0, 1) * 30);
@@ -86,7 +77,7 @@ class BookingSeeder extends Seeder
                 $attempts++;
             } while ((in_array($timeSlot, $usedTimeSlots) || !$isAvailable) && $attempts < 20);
 
-            if ($attempts >= 20) continue; // Skip if can't find available slot
+            if ($attempts >= 20) continue;
 
             $usedTimeSlots[] = $timeSlot;
 
@@ -113,37 +104,29 @@ class BookingSeeder extends Seeder
         $startTimeOnly = $startTime->format('H:i:s');
         $endTimeOnly = $endTime->format('H:i:s');
 
-        // Check for availability exceptions on this date
         $exceptions = AvailabilityException::where('employee_id', $employee->id)
             ->where('date', $date)
             ->get();
 
         foreach ($exceptions as $exception) {
-            // Check if the proposed booking time overlaps with any exception
             $exceptionStart = $exception->start_time;
             $exceptionEnd = $exception->end_time;
 
-            // Check for time overlap
             $hasOverlap = ($startTimeOnly < $exceptionEnd && $endTimeOnly > $exceptionStart);
 
             if ($hasOverlap) {
-                // If it's an 'unavailable' exception, employee is not available
                 if ($exception->type === 'unavailable') {
                     return false;
                 }
-                // If it's an 'available' exception, this extends their availability
-                // so we don't need to check regular working hours for this time
             }
         }
 
-        // Check if there are any existing bookings that would conflict
         $existingBooking = Booking::where('employee_id', $employee->id)
             ->whereDate('start_time', $date)
             ->where(function ($query) use ($startTime, $endTime) {
                 $query->where(function ($q) use ($startTime, $endTime) {
-                    // Booking starts before our end time and ends after our start time
                     $q->where('start_time', '<', $endTime)
-                      ->where('end_time', '>', $startTime);
+                        ->where('end_time', '>', $startTime);
                 });
             })
             ->exists();
@@ -153,8 +136,6 @@ class BookingSeeder extends Seeder
 
     private function createOverlappingBookings($employees, $clients, $today)
     {
-        // Create some overlapping bookings to demonstrate conflicts
-        // BUT respect availability exceptions
         $employee = $employees->first();
         $services = $employee->services;
 
@@ -163,7 +144,6 @@ class BookingSeeder extends Seeder
         $service = $services->first();
         $tomorrow = $today->copy()->addDay();
 
-        // Find a time slot that doesn't conflict with availability exceptions
         $attempts = 0;
         do {
             $startTime1 = $tomorrow->copy()->setHour(rand(10, 15))->setMinute(0);
@@ -173,7 +153,6 @@ class BookingSeeder extends Seeder
         } while (!$isAvailable && $attempts < 10);
 
         if ($attempts < 10) {
-            // First booking
             Booking::create([
                 'client_id' => $clients->random()->id,
                 'service_id' => $service->id,
@@ -187,8 +166,7 @@ class BookingSeeder extends Seeder
                 'updated_at' => now(),
             ]);
 
-            // Overlapping booking (conflict) - this will deliberately overlap with the first booking
-            $startTime2 = $startTime1->copy()->addMinutes(30); // Overlaps with first booking
+            $startTime2 = $startTime1->copy()->addMinutes(30);
             $endTime2 = $startTime2->copy()->addMinutes($service->duration);
 
             Booking::create([
@@ -205,7 +183,6 @@ class BookingSeeder extends Seeder
             ]);
         }
 
-        // Create another overlapping pair with different employee
         if ($employees->count() > 1) {
             $employee2 = $employees->skip(1)->first();
             $services2 = $employee2->services;
@@ -214,7 +191,6 @@ class BookingSeeder extends Seeder
                 $service2 = $services2->first();
                 $dayAfterTomorrow = $today->copy()->addDays(2);
 
-                // Find available time slot for second employee
                 $attempts2 = 0;
                 do {
                     $startTime3 = $dayAfterTomorrow->copy()->setHour(rand(10, 15))->setMinute(0);
@@ -224,7 +200,6 @@ class BookingSeeder extends Seeder
                 } while (!$isAvailable2 && $attempts2 < 10);
 
                 if ($attempts2 < 10) {
-                    // First booking
                     Booking::create([
                         'client_id' => $clients->random()->id,
                         'service_id' => $service2->id,
@@ -238,8 +213,7 @@ class BookingSeeder extends Seeder
                         'updated_at' => now(),
                     ]);
 
-                    // Another overlapping booking
-                    $startTime4 = $startTime3->copy()->addMinutes(15); // Slight overlap
+                    $startTime4 = $startTime3->copy()->addMinutes(15);
                     $endTime4 = $startTime4->copy()->addMinutes($service2->duration);
 
                     Booking::create([
@@ -285,7 +259,7 @@ class BookingSeeder extends Seeder
             'Consultation required',
             'Bring own materials',
             'Client running late',
-            null, // Some bookings have no notes
+            null,
             null,
             null,
         ];

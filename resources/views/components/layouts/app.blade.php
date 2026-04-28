@@ -9,25 +9,20 @@
 
     <title>{{ config('app.name', 'BookingSystem') }}</title>
 
-    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
-    <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
-    <!-- Map Libraries -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-    <!-- Geoapify API Key -->
     <meta name="geoapify-api-key" content="{{ config('services.geoapify.key') }}">
 
     <style>
         html {
             overscroll-behavior: none;
         }
-        ...existing code...
     </style>
 </head>
 
@@ -36,7 +31,6 @@
         @include('layouts.navigation')
 
         <div class="main-content ">
-            <!-- Page Heading -->
             @if (isset($header))
                 <header class="header-frosted shadow">
                     <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
@@ -45,7 +39,6 @@
                 </header>
             @endif
 
-            <!-- Page Content -->
             <main class="flex-1">
                 {{ $slot }}
             </main>

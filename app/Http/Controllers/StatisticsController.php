@@ -20,12 +20,10 @@ class StatisticsController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        // Check if user has access to this business
         if ($user->role === 'provider' && $business->user_id !== $user->id) {
             abort(403, 'You do not have access to this business.');
         }
 
-        // Get available businesses for the business selector (if needed)
         if ($user->role === 'admin') {
             $businesses = Business::with(['user'])->orderBy('name')->get();
         } else {
@@ -36,19 +34,16 @@ class StatisticsController extends Controller
             return redirect()->route('businesses.create')->with('error', 'Please create a business first to view statistics.');
         }
 
-        $period = $request->get('period', 'month'); // month, week, day
+        $period = $request->get('period', 'month');
 
-        // Get statistics data
         $totalBookings = $business->total_bookings;
         $totalRevenue = $business->total_revenue;
         $totalCustomers = $business->total_customers;
         $mostBookedServices = $business->most_booked_services;
 
-        // Get chart data
         $bookingsData = $business->getBookingsPerPeriod($period);
         $revenueData = $business->getRevenuePerPeriod($period);
 
-        // Format data for charts
         $chartData = [
             'bookings' => [
                 'labels' => $bookingsData->pluck('period')->reverse()->values(),
@@ -84,7 +79,6 @@ class StatisticsController extends Controller
                 return response()->json(['error' => 'Unauthorized'], 403);
             }
 
-            // Check if user has access to this business
             if ($user->role === 'provider' && $business->user_id !== $user->id) {
                 return response()->json(['error' => 'You do not have access to this business.'], 403);
             }
@@ -104,9 +98,8 @@ class StatisticsController extends Controller
                     'data' => $revenueData->pluck('revenue')->reverse()->values()
                 ]
             ];
-            
+
             return response()->json($response);
-            
         } catch (\Exception $e) {
             Log::error('Statistics getData error', ['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
             return response()->json(['error' => 'Internal server error: ' . $e->getMessage()], 500);
@@ -124,7 +117,6 @@ class StatisticsController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        // Get available businesses based on user role
         if ($user->role === 'admin') {
             $businesses = Business::orderBy('name')->get();
         } else {
@@ -135,7 +127,6 @@ class StatisticsController extends Controller
             return redirect()->route('businesses.create')->with('error', 'Please create a business first to view statistics.');
         }
 
-        // Redirect to first available business statistics
         return redirect()->route('statistics.index', ['business' => $businesses->first()]);
     }
 }

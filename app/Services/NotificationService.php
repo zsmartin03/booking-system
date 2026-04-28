@@ -141,12 +141,10 @@ class NotificationService
      */
     private function shouldSendEmail(Booking $booking)
     {
-        // Skip test emails
         if (str_ends_with($booking->client->email, 'example.com')) {
             return false;
         }
 
-        // Always send email notifications
         return true;
     }
 }

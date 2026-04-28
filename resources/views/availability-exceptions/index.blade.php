@@ -2,8 +2,11 @@
     <x-slot name="header">
         <x-breadcrumb :items="[
             ['text' => __('messages.businesses'), 'url' => route('businesses.index')],
-            ['text' => __('messages.employees') . ' - ' . $employee->business->name, 'url' => route('employees.index', ['business_id' => $employee->business->id])],
-            ['text' => __('messages.availability_exceptions') . ' - ' . $employee->name, 'url' => null]
+            [
+                'text' => __('messages.employees') . ' - ' . $employee->business->name,
+                'url' => route('employees.index', ['business_id' => $employee->business->id]),
+            ],
+            ['text' => __('messages.availability_exceptions') . ' - ' . $employee->name, 'url' => null],
         ]" />
     </x-slot>
 
@@ -22,7 +25,7 @@
         @endif
 
         <div class="frosted-card rounded-xl shadow-lg overflow-hidden">
-            <!-- Desktop Table View -->
+
             <div class="hidden lg:block">
                 <div class="overflow-x-auto">
                     <table class="w-full min-w-full">
@@ -105,7 +108,6 @@
                 </div>
             </div>
 
-            <!-- Mobile Card View -->
             <div class="lg:hidden">
                 @forelse($exceptions as $exception)
                     <div class="p-4 border-b border-frappe-surface1/20 last:border-b-0">
@@ -172,7 +174,6 @@
         </div>
     </div>
 
-    <!-- Delete Modal -->
     <div id="deleteModal"
         class="fixed inset-0 items-center justify-center bg-black bg-opacity-60 backdrop-blur-sm z-50 hidden">
         <div class="frosted-modal p-6 rounded-2xl shadow-2xl w-full max-w-md mx-4">

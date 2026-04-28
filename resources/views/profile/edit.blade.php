@@ -7,7 +7,6 @@
 
     <div class="py-6">
         <div class="max-w-2xl mx-auto sm:px-6 lg:px-8">
-            <!-- Status Messages -->
             @if (session('status'))
                 <div class="mb-4 p-4 bg-frappe-green/20 text-frappe-green border border-frappe-green rounded-lg">
                     {{ session('status') }}
@@ -16,7 +15,6 @@
 
             <div class="frosted-card overflow-hidden shadow-lg sm:rounded-xl">
                 <div class="p-6">
-                    <!-- Profile Update Form -->
                     <div class="mb-10">
                         <h3 class="text-lg font-medium text-frappe-blue mb-4">{{ __('messages.profile') }}</h3>
 
@@ -25,12 +23,10 @@
                             @method('patch')
 
                             <div class="space-y-4">
-                                <!-- Avatar -->
                                 <div>
                                     <x-input-label for="avatar" :value="__('messages.avatar')" class="text-frappe-subtext1 mb-3" />
 
                                     <div class="flex items-start gap-6">
-                                        <!-- Avatar Preview -->
                                         <div class="flex flex-col items-center">
                                             <div class="relative group">
                                                 <div id="avatar-preview"
@@ -47,7 +43,6 @@
                                                         </div>
                                                     @endif
                                                 </div>
-                                                <!-- Loading indicator -->
                                                 <div id="avatar-loading"
                                                     class="absolute inset-0 bg-frappe-surface0/80 backdrop-blur-sm rounded-full flex items-center justify-center hidden">
                                                     <div
@@ -59,9 +54,7 @@
                                                 class="text-xs text-frappe-subtext1 mt-2 text-center">{{ __('messages.profile_picture') }}</span>
                                         </div>
 
-                                        <!-- Upload Controls -->
                                         <div class="flex-1">
-                                            <!-- Custom File Input -->
                                             <div class="relative">
                                                 <input id="avatar" name="avatar" type="file" class="hidden"
                                                     accept="image/*" onchange="previewAvatar(this)">
@@ -72,7 +65,6 @@
                                                 </label>
                                             </div>
 
-                                            <!-- File Info -->
                                             <div id="file-info" class="mt-2 hidden">
                                                 <div
                                                     class="bg-frappe-surface0/30 rounded-lg p-3 border border-frappe-surface2/30">
@@ -91,7 +83,6 @@
                                                 </div>
                                             </div>
 
-                                            <!-- Remove Avatar Button -->
                                             @if ($user->avatar)
                                                 <div class="mt-3">
                                                     <button type="button" onclick="removeAvatar()"
@@ -102,7 +93,6 @@
                                                 </div>
                                             @endif
 
-                                            <!-- Upload Guidelines -->
                                             <div class="mt-4 text-xs text-frappe-subtext1">
                                                 <p>{{ __('messages.avatar_guidelines') }}</p>
                                                 <ul class="list-disc list-inside mt-1 space-y-1">
@@ -117,7 +107,6 @@
                                     <x-input-error :messages="$errors->get('avatar')" class="mt-2 text-frappe-red" />
                                 </div>
 
-                                <!-- Name -->
                                 <div>
                                     <x-input-label for="name" :value="__('messages.name')" class="text-frappe-subtext1" />
                                     <x-text-input id="name" name="name" type="text" class="block mt-1 w-full"
@@ -125,7 +114,6 @@
                                     <x-input-error :messages="$errors->get('name')" class="mt-1 text-frappe-red" />
                                 </div>
 
-                                <!-- Email -->
                                 <div>
                                     <x-input-label for="email" :value="__('messages.email')" class="text-frappe-subtext1" />
                                     <x-text-input id="email" name="email" type="email" class="block mt-1 w-full"
@@ -133,7 +121,6 @@
                                     <x-input-error :messages="$errors->get('email')" class="mt-1 text-frappe-red" />
                                 </div>
 
-                                <!-- Phone Number -->
                                 <div>
                                     <x-input-label for="phone_number" :value="__('messages.phone')" class="text-frappe-subtext1" />
                                     <x-text-input id="phone_number" name="phone_number" type="tel"
@@ -150,7 +137,6 @@
                         </form>
                     </div>
 
-                    <!-- Password Update Form -->
                     <div class="border-t border-frappe-surface1 pt-8">
                         <h3 class="text-lg font-medium text-frappe-blue mb-4">{{ __('messages.update_password') }}</h3>
 
@@ -158,7 +144,6 @@
                             @csrf
 
                             <div class="space-y-4">
-                                <!-- Current Password -->
                                 <div>
                                     <x-input-label for="current_password" :value="__('messages.current_password')"
                                         class="text-frappe-subtext1" />
@@ -167,7 +152,6 @@
                                     <x-input-error :messages="$errors->get('current_password')" class="mt-1 text-frappe-red" />
                                 </div>
 
-                                <!-- New Password -->
                                 <div>
                                     <x-input-label for="password" :value="__('messages.new_password')" class="text-frappe-subtext1" />
                                     <x-text-input id="password" name="password" type="password"
@@ -175,7 +159,6 @@
                                     <x-input-error :messages="$errors->get('password')" class="mt-1 text-frappe-red" />
                                 </div>
 
-                                <!-- Confirm Password -->
                                 <div>
                                     <x-input-label for="password_confirmation" :value="__('messages.confirm_new_password')"
                                         class="text-frappe-subtext1" />
@@ -197,7 +180,6 @@
         </div>
     </div>
 
-    <!-- Remove Avatar Confirmation Modal -->
     <div id="removeAvatarModal"
         class="fixed inset-0 items-center justify-center bg-black bg-opacity-60 backdrop-blur-sm z-50 hidden">
         <div class="frosted-modal p-6 rounded-2xl shadow-2xl w-full max-w-md mx-4">

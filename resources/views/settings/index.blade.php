@@ -2,7 +2,7 @@
     <x-slot name="header">
         <x-breadcrumb :items="[
             ['text' => __('messages.businesses'), 'url' => route('businesses.index')],
-            ['text' => __('messages.settings') . ' - ' . $business->name, 'url' => null]
+            ['text' => __('messages.settings') . ' - ' . $business->name, 'url' => null],
         ]" />
     </x-slot>
 
@@ -26,7 +26,6 @@
                 <input type="hidden" name="business_id" value="{{ $business->id }}">
 
                 <div class="p-6 space-y-6">
-                    <!-- Booking Restrictions -->
                     <div class="border-b border-frappe-surface1/30 pb-6">
                         <h3 class="text-lg font-semibold text-frappe-lavender mb-4">
                             <x-heroicon-o-calendar class="w-5 h-5 inline mr-2" />
@@ -76,7 +75,6 @@
                         </div>
                     </div>
 
-                    <!-- General Settings -->
                     <div class="border-b border-frappe-surface1/30 pb-6">
                         <h3 class="text-lg font-semibold text-frappe-lavender mb-4">
                             <x-heroicon-o-cog-8-tooth class="w-5 h-5 inline mr-2" />
@@ -115,7 +113,6 @@
                         </div>
                     </div>
 
-                    <!-- Business Status -->
                     <div class="border-b border-frappe-surface1/30 pb-6">
                         <h3 class="text-lg font-semibold text-frappe-lavender mb-4">
                             <x-heroicon-o-shield-check class="w-5 h-5 inline mr-2" />
@@ -175,32 +172,30 @@
         </div>
     </div>
 
-    <!-- Reset Confirmation Modal -->
-    <div id="resetModal"
-        class="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm z-50 hidden">
+    <div id="resetModal" class="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm z-50 hidden">
         <div class="flex items-center justify-center h-full">
             <div class="frosted-modal p-6 rounded-2xl shadow-2xl w-full max-w-md mx-4">
-            <h3 class="text-xl font-semibold mb-4 text-frappe-red">{{ __('messages.reset_settings') }}</h3>
-            <p class="mb-6 text-frappe-text opacity-90">
-                {{ __('messages.reset_settings_confirmation') }}
-            </p>
+                <h3 class="text-xl font-semibold mb-4 text-frappe-red">{{ __('messages.reset_settings') }}</h3>
+                <p class="mb-6 text-frappe-text opacity-90">
+                    {{ __('messages.reset_settings_confirmation') }}
+                </p>
 
-            <form method="POST" action="{{ route('settings.reset') }}">
-                @csrf
-                <input type="hidden" name="business_id" value="{{ $business->id }}">
+                <form method="POST" action="{{ route('settings.reset') }}">
+                    @csrf
+                    <input type="hidden" name="business_id" value="{{ $business->id }}">
 
-                <div class="flex justify-end gap-3">
-                    <button type="button" onclick="hideResetModal()"
-                        class="px-6 py-2 bg-gradient-to-r from-gray-500/20 to-gray-600/20 backdrop-blur-sm border border-gray-400/30 text-gray-300 rounded-lg hover:from-gray-500/30 hover:to-gray-600/30 transition-all">
-                        {{ __('messages.cancel') }}
-                    </button>
-                    <button type="submit"
-                        class="px-6 py-2 bg-gradient-to-r from-red-500/30 to-pink-500/30 backdrop-blur-sm border border-red-400/40 text-red-300 rounded-lg hover:from-red-500/40 hover:to-pink-500/40 transition-all">
-                        {{ __('messages.reset_settings') }}
-                    </button>
-                </div>
-            </form>
-        </div>
+                    <div class="flex justify-end gap-3">
+                        <button type="button" onclick="hideResetModal()"
+                            class="px-6 py-2 bg-gradient-to-r from-gray-500/20 to-gray-600/20 backdrop-blur-sm border border-gray-400/30 text-gray-300 rounded-lg hover:from-gray-500/30 hover:to-gray-600/30 transition-all">
+                            {{ __('messages.cancel') }}
+                        </button>
+                        <button type="submit"
+                            class="px-6 py-2 bg-gradient-to-r from-red-500/30 to-pink-500/30 backdrop-blur-sm border border-red-400/40 text-red-300 rounded-lg hover:from-red-500/40 hover:to-pink-500/40 transition-all">
+                            {{ __('messages.reset_settings') }}
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 

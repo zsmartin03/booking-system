@@ -65,13 +65,11 @@ class CategoryController extends Controller
             'color' => 'required|string|regex:/^#[0-9A-Fa-f]{6}$/',
         ]);
 
-        // Create the category
         $category = Category::create([
             'slug' => $validated['slug'],
             'color' => $validated['color'],
         ]);
 
-        // Update translation files
         $this->updateTranslationFiles($validated['slug'], [
             'en' => [
                 'name' => $validated['name_en'],
@@ -115,7 +113,6 @@ class CategoryController extends Controller
 
         $category = Category::findOrFail($id);
 
-        // Get current translations
         $translations = [
             'en' => [
                 'name' => __("categories.{$category->slug}.name", [], 'en'),
@@ -157,7 +154,6 @@ class CategoryController extends Controller
             'color' => $validated['color'],
         ]);
 
-        // Update translation files
         $this->updateTranslationFiles($validated['slug'], [
             'en' => [
                 'name' => $validated['name_en'],

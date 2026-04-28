@@ -7,7 +7,6 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <!-- Success Message -->
             @if (session('success'))
                 <div class="mb-6 bg-frappe-green/20 border border-frappe-green text-frappe-green px-4 py-3 rounded-lg">
                     {{ session('success') }}
@@ -76,7 +75,6 @@
                             @endforeach
                         </div>
 
-                        <!-- Pagination -->
                         <div class="mt-6">
                             {{ $notifications->links() }}
                         </div>

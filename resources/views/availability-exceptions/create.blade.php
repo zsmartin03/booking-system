@@ -2,9 +2,15 @@
     <x-slot name="header">
         <x-breadcrumb :items="[
             ['text' => __('messages.businesses'), 'url' => route('businesses.index')],
-            ['text' => __('messages.employees') . ' - ' . $employee->business->name, 'url' => route('employees.index', ['business_id' => $employee->business->id])],
-            ['text' => __('messages.availability_exceptions') . ' - ' . $employee->name, 'url' => route('availability-exceptions.index', ['employee_id' => $employee->id])],
-            ['text' => __('messages.add_availability_exception'), 'url' => null]
+            [
+                'text' => __('messages.employees') . ' - ' . $employee->business->name,
+                'url' => route('employees.index', ['business_id' => $employee->business->id]),
+            ],
+            [
+                'text' => __('messages.availability_exceptions') . ' - ' . $employee->name,
+                'url' => route('availability-exceptions.index', ['employee_id' => $employee->id]),
+            ],
+            ['text' => __('messages.add_availability_exception'), 'url' => null],
         ]" />
     </x-slot>
 
@@ -89,13 +95,11 @@
     </div>
 
     <script>
-        // Auto-fill end time when start time is selected
         document.getElementById('start_time').addEventListener('change', function() {
             const startTime = this.value;
             const endTimeInput = document.getElementById('end_time');
 
             if (startTime && !endTimeInput.value) {
-                // Add 1 hour to start time as default
                 const [hours, minutes] = startTime.split(':');
                 const endHours = (parseInt(hours) + 1) % 24;
                 endTimeInput.value = `${endHours.toString().padStart(2, '0')}:${minutes}`;

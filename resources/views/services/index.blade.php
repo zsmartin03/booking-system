@@ -2,7 +2,7 @@
     <x-slot name="header">
         <x-breadcrumb :items="[
             ['text' => __('messages.businesses'), 'url' => route('businesses.index')],
-            ['text' => __('messages.services') . ' - ' . $business->name, 'url' => null]
+            ['text' => __('messages.services') . ' - ' . $business->name, 'url' => null],
         ]" />
     </x-slot>
 
@@ -21,7 +21,6 @@
         @endif
 
         <div class="frosted-card rounded-xl shadow-lg overflow-hidden">
-            <!-- Desktop Table View -->
             <div class="hidden lg:block">
                 <div class="overflow-x-auto">
                     <table class="w-full min-w-full">
@@ -81,7 +80,6 @@
                 </div>
             </div>
 
-            <!-- Mobile/Tablet Card View -->
             <div class="lg:hidden">
                 @forelse($services as $service)
                     <div class="p-4 border-b border-frappe-surface1/20 last:border-b-0">

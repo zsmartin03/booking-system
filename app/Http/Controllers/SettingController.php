@@ -49,15 +49,14 @@ class SettingController extends Controller
 
         $validated = $request->validate([
             'business_id' => 'required|exists:businesses,id',
-            'booking_advance_hours' => 'required|integer|min:0|max:168', // Max 1 week
-            'booking_advance_days' => 'required|integer|min:1|max:365',  // Max 1 year
+            'booking_advance_hours' => 'required|integer|min:0|max:168',
+            'booking_advance_days' => 'required|integer|min:1|max:365',
             'currency' => 'required|string|in:' . implode(',', array_keys(Service::getAvailableCurrencies())),
             'allow_cancellation_hours' => 'required|integer|min:0|max:168',
             'business_timezone' => 'required|string|max:50',
             'booking_buffer_minutes' => 'required|integer|min:0|max:120',
         ]);
 
-        // Handle boolean fields separately (checkboxes)
         $booleanFields = [
             'holiday_mode',
             'maintenance_mode',

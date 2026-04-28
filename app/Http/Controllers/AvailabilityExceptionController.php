@@ -54,7 +54,6 @@ class AvailabilityExceptionController extends Controller
 
         $validated['employee_id'] = $employee->id;
 
-        // Check for overlapping exceptions
         $overlap = AvailabilityException::where('employee_id', $employee->id)
             ->where('date', $validated['date'])
             ->where(function ($q) use ($validated) {
@@ -105,7 +104,6 @@ class AvailabilityExceptionController extends Controller
             'note' => 'nullable|string|max:500',
         ]);
 
-        // Check for overlapping exceptions (excluding current exception)
         $overlap = AvailabilityException::where('employee_id', $employee->id)
             ->where('date', $validated['date'])
             ->where('id', '!=', $exception->id)

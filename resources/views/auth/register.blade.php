@@ -3,7 +3,6 @@
         <form method="POST" action="{{ route('register') }}">
             @csrf
 
-            <!-- Name -->
             <div>
                 <x-input-label for="name" :value="__('messages.name')" class="text-frappe-text" />
                 <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')"
@@ -11,7 +10,6 @@
                 <x-input-error :messages="$errors->get('name')" class="mt-2 text-frappe-red text-sm" />
             </div>
 
-            <!-- Email Address -->
             <div class="mt-4">
                 <x-input-label for="email" :value="__('messages.email')" class="text-frappe-text" />
                 <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')"
@@ -19,7 +17,6 @@
                 <x-input-error :messages="$errors->get('email')" class="mt-2 text-frappe-red text-sm" />
             </div>
 
-            <!-- Role -->
             <div class="mt-4">
                 <x-input-label for="role" :value="__('messages.i_want_to')" class="text-frappe-text" />
                 <div class="mt-1 grid grid-cols-2 gap-2">
@@ -39,7 +36,6 @@
                 <x-input-error :messages="$errors->get('role')" class="mt-2 text-frappe-red text-sm" />
             </div>
 
-            <!-- Password -->
             <div class="mt-4">
                 <x-input-label for="password" :value="__('messages.password')" class="text-frappe-text" />
                 <x-text-input id="password" class="block mt-1 w-full" type="password" name="password" required
@@ -47,7 +43,6 @@
                 <x-input-error :messages="$errors->get('password')" class="mt-2 text-frappe-red text-sm" />
             </div>
 
-            <!-- Confirm Password -->
             <div class="mt-4">
                 <x-input-label for="password_confirmation" :value="__('messages.confirm_password')" class="text-frappe-text" />
                 <x-text-input id="password_confirmation" class="block mt-1 w-full" type="password"
@@ -55,7 +50,6 @@
                 <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2 text-frappe-red text-sm" />
             </div>
 
-            <!-- Terms and Conditions -->
             <div class="mt-4">
                 <label class="flex items-center space-x-2">
                     <input type="checkbox" name="terms" value="1"
@@ -63,7 +57,8 @@
                         {{ old('terms') ? 'checked' : '' }} required>
                     <span class="text-sm text-frappe-text">
                         {{ __('messages.agree_to_terms') }}
-                        <a href="#" class="text-frappe-blue hover:text-frappe-sapphire">{{ __('messages.terms_conditions') }}</a>
+                        <a href="#"
+                            class="text-frappe-blue hover:text-frappe-sapphire">{{ __('messages.terms_conditions') }}</a>
                     </span>
                 </label>
                 <x-input-error :messages="$errors->get('terms')" class="mt-2 text-frappe-red text-sm" />

@@ -83,7 +83,7 @@
             const helpText = document.getElementById('duration-help');
 
             if (value && value < 5) {
-                // Show error for values less than 5 minutes
+                // error for values less than 5 minutes
                 this.setCustomValidity('{{ __('messages.duration_minimum_error') }}');
                 if (helpText) {
                     helpText.textContent = '{{ __('messages.duration_minimum_error') }}';
@@ -91,7 +91,7 @@
                     helpText.classList.remove('text-frappe-subtext1');
                 }
             } else if (value && value >= 5 && value % 5 !== 0) {
-                // Show error for invalid values (not divisible by 5)
+                // error for invalid values (not divisible by 5)
                 const suggestion = Math.max(5, Math.round(value / 5) * 5);
                 this.setCustomValidity('{{ __('messages.duration_divisible_error', ['suggestion' => 'XX']) }}'
                     .replace('XX', suggestion));
@@ -102,7 +102,7 @@
                     helpText.classList.remove('text-frappe-subtext1');
                 }
             } else {
-                // Clear error for valid values or empty input
+                // clear error for valid values or empty input
                 this.setCustomValidity('');
                 if (helpText) {
                     helpText.textContent = '{{ __('messages.duration_help_text') }}';

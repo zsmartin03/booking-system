@@ -15,15 +15,12 @@ class AvailabilityExceptionSeeder extends Seeder
         $today = Carbon::now();
 
         foreach ($employees as $employee) {
-            // Only create exceptions for half of the employees to reduce volume
             if (rand(1, 2) === 1) {
-                continue; // Skip this employee
+                continue;
             }
 
-            // Create some availability exceptions for each employee
             $exceptions = [];
 
-            // Tomorrow - Employee taking a long lunch
             $exceptions[] = [
                 'employee_id' => $employee->id,
                 'date' => $today->copy()->addDay()->addWeek()->format('Y-m-d'),
@@ -33,7 +30,6 @@ class AvailabilityExceptionSeeder extends Seeder
                 'note' => 'Extended lunch break - doctor appointment',
             ];
 
-            // Day after tomorrow - Employee working extended hours
             $exceptions[] = [
                 'employee_id' => $employee->id,
                 'date' => $today->copy()->addDays(2)->addWeek()->format('Y-m-d'),
@@ -43,7 +39,6 @@ class AvailabilityExceptionSeeder extends Seeder
                 'note' => 'Early morning availability for special clients',
             ];
 
-            // Next week Monday - Employee unavailable in the morning
             $nextMonday = $today->copy()->addWeek()->next(Carbon::MONDAY);
             $exceptions[] = [
                 'employee_id' => $employee->id,
@@ -54,7 +49,6 @@ class AvailabilityExceptionSeeder extends Seeder
                 'note' => 'Training session - not available for appointments',
             ];
 
-            // Next week Wednesday - Employee taking afternoon off
             $nextWednesday = $today->copy()->addWeek()->next(Carbon::WEDNESDAY);
             $exceptions[] = [
                 'employee_id' => $employee->id,
@@ -65,7 +59,6 @@ class AvailabilityExceptionSeeder extends Seeder
                 'note' => 'Personal appointment - afternoon unavailable',
             ];
 
-            // Next week Friday - Employee working late
             $nextFriday = $today->copy()->addWeek()->next(Carbon::FRIDAY);
             $exceptions[] = [
                 'employee_id' => $employee->id,
@@ -76,8 +69,7 @@ class AvailabilityExceptionSeeder extends Seeder
                 'note' => 'Extended evening hours for weekend preparation',
             ];
 
-            // Weekend availability for some employees (randomly)
-            if (rand(1, 3) === 1) { // 1/3 chance
+            if (rand(1, 3) === 1) {
                 $nextSaturday = $today->copy()->addWeek()->next(Carbon::SATURDAY);
                 $exceptions[] = [
                     'employee_id' => $employee->id,
@@ -89,8 +81,7 @@ class AvailabilityExceptionSeeder extends Seeder
                 ];
             }
 
-            // Holiday/Vacation - full day unavailable (some employees)
-            if (rand(1, 4) === 1) { // 1/4 chance
+            if (rand(1, 4) === 1) {
                 $vacationDay = $today->copy()->addWeek()->addDays(rand(7, 21));
                 $exceptions[] = [
                     'employee_id' => $employee->id,
@@ -102,9 +93,8 @@ class AvailabilityExceptionSeeder extends Seeder
                 ];
             }
 
-            // Lunch break exceptions (some days)
             for ($i = 1; $i <= 5; $i++) {
-                if (rand(1, 3) === 1) { // 1/3 chance each day
+                if (rand(1, 3) === 1) {
                     $date = $today->copy()->addWeek()->addDays($i);
                     $exceptions[] = [
                         'employee_id' => $employee->id,
@@ -117,7 +107,6 @@ class AvailabilityExceptionSeeder extends Seeder
                 }
             }
 
-            // Create only a subset of exceptions for each employee (3-5 exceptions)
             $selectedExceptions = array_slice($exceptions, 0, rand(3, 5));
 
             foreach ($selectedExceptions as $exceptionData) {
@@ -125,10 +114,8 @@ class AvailabilityExceptionSeeder extends Seeder
             }
         }
 
-        // Add some specific exceptions for demonstration purposes
         $demoEmployee = Employee::first();
         if ($demoEmployee) {
-            // Today - short unavailable period
             AvailabilityException::create([
                 'employee_id' => $demoEmployee->id,
                 'date' => $today->format('Y-m-d'),
@@ -138,7 +125,6 @@ class AvailabilityExceptionSeeder extends Seeder
                 'note' => 'Team meeting - not available for appointments',
             ]);
 
-            // Tomorrow - extended availability
             AvailabilityException::create([
                 'employee_id' => $demoEmployee->id,
                 'date' => $today->copy()->addDay()->format('Y-m-d'),

@@ -60,7 +60,7 @@ class EmployeeController extends Controller
             'role' => 'employee',
         ]);
 
-        event(new Registered($employeeUser)); // This sends the verification email
+        event(new Registered($employeeUser)); // verification email
 
         $validated['user_id'] = $employeeUser->id;
 

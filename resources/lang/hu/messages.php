@@ -646,4 +646,9 @@ return [
     'no_services_booked' => 'Még nem foglaltak szolgáltatást.',
     'bookings' => 'foglalás',
     'per_service' => 'szolgáltatásonként',
+
+    // Business Create Form - Map and Location
+    'location_map' => 'Helyszín térkép',
+    'address_or_click_map' => 'Írja be a címet vagy kattintson a térképre a helyszín beállításához',
+    'click_map_to_set_location' => 'Kattintson a térképre a pontos helyszín beállításához, vagy írja be a fenti címet',
 ];

@@ -8,11 +8,9 @@
 
     <title>{{ config('app.name', 'BookingSystem') }}</title>
 
-    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
-    <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <style>
@@ -212,17 +210,16 @@
 
 <body class="min-h-screen bg-frappe-crust font-sans text-frappe-text antialiased wave-container">
     <div class="flex flex-col min-h-screen content-layer">
-        <!-- Header -->
+
         @include('layouts.navigation')
 
-        <!-- Hero Welcome Card -->
         <section class="py-12 hero-section">
             <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-                <!-- Main Hero Card -->
+
                 <div class="frosted-card overflow-hidden shadow-2xl sm:rounded-2xl border border-frappe-surface2 mb-8">
                     <div class="p-8 lg:p-12">
                         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-                            <!-- Left Content -->
+
                             <div>
                                 <h1 class="text-4xl lg:text-5xl font-bold text-frappe-lavender mb-6 leading-tight">
                                     {{ __('messages.welcome_to_booking_system') }}
@@ -233,7 +230,6 @@
                                 </p>
                             </div>
 
-                            <!-- Right Content - Action Buttons -->
                             <div class="flex flex-col items-center lg:items-end space-y-4">
                                 <div class="w-full max-w-sm">
                                     <a href="{{ route('register') }}"
@@ -255,14 +251,14 @@
                     </div>
                 </div>
 
-                <!-- Features Card -->
                 <div class="frosted-card overflow-hidden shadow-xl sm:rounded-2xl border border-frappe-surface2 mb-8">
                     <div class="p-8 lg:p-10">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            <!-- For Users -->
+
                             <div class="text-center md:text-left">
                                 <div class="flex items-center justify-center md:justify-start gap-3 mb-4">
-                                    <div class="w-12 h-12 bg-gradient-to-r from-blue-500/20 to-indigo-500/20 rounded-full flex items-center justify-center">
+                                    <div
+                                        class="w-12 h-12 bg-gradient-to-r from-blue-500/20 to-indigo-500/20 rounded-full flex items-center justify-center">
                                         <x-heroicon-o-user class="w-6 h-6 text-frappe-blue" />
                                     </div>
                                     <h3 class="text-xl font-semibold text-frappe-blue">
@@ -271,24 +267,27 @@
                                 </div>
                                 <ul class="space-y-3 text-frappe-subtext0">
                                     <li class="flex items-start gap-3">
-                                        <x-heroicon-o-check-circle class="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
+                                        <x-heroicon-o-check-circle
+                                            class="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
                                         <span>{{ __('messages.user_feature_1') }}</span>
                                     </li>
                                     <li class="flex items-start gap-3">
-                                        <x-heroicon-o-check-circle class="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
+                                        <x-heroicon-o-check-circle
+                                            class="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
                                         <span>{{ __('messages.user_feature_2') }}</span>
                                     </li>
                                     <li class="flex items-start gap-3">
-                                        <x-heroicon-o-check-circle class="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
+                                        <x-heroicon-o-check-circle
+                                            class="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
                                         <span>{{ __('messages.user_feature_3') }}</span>
                                     </li>
                                 </ul>
                             </div>
 
-                            <!-- For Business Owners -->
                             <div class="text-center md:text-left">
                                 <div class="flex items-center justify-center md:justify-start gap-3 mb-4">
-                                    <div class="w-12 h-12 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-full flex items-center justify-center">
+                                    <div
+                                        class="w-12 h-12 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-full flex items-center justify-center">
                                         <x-heroicon-o-building-storefront class="w-6 h-6 text-frappe-mauve" />
                                     </div>
                                     <h3 class="text-xl font-semibold text-frappe-mauve">
@@ -297,15 +296,18 @@
                                 </div>
                                 <ul class="space-y-3 text-frappe-subtext0">
                                     <li class="flex items-start gap-3">
-                                        <x-heroicon-o-check-circle class="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
+                                        <x-heroicon-o-check-circle
+                                            class="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
                                         <span>{{ __('messages.business_feature_1') }}</span>
                                     </li>
                                     <li class="flex items-start gap-3">
-                                        <x-heroicon-o-check-circle class="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
+                                        <x-heroicon-o-check-circle
+                                            class="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
                                         <span>{{ __('messages.business_feature_2') }}</span>
                                     </li>
                                     <li class="flex items-start gap-3">
-                                        <x-heroicon-o-check-circle class="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
+                                        <x-heroicon-o-check-circle
+                                            class="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
                                         <span>{{ __('messages.business_feature_3') }}</span>
                                     </li>
                                 </ul>
@@ -329,8 +331,8 @@
                     <x-business-card :business="$business" />
 
                     @if ($loop->last)
-                        </div>
-                    @endif
+            </div>
+            @endif
         @empty
             <div class="frosted-card rounded-xl shadow-lg p-8 text-center">
                 <div class="text-frappe-subtext1 text-lg">{{ __('messages.no_businesses_found') }}</div>

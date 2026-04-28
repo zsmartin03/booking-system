@@ -10,7 +10,6 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="frosted-card overflow-hidden shadow-lg sm:rounded-xl">
                 <div class="p-4 sm:p-6">
-                    <!-- Category Info -->
                     <div class="mb-6">
                         <div class="flex items-center gap-4 mb-4">
                             <div class="w-8 h-8 rounded-full border border-frappe-surface2/50"
@@ -22,7 +21,6 @@
                             <p class="text-frappe-subtext1 text-base mb-4">{{ $category->translated_description }}</p>
                         @endif
 
-                        <!-- Badge Preview -->
                         <div class="mb-6">
                             <h4 class="text-sm font-medium text-frappe-text mb-3">{{ __('messages.preview') }}</h4>
                             <div class="p-4 rounded-lg bg-frappe-surface0/20">
@@ -56,7 +54,6 @@
                         </div>
                     </div>
 
-                    <!-- Action buttons -->
                     <div class="flex flex-wrap gap-3 mb-6">
                         <a href="{{ route('categories.edit', $category->id) }}"
                             class="inline-flex items-center gap-2 bg-gradient-to-r from-yellow-500/20 to-orange-500/20 backdrop-blur-sm border border-yellow-400/30 text-yellow-300 px-4 py-2 rounded-lg text-sm hover:from-yellow-500/30 hover:to-orange-500/30 transition-all">
@@ -79,7 +76,6 @@
                 </div>
             </div>
 
-            <!-- Businesses in this category -->
             @if ($category->businesses->count() > 0)
                 <div class="frosted-card overflow-hidden shadow-lg sm:rounded-xl mt-6">
                     <div class="p-4 sm:p-6">
@@ -222,7 +218,6 @@
             };
         }
 
-        // Initialize the preview with the category color
         document.addEventListener('DOMContentLoaded', function() {
             const categoryColor = '{{ $category->color }}';
             const preview = document.getElementById('category-preview');

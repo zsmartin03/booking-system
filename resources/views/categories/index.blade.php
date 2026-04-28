@@ -15,12 +15,10 @@
                 </a>
             </div>
 
-            <!-- Search Form -->
             <div class="frosted-card overflow-hidden shadow-lg sm:rounded-xl border border-frappe-surface2 mb-6">
                 <div class="p-6">
                     <form method="GET" action="{{ route('categories.index') }}" class="space-y-4">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <!-- Search by name or description -->
                             <div>
                                 <label for="search" class="block text-sm font-medium text-frappe-text mb-2">
                                     {{ __('messages.search_categories') }}
@@ -31,7 +29,6 @@
                             </div>
                         </div>
 
-                        <!-- Action buttons -->
                         <div class="flex flex-wrap gap-3">
                             <button type="submit"
                                 class="inline-flex items-center gap-2 bg-gradient-to-r from-blue-500/20 to-indigo-500/20 backdrop-blur-sm border border-blue-400/30 text-blue-300 px-4 py-2 rounded-lg text-sm hover:from-blue-500/30 hover:to-indigo-500/30 transition-all">
@@ -59,7 +56,6 @@
                                 <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                                     <div class="flex-1">
                                         <div class="flex items-start gap-4">
-                                            <!-- Category Color -->
                                             <div class="flex-shrink-0">
                                                 <div class="w-6 h-6 rounded-full border border-frappe-surface2/50"
                                                     style="background-color: {{ $category->color }}"></div>
@@ -91,7 +87,6 @@
                                         </div>
                                     </div>
 
-                                    <!-- Action buttons -->
                                     <div class="flex flex-wrap gap-2">
                                         <a href="{{ route('categories.show', $category->id) }}"
                                             class="inline-flex items-center gap-2 bg-gradient-to-r from-blue-500/20 to-indigo-500/20 backdrop-blur-sm border border-blue-400/30 text-blue-300 px-3 py-2 rounded-lg text-sm hover:from-blue-500/30 hover:to-indigo-500/30 transition-all">
@@ -136,7 +131,6 @@
         </div>
     </div>
 
-    <!-- Delete Modal -->
     <div id="deleteModal"
         class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 backdrop-blur-sm z-50 hidden">
         <div class="frosted-modal p-6 rounded-2xl shadow-2xl w-full max-w-md mx-4">

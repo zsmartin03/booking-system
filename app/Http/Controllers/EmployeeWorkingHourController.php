@@ -153,7 +153,7 @@ class EmployeeWorkingHourController extends Controller
             $start = $input[$day]['start_time'] ?? null;
             $end = $input[$day]['end_time'] ?? null;
             $bwh = $businessWorkingHours[$day] ?? null;
-            // Accept both H:i and H:i:s
+            // accept both H:i and H:i:s
             $timePattern = '/^\d{2}:\d{2}(:\d{2})?$/';
             if (!$start || !preg_match($timePattern, $start)) {
                 $errors[] = __('validation.date_format', ['attribute' => "working hours.$day.start time", 'format' => 'H:i']);
@@ -161,7 +161,7 @@ class EmployeeWorkingHourController extends Controller
             if (!$end || !preg_match($timePattern, $end)) {
                 $errors[] = __('validation.date_format', ['attribute' => "working hours.$day.end time", 'format' => 'H:i']);
             }
-            // Normalize to H:i:s for DB
+            // normalize to H:i:s for db
             if ($start && strlen($start) === 5) $start .= ':00';
             if ($end && strlen($end) === 5) $end .= ':00';
             if ($start && $end && $start >= $end) {

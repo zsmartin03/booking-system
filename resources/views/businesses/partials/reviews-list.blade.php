@@ -1,6 +1,5 @@
 @if (isset($otherReviews) && $otherReviews->count() > 0)
     <div class="space-y-3">
-        <!-- Other Reviews -->
         @foreach ($otherReviews as $review)
             <div class="bg-frappe-surface0/30 rounded-lg p-4 border border-frappe-surface2/30"
                 data-review-id="{{ $review->id }}">
@@ -44,7 +43,6 @@
 
                 <p class="text-frappe-text mb-3">{{ $review->comment }}</p>
 
-                <!-- Vote buttons -->
                 @auth
                     @if (auth()->id() !== $review->user_id && !auth()->user()->isAffiliatedWithBusiness($review->business_id))
                         <div class="flex items-center gap-4 mb-3">
@@ -77,7 +75,6 @@
                     @endif
                 @endauth
 
-                <!-- Business Response -->
                 @if ($review->response)
                     <div
                         class="response-content-{{ $review->response->id }} bg-frappe-surface1/30 rounded-lg p-3 border-l-4 border-frappe-blue">
@@ -111,7 +108,6 @@
                         <p class="text-frappe-text text-sm">{{ $review->response->response }}</p>
                     </div>
                 @elseif (auth()->check() && auth()->id() === $business->user_id)
-                    <!-- Response Form for Business Owner -->
                     <div class="bg-frappe-surface1/30 rounded-lg p-3 border-l-4 border-frappe-blue">
                         <form onsubmit="submitResponse(event, {{ $review->id }})">
                             @csrf

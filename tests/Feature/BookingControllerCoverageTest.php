@@ -142,6 +142,79 @@ class BookingControllerCoverageTest extends TestCase
         $this->assertNotContains($date->format('Y-m-d') . 'T10:00', $times);
     }
 
+    public function test_available_slots_applies_available_exception_end_time_limits_by_next_booking_and_processes_available_exceptions_loop(): void
+    {
+        $user = User::factory()->create(['role' => 'client', 'email_verified_at' => now()]);
+
+        $business = Business::factory()->create();
+        $service = Service::factory()->create([
+            'business_id' => $business->id,
+            'duration' => 10,
+            'active' => true,
+        ]);
+        $employee = Employee::factory()->create([
+            'business_id' => $business->id,
+            'active' => true,
+            'name' => 'Emp 2',
+        ]);
+        $employee->services()->sync([$service->id]);
+
+        $weekStart = now()->startOfWeek();
+        $date = $weekStart->copy();
+
+        EmployeeWorkingHour::factory()->create([
+            'employee_id' => $employee->id,
+            'day_of_week' => strtolower($date->format('l')),
+            'start_time' => '10:00:00',
+            'end_time' => '11:00:00',
+        ]);
+
+        // Available exception that should shorten the effective end time.
+        AvailabilityException::factory()->create([
+            'employee_id' => $employee->id,
+            'date' => $date->toDateString(),
+            'start_time' => '10:00:00',
+            'end_time' => '10:30:00',
+            'type' => 'available',
+        ]);
+
+        // Second available exception with minutes rounding up to 60 in the "available exceptions" loop.
+        AvailabilityException::factory()->create([
+            'employee_id' => $employee->id,
+            'date' => $date->toDateString(),
+            'start_time' => '09:58:00',
+            'end_time' => '10:05:00',
+            'type' => 'available',
+        ]);
+
+        // Next booking after 10:00 should limit available_until to 10:20.
+        Booking::factory()->create([
+            'service_id' => $service->id,
+            'employee_id' => $employee->id,
+            'start_time' => $date->copy()->setTime(10, 20, 0),
+            'end_time' => $date->copy()->setTime(10, 40, 0),
+            'status' => 'confirmed',
+            'total_price' => 10,
+        ]);
+
+        $response = $this->actingAs($user)->getJson(route('booking-slots', [
+            'service_id' => $service->id,
+            'employee_id' => $employee->id,
+            'week_start' => $weekStart->toDateString(),
+        ]));
+
+        $response->assertOk();
+        $slots = $response->json();
+
+        $this->assertArrayHasKey($date->toDateString(), $slots);
+        $firstSlot = $slots[$date->toDateString()][0] ?? null;
+        $this->assertNotNull($firstSlot);
+
+        $this->assertSame($date->format('Y-m-d') . 'T10:00', $firstSlot['time']);
+        $this->assertNotEmpty($firstSlot['all_employees']);
+        $this->assertSame($date->format('Y-m-d') . 'T10:20', $firstSlot['all_employees'][0]['available_until']);
+    }
+
     public function test_redirect_404_when_no_business_has_active_services_and_redirects_when_one_exists(): void
     {
         $user = User::factory()->create(['role' => 'client', 'email_verified_at' => now()]);

@@ -1,12 +1,10 @@
 <x-guest-layout>
     <div class="frosted-card rounded-xl shadow-lg p-6 max-w-md mx-auto">
-        <!-- Session Status -->
         <x-auth-session-status class="mb-4 text-frappe-green" :status="session('status')" />
 
         <form method="POST" action="{{ route('login') }}">
             @csrf
 
-            <!-- Email Address -->
             <div>
                 <x-input-label for="email" :value="__('messages.email')" class="text-frappe-text" />
                 <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')"
@@ -14,7 +12,6 @@
                 <x-input-error :messages="$errors->get('email')" class="mt-2 text-frappe-red text-sm" />
             </div>
 
-            <!-- Password -->
             <div class="mt-4">
                 <x-input-label for="password" :value="__('messages.password')" class="text-frappe-text" />
                 <x-text-input id="password" class="block mt-1 w-full" type="password" name="password" required
@@ -22,7 +19,6 @@
                 <x-input-error :messages="$errors->get('password')" class="mt-2 text-frappe-red text-sm" />
             </div>
 
-            <!-- Remember Me -->
             <div class="block mt-4">
                 <label for="remember_me" class="inline-flex items-center">
                     <input id="remember_me" type="checkbox"

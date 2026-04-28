@@ -18,11 +18,9 @@ class ReviewSeeder extends Seeder
     {
         $faker = Faker::create();
 
-        // Get all businesses and users
         $businesses = Business::all();
         $users = User::where('role', 'client')->get();
 
-        // If we don't have enough client users, create more
         if ($users->count() < 15) {
             for ($i = $users->count(); $i < 15; $i++) {
                 $users->push(User::create([
@@ -36,7 +34,6 @@ class ReviewSeeder extends Seeder
             $users = User::where('role', 'client')->get();
         }
 
-        // Sample review comments by rating
         $reviewComments = [
             5 => [
                 "Absolutely fantastic service! Exceeded all my expectations. The staff was professional and friendly.",
@@ -81,22 +78,18 @@ class ReviewSeeder extends Seeder
         ];
 
         foreach ($businesses as $business) {
-            // Create 8-15 reviews per business
             $reviewCount = rand(8, 15);
             $usedUsers = [];
 
-            // Get users who haven't already reviewed this business
             $availableUsers = $users->filter(function ($user) use ($business) {
                 return !Review::where('business_id', $business->id)
                     ->where('user_id', $user->id)
                     ->exists();
             });
 
-            // Limit review count to available users
             $reviewCount = min($reviewCount, $availableUsers->count());
 
             for ($i = 0; $i < $reviewCount; $i++) {
-                // Get a random user that hasn't reviewed this business yet
                 do {
                     $user = $availableUsers->random();
                     $availableUsers = $availableUsers->reject(function ($u) use ($user) {
@@ -105,15 +98,13 @@ class ReviewSeeder extends Seeder
                 } while (in_array($user->id, $usedUsers) && $availableUsers->count() > 0);
 
                 if (in_array($user->id, $usedUsers)) {
-                    break; // No more unique users available
+                    break;
                 }
 
                 $usedUsers[] = $user->id;
 
-                // Generate a rating with bias towards higher ratings (more realistic)
                 $rating = $this->generateRealisticRating();
 
-                // Create some bookings for verified reviews (about 60% will have bookings)
                 $hasBooking = rand(1, 100) <= 60;
                 if ($hasBooking && $business->services->count() > 0) {
                     $service = $business->services->random();
@@ -129,7 +120,6 @@ class ReviewSeeder extends Seeder
                     ]);
                 }
 
-                // Create the review
                 $review = Review::create([
                     'business_id' => $business->id,
                     'user_id' => $user->id,
@@ -139,7 +129,6 @@ class ReviewSeeder extends Seeder
                     'created_at' => $faker->dateTimeBetween('-2 months', 'now'),
                 ]);
 
-                // Add some votes to reviews (about 40% of reviews get votes)
                 if (rand(1, 100) <= 40) {
                     $voteCount = rand(1, 5);
                     $votedUsers = [];
@@ -154,12 +143,11 @@ class ReviewSeeder extends Seeder
                         ReviewVote::create([
                             'review_id' => $review->id,
                             'user_id' => $voter->id,
-                            'is_upvote' => rand(1, 100) <= 80, // 80% upvotes, 20% downvotes
+                            'is_upvote' => rand(1, 100) <= 80,
                         ]);
                     }
                 }
 
-                // Business owners respond to some reviews (about 30% get responses)
                 if (rand(1, 100) <= 30) {
                     $responses = [
                         5 => [
@@ -200,18 +188,14 @@ class ReviewSeeder extends Seeder
         }
     }
 
-    /**
-     * Generate a realistic rating distribution
-     * Most businesses have more 4-5 star reviews than low ratings
-     */
     private function generateRealisticRating(): int
     {
         $rand = rand(1, 100);
 
-        if ($rand <= 35) return 5;      // 35% - 5 stars
-        if ($rand <= 60) return 4;      // 25% - 4 stars
-        if ($rand <= 75) return 3;      // 15% - 3 stars
-        if ($rand <= 90) return 2;      // 15% - 2 stars
-        return 1;                       // 10% - 1 star
+        if ($rand <= 35) return 5;
+        if ($rand <= 60) return 4;
+        if ($rand <= 75) return 3;
+        if ($rand <= 90) return 2;
+        return 1;
     }
 }

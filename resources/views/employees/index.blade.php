@@ -21,7 +21,6 @@
         @endif
 
         <div class="frosted-card rounded-xl shadow-lg overflow-hidden">
-            <!-- Desktop Table View -->
             <div class="hidden lg:block">
                 <div class="overflow-x-auto">
                     <table class="w-full min-w-full">
@@ -92,7 +91,6 @@
                 </div>
             </div>
 
-            <!-- Mobile/Tablet Card View -->
             <div class="lg:hidden">
                 @forelse($employees as $employee)
                     <div class="p-4 border-b border-frappe-surface1/20 last:border-b-0">

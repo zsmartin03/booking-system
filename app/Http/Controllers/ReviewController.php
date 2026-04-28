@@ -100,7 +100,6 @@ class ReviewController extends Controller
             ]);
         }
 
-        // Reload the relationship to get the updated response
         $review->load('response.user');
 
         return response()->json([

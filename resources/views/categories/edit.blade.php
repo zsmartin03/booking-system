@@ -23,7 +23,6 @@
                             <x-input-error :messages="$errors->get('slug')" class="mt-2" />
                         </div>
 
-                        <!-- English Translations -->
                         <div class="mb-6">
                             <h4 class="text-lg font-medium text-frappe-text mb-3 flex items-center gap-2">
                                 <x-flag-language-en class="w-5 h-5" />
@@ -46,7 +45,6 @@
                             </div>
                         </div>
 
-                        <!-- Hungarian Translations -->
                         <div class="mb-6">
                             <h4 class="text-lg font-medium text-frappe-text mb-3 flex items-center gap-2">
                                 <x-flag-language-hu class="w-5 h-5" />

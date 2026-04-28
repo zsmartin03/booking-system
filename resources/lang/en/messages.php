@@ -638,4 +638,9 @@ return [
     'no_services_booked' => 'No services have been booked yet.',
     'bookings' => 'bookings',
     'per_service' => 'per service',
+
+    // Business Create Form - Map and Location
+    'location_map' => 'Location Map',
+    'address_or_click_map' => 'Type an address or click on the map to set location',
+    'click_map_to_set_location' => 'Click on the map to set the exact location or type an address above',
 ];

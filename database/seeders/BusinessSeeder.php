@@ -95,7 +95,7 @@ class BusinessSeeder extends Seeder
                     'latitude' => 33.7850,
                     'longitude' => -84.3857,
                 ],
-                'category_slug' => ['fitness-sports', 'health-medical'], // Multiple categories
+                'category_slug' => ['fitness-sports', 'health-medical'],
                 'currency' => 'USD',
                 'services' => [
                     ['name' => 'Personal Training Session', 'description' => 'One-on-one fitness training', 'price' => 80.00, 'duration' => 60],
@@ -116,7 +116,7 @@ class BusinessSeeder extends Seeder
                     'latitude' => 25.7804,
                     'longitude' => -80.1300,
                 ],
-                'category_slug' => ['beauty-wellness', 'health-medical'], // Multiple categories
+                'category_slug' => ['beauty-wellness', 'health-medical'],
                 'currency' => 'USD',
                 'services' => [
                     ['name' => 'Deep Tissue Massage', 'description' => 'Therapeutic deep tissue massage', 'price' => 110.00, 'duration' => 90],
@@ -138,7 +138,7 @@ class BusinessSeeder extends Seeder
                     'latitude' => 47.6131,
                     'longitude' => -122.3414,
                 ],
-                'category_slug' => ['professional-services', 'technology'], // Multiple categories
+                'category_slug' => ['professional-services', 'technology'],
                 'currency' => 'USD',
                 'services' => [
                     ['name' => 'Laptop Repair', 'description' => 'Hardware and software troubleshooting', 'price' => 75.00, 'duration' => 60],
@@ -180,7 +180,7 @@ class BusinessSeeder extends Seeder
                     'latitude' => 33.3950,
                     'longitude' => -112.0434,
                 ],
-                'category_slug' => ['health-medical', 'pet-services'], // Multiple categories
+                'category_slug' => ['health-medical', 'pet-services'],
                 'currency' => 'USD',
                 'services' => [
                     ['name' => 'Pet Wellness Exam', 'description' => 'Complete health checkup for pets', 'price' => 85.00, 'duration' => 45],
@@ -451,24 +451,22 @@ class BusinessSeeder extends Seeder
 
         foreach ($businessData as $index => $data) {
             $providerUser = $providerUsers[$index % $providerUsers->count()];
-            
+
             $business = Business::create([
                 'user_id' => $providerUser->id,
                 ...$data['business']
             ]);
 
-            // Attach categories
             $categories = Category::all();
             $categorySlugs = is_array($data['category_slug']) ? $data['category_slug'] : [$data['category_slug']];
             $attachedCategoryIds = [];
-            
+
             foreach ($categorySlugs as $categorySlug) {
                 $category = $categories->where('slug', $categorySlug)->first();
                 if ($category && !in_array($category->id, $attachedCategoryIds)) {
                     $business->categories()->attach($category->id);
                     $attachedCategoryIds[] = $category->id;
                 } elseif (!$category && empty($attachedCategoryIds)) {
-                    // Fallback to random category if specified category doesn't exist and no categories attached yet
                     $randomCategory = $categories->random();
                     if (!in_array($randomCategory->id, $attachedCategoryIds)) {
                         $business->categories()->attach($randomCategory->id);
@@ -477,13 +475,11 @@ class BusinessSeeder extends Seeder
                 }
             }
 
-            // Create business working hours
             $workDays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
-            
-            // Some businesses also work on weekends
+
             $categorySlugs = is_array($data['category_slug']) ? $data['category_slug'] : [$data['category_slug']];
             $hasWeekendCategories = array_intersect($categorySlugs, ['beauty-wellness', 'food-dining', 'fitness-sports', 'pet-services']);
-            
+
             if (!empty($hasWeekendCategories)) {
                 $workDays[] = 'saturday';
                 if (array_intersect($categorySlugs, ['food-dining', 'fitness-sports'])) {
@@ -494,8 +490,7 @@ class BusinessSeeder extends Seeder
             foreach ($workDays as $day) {
                 $startTime = '09:00:00';
                 $endTime = '18:00:00';
-                
-                // Adjust hours based on business type
+
                 if ($data['category_slug'] === 'automotive') {
                     $startTime = '08:00:00';
                 } elseif ($data['category_slug'] === 'fitness-sports') {
@@ -516,7 +511,6 @@ class BusinessSeeder extends Seeder
                 ]);
             }
 
-            // Create business settings
             $defaultSettings = [
                 'booking_advance_hours' => 2,
                 'booking_advance_days' => 30,
@@ -526,7 +520,6 @@ class BusinessSeeder extends Seeder
                 'booking_confirmation_required' => false,
             ];
 
-            // Adjust settings based on business type
             if ($data['category_slug'] === 'health-medical') {
                 $defaultSettings['booking_advance_hours'] = 24;
                 $defaultSettings['booking_confirmation_required'] = true;
@@ -543,7 +536,6 @@ class BusinessSeeder extends Seeder
                 ]);
             }
 
-            // Create services
             $services = [];
             foreach ($data['services'] as $serviceData) {
                 $services[] = Service::create([
@@ -553,7 +545,6 @@ class BusinessSeeder extends Seeder
                 ]);
             }
 
-            // Create employees and their working hours
             foreach ($data['employees'] as $empIndex => $employeeData) {
                 $employeeUser = User::create([
                     'name' => $employeeData['name'],
@@ -573,12 +564,11 @@ class BusinessSeeder extends Seeder
                     'active' => true,
                 ]);
 
-                // Create employee working hours (same as business hours)
                 foreach ($workDays as $day) {
                     $businessHour = BusinessWorkingHour::where('business_id', $business->id)
                         ->where('day_of_week', $day)
                         ->first();
-                    
+
                     if ($businessHour) {
                         EmployeeWorkingHour::create([
                             'employee_id' => $employee->id,
@@ -589,7 +579,6 @@ class BusinessSeeder extends Seeder
                     }
                 }
 
-                // Attach services to employee
                 foreach ($services as $service) {
                     $service->employees()->attach($employee->id);
                 }

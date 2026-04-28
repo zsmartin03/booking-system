@@ -1,8 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <x-breadcrumb :items="[
-            ['text' => __('messages.businesses'), 'url' => null]
-        ]" />
+        <x-breadcrumb :items="[['text' => __('messages.businesses'), 'url' => null]]" />
     </x-slot>
 
     <div class="py-6">
@@ -17,12 +15,10 @@
                 </a>
             </div>
 
-            <!-- Search and Filter Form -->
             <div class="frosted-card overflow-hidden shadow-lg sm:rounded-xl border border-frappe-surface2 mb-6">
                 <div class="p-6">
                     <form method="GET" action="{{ route('businesses.index') }}" class="space-y-4">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <!-- Search by name -->
                             <div>
                                 <label for="search" class="block text-sm font-medium text-frappe-text mb-2">
                                     {{ __('messages.search_by_name') }}
@@ -32,7 +28,6 @@
                                     class="w-full px-3 py-2 bg-frappe-mantle border border-frappe-surface2 rounded-lg text-frappe-text placeholder-frappe-subtext1 focus:outline-none focus:ring-2 focus:ring-frappe-blue focus:border-transparent">
                             </div>
 
-                            <!-- Filter by category -->
                             <div>
                                 <label for="category" class="block text-sm font-medium text-frappe-text mb-2">
                                     {{ __('messages.filter_by_category') }}
@@ -50,7 +45,6 @@
                             </div>
                         </div>
 
-                        <!-- Action buttons -->
                         <div class="flex flex-wrap gap-3">
                             <button type="submit"
                                 class="inline-flex items-center gap-2 bg-gradient-to-r from-blue-500/20 to-indigo-500/20 backdrop-blur-sm border border-blue-400/30 text-blue-300 px-4 py-2 rounded-lg text-sm hover:from-blue-500/30 hover:to-indigo-500/30 transition-all">
@@ -70,7 +64,6 @@
                 </div>
             </div>
 
-            <!-- Results info -->
             @if (request('search') || request('category'))
                 <div class="mb-6">
                     <div class="frosted-card overflow-hidden shadow-lg sm:rounded-xl border border-frappe-surface2">
@@ -107,15 +100,16 @@
                     <div class="divide-y divide-frappe-surface2/30">
                         @foreach ($businesses as $business)
                             <div class="p-4 sm:p-6 hover:bg-frappe-surface0/20 transition-all duration-200">
-                                <!-- Main business info -->
+
                                 <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                                     <div class="flex-1">
                                         <div class="flex flex-col sm:flex-row sm:items-start gap-4">
-                                            <!-- Business Logo -->
+
                                             @if ($business->logo)
                                                 <div class="flex-shrink-0">
                                                     <div class="w-16 h-16 flex items-center justify-center">
-                                                        <img src="{{ $business->logo_url }}" alt="{{ $business->name }} Logo" 
+                                                        <img src="{{ $business->logo_url }}"
+                                                            alt="{{ $business->name }} Logo"
                                                             class="max-w-full max-h-full object-contain border border-frappe-surface2">
                                                     </div>
                                                 </div>
@@ -127,7 +121,6 @@
                                                     {{ $business->name }}
                                                 </a>
 
-                                                <!-- Categories -->
                                                 @if ($business->categories->count() > 0)
                                                     <div class="flex flex-wrap gap-1 mb-2">
                                                         @foreach ($business->categories as $category)
@@ -158,10 +151,9 @@
                                     </div>
                                 </div>
 
-                                <!-- Action buttons -->
                                 <div
                                     class="mt-4 flex flex-col sm:flex-row gap-2 justify-between items-start sm:items-center">
-                                    <!-- Main action buttons - left side -->
+
                                     <div class="flex flex-wrap gap-2">
                                         <a href="{{ route('business-working-hours.index', ['business_id' => $business->id]) }}"
                                             class="inline-flex items-center gap-2 bg-gradient-to-r from-green-500/20 to-teal-500/20 backdrop-blur-sm border border-green-400/30 text-green-300 px-4 py-2 rounded-lg text-sm hover:from-green-500/30 hover:to-teal-500/30 transition-all"
@@ -190,7 +182,6 @@
                                         </a>
                                     </div>
 
-                                    <!-- Edit and Delete buttons - right side -->
                                     <div class="flex gap-2 ml-auto sm:ml-0">
                                         <a href="{{ route('businesses.edit', $business->id) }}"
                                             class="edit-button text-white px-4 py-2 rounded-lg inline-flex items-center gap-2 text-sm transition-all"

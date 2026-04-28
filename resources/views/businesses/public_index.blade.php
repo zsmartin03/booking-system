@@ -5,12 +5,10 @@
 
     <div class="py-6">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <!-- Search and Filter Form -->
             <div class="frosted-card overflow-hidden shadow-lg sm:rounded-xl border border-frappe-surface2 mb-6">
                 <div class="p-6">
                     <form id="filterForm" method="GET" action="{{ route('businesses.public.index') }}" class="space-y-4">
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                            <!-- Search by name -->
                             <div>
                                 <label for="search" class="block text-sm font-medium text-frappe-text mb-2">
                                     {{ __('messages.search_by_name') }}
@@ -20,7 +18,6 @@
                                     class="w-full px-3 py-2 bg-frappe-mantle border border-frappe-surface2 rounded-lg text-frappe-text placeholder-frappe-subtext1 focus:outline-none focus:ring-2 focus:ring-frappe-blue focus:border-transparent">
                             </div>
 
-                            <!-- Filter by category -->
                             <div>
                                 <label for="category" class="block text-sm font-medium text-frappe-text mb-2">
                                     {{ __('messages.filter_by_category') }}
@@ -37,7 +34,6 @@
                                 </select>
                             </div>
 
-                            <!-- Filter by minimum rating -->
                             <div>
                                 <label for="min_rating" class="block text-sm font-medium text-frappe-text mb-2">
                                     {{ __('messages.minimum_rating') }}
@@ -57,7 +53,6 @@
                                 </select>
                             </div>
 
-                            <!-- Sort by -->
                             <div>
                                 <label for="sort" class="block text-sm font-medium text-frappe-text mb-2">
                                     {{ __('messages.sort_by') }}
@@ -88,7 +83,6 @@
                             </div>
                         </div>
 
-                        <!-- Action buttons -->
                         <div class="flex flex-wrap gap-3">
                             <button type="submit"
                                 class="inline-flex items-center gap-2 bg-gradient-to-r from-blue-500/20 to-indigo-500/20 backdrop-blur-sm border border-blue-400/30 text-blue-300 px-4 py-2 rounded-lg text-sm hover:from-blue-500/30 hover:to-indigo-500/30 transition-all">
@@ -108,7 +102,6 @@
                 </div>
             </div>
 
-            <!-- Results info -->
             @if (request('search') || request('category') || request('min_rating') || request('sort'))
                 <div class="mb-6">
                     <div class="frosted-card overflow-hidden shadow-lg sm:rounded-xl border border-frappe-surface2">
@@ -186,13 +179,11 @@
         </div>
         @endforelse
 
-        <!-- Pagination -->
         @if ($businesses->hasPages())
             <div class="mt-8">
                 <div class="frosted-card overflow-hidden shadow-lg sm:rounded-xl border border-frappe-surface2">
                     <div class="p-6">
                         <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
-                            <!-- Results info -->
                             <div class="text-sm text-frappe-subtext1">
                                 {{ __('messages.showing') }}
                                 <span class="font-medium text-frappe-text">{{ $businesses->firstItem() }}</span>
@@ -203,9 +194,7 @@
                                 {{ __('messages.results') }}
                             </div>
 
-                            <!-- Pagination links -->
                             <div class="flex items-center gap-2">
-                                {{-- Previous Page Link --}}
                                 @if (!$businesses->onFirstPage())
                                     <a href="{{ $businesses->previousPageUrl() }}"
                                         class="inline-flex items-center gap-2 bg-gradient-to-r from-blue-500/20 to-indigo-500/20 backdrop-blur-sm border border-blue-400/30 text-blue-300 px-4 py-2 rounded-lg text-sm hover:from-blue-500/30 hover:to-indigo-500/30 transition-all">
@@ -214,7 +203,6 @@
                                     </a>
                                 @endif
 
-                                {{-- Pagination Elements --}}
                                 @php
                                     $currentPage = $businesses->currentPage();
                                     $lastPage = $businesses->lastPage();
@@ -262,7 +250,6 @@
                                     </a>
                                 @endif
 
-                                {{-- Next Page Link --}}
                                 @if ($businesses->hasMorePages())
                                     <a href="{{ $businesses->nextPageUrl() }}"
                                         class="inline-flex items-center gap-2 bg-gradient-to-r from-blue-500/20 to-indigo-500/20 backdrop-blur-sm border border-blue-400/30 text-blue-300 px-4 py-2 rounded-lg text-sm hover:from-blue-500/30 hover:to-indigo-500/30 transition-all">

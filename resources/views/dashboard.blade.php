@@ -3,12 +3,10 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
 
-                <!-- Role Card -->
                 <div
                     class="frosted-card rounded-xl p-8 flex flex-col items-center justify-center shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-105 min-h-[200px] md:col-span-2">
                     <x-heroicon-o-user class="w-12 h-12 text-frappe-blue mb-4" />
 
-                    <!-- Welcome Message -->
                     <div class="text-frappe-text text-2xl mb-2 text-center">
                         {{ __('messages.welcome_user', ['name' => auth()->user()->name]) }}
                     </div>
@@ -18,7 +16,6 @@
                         {{ ucfirst(auth()->user()->role) }}
                     </span>
 
-                    <!-- Profile and Logout Buttons -->
                     <div class="flex flex-col sm:flex-row gap-3 mt-auto">
                         <a href="{{ route('profile.edit') }}"
                             class="bg-gradient-to-r from-blue-500/30 to-sapphire-500/30 backdrop-blur-sm border border-blue-400/40 text-blue-300 rounded-lg hover:from-blue-500/40 hover:to-sapphire-500/40 transition-all px-6 py-2 flex items-center gap-2 shadow-lg">
@@ -38,7 +35,6 @@
                 </div>
 
 
-                <!-- Browse Businesses (all users) -->
                 <div
                     class="frosted-card rounded-xl p-8 flex flex-col items-center justify-center shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-105 min-h-[200px]">
                     <x-heroicon-o-building-storefront class="w-12 h-12 text-frappe-green mb-4" />
@@ -50,7 +46,6 @@
                     </a>
                 </div>
 
-                <!-- Your Bookings (all users) -->
                 <div
                     class="frosted-card rounded-xl p-8 flex flex-col items-center justify-center shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-105 min-h-[200px]">
                     <x-heroicon-o-calendar class="w-12 h-12 text-frappe-peach mb-4" />
@@ -62,7 +57,6 @@
                     </a>
                 </div>
 
-                <!-- Manage Businesses (admin/provider only) -->
                 @if (auth()->user()->role === 'admin' || auth()->user()->role === 'provider')
                     <div
                         class="frosted-card rounded-xl p-8 flex flex-col items-center justify-center shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-105 min-h-[200px]">
@@ -75,7 +69,6 @@
                         </a>
                     </div>
 
-                    <!-- Manage Bookings (admin/provider only) -->
                     <div
                         class="frosted-card rounded-xl p-8 flex flex-col items-center justify-center shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-105 min-h-[200px]">
                         <x-heroicon-o-clipboard-document-list class="w-12 h-12 text-frappe-mauve mb-4" />
@@ -87,7 +80,6 @@
                         </a>
                     </div>
 
-                    <!-- Business Statistics (admin/provider only) -->
                     <div
                         class="frosted-card rounded-xl p-8 flex flex-col items-center justify-center shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-105 min-h-[200px]">
                         <x-heroicon-o-chart-bar class="w-12 h-12 text-frappe-teal mb-4" />
@@ -100,7 +92,6 @@
                     </div>
                 @endif
 
-                <!-- Manage Categories (admin only) -->
                 @if (auth()->user()->role === 'admin')
                     <div
                         class="frosted-card rounded-xl p-8 flex flex-col items-center justify-center shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-105 min-h-[200px]">

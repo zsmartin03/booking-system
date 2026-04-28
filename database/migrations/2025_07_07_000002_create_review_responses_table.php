@@ -18,10 +18,8 @@ return new class extends Migration
             $table->text('response');
             $table->timestamps();
 
-            // Ensure one response per review
             $table->unique('review_id');
 
-            // Add index for better performance
             $table->index(['review_id', 'created_at']);
         });
     }

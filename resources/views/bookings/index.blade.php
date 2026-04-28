@@ -7,7 +7,6 @@
 
     <div class="py-6 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="frosted-card rounded-xl shadow-lg overflow-hidden">
-            <!-- Desktop Table View -->
             <div class="hidden md:block">
                 <div class="overflow-x-auto">
                     <table class="w-full min-w-full">
@@ -75,7 +74,6 @@
                 </div>
             </div>
 
-            <!-- Mobile Card View -->
             <div class="md:hidden">
                 @forelse($bookings as $booking)
                     <div class="p-4 border-b border-frappe-surface1/20 last:border-b-0">

@@ -57,11 +57,9 @@ class BookingObserver
      */
     public function updated(Booking $booking)
     {
-        // Retrieve the previous status from cache
         $cacheKey = "booking_{$booking->id}_previous_status";
         $previousStatus = Cache::get($cacheKey);
 
-        // Only send notification if status has changed
         if ($previousStatus !== null && $previousStatus !== $booking->status) {
             $this->notificationService->sendBookingStatusUpdatedNotifications($booking, $previousStatus);
         }
