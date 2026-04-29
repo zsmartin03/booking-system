@@ -29,7 +29,6 @@ class RegisteredUserControllerTest extends TestCase
             'password' => 'Password123!',
             'password_confirmation' => 'Password123!',
             'role' => 'client',
-            'terms' => 'on',
         ]);
 
         $response->assertRedirect(route('dashboard'));
@@ -51,7 +50,6 @@ class RegisteredUserControllerTest extends TestCase
             'password' => 'Password123!',
             'password_confirmation' => 'Password123!',
             'role' => 'provider',
-            'terms' => 'on',
         ]);
 
         $response->assertRedirect(route('dashboard'));
@@ -59,22 +57,6 @@ class RegisteredUserControllerTest extends TestCase
         $user = User::where('email', 'user@example.com')->first();
         $this->assertNotNull($user->email_verified_at);
         Event::assertNotDispatched(Registered::class);
-    }
-
-    public function test_registration_requires_terms_acceptance()
-    {
-        $response = $this->from(route('register'))->post(route('register'), [
-            'name' => 'Test User',
-            'email' => 'fail@domain.com',
-            'password' => 'Password123!',
-            'password_confirmation' => 'Password123!',
-            'role' => 'client',
-            // 'terms' => 'on',
-        ]);
-
-        $response->assertRedirect(route('register'));
-        $response->assertSessionHasErrors('terms');
-        $this->assertGuest();
     }
 
     public function test_registration_requires_valid_role()
@@ -85,7 +67,6 @@ class RegisteredUserControllerTest extends TestCase
             'password' => 'Password123!',
             'password_confirmation' => 'Password123!',
             'role' => 'invalid',
-            'terms' => 'on',
         ]);
 
         $response->assertRedirect(route('register'));

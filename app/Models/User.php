@@ -2,10 +2,17 @@
 
 namespace App\Models;
 
+use App\Mail\ResetPassword;
+use App\Mail\VerifyEmail;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\URL;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -148,7 +155,7 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Override email verification notification to skip example.com addresses
+     * Override email verification notification to send custom formatted email
      */
     public function sendEmailVerificationNotification()
     {
@@ -156,6 +163,28 @@ class User extends Authenticatable implements MustVerifyEmail
             return;
         }
 
-        parent::sendEmailVerificationNotification();
+        $verificationUrl = URL::temporarySignedRoute(
+            'verification.verify',
+            Carbon::now()->addMinutes(Config::get('auth.verification.expire', 60)),
+            [
+                'id' => $this->getKey(),
+                'hash' => sha1($this->getEmailForVerification()),
+            ]
+        );
+
+        Mail::to($this->email)->send(new VerifyEmail($verificationUrl));
+    }
+
+    /**
+     * Send a password reset notification to the user.
+     */
+    public function sendPasswordResetNotification($token)
+    {
+        $resetUrl = URL::route('password.reset', [
+            'token' => $token,
+            'email' => $this->email,
+        ]);
+
+        Mail::to($this->email)->send(new ResetPassword($resetUrl));
     }
 }

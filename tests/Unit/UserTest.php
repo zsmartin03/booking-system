@@ -6,13 +6,13 @@ use App\Models\User;
 use App\Models\Business;
 use App\Models\Employee;
 use App\Models\Booking;
+use App\Mail\VerifyEmail as VerifyEmailMailable;
 use App\Models\Notification;
 use App\Models\Review;
 use App\Models\ReviewVote;
 use App\Models\ReviewResponse;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Notification as NotificationFacade;
-use Illuminate\Auth\Notifications\VerifyEmail;
+use Illuminate\Support\Facades\Mail;
 use Tests\TestCase;
 
 class UserTest extends TestCase
@@ -170,16 +170,16 @@ class UserTest extends TestCase
     public function test_send_email_verification_notification_skips_example_com()
     {
         $user = User::factory()->create(['email' => 'skip@example.com']);
-        NotificationFacade::fake();
+        Mail::fake();
         $user->sendEmailVerificationNotification();
-        NotificationFacade::assertNothingSent();
+        Mail::assertNothingSent();
     }
 
     public function test_send_email_verification_notification_sends_for_non_example_com()
     {
         $user = User::factory()->create(['email' => 'real@domain.com']);
-        NotificationFacade::fake();
+        Mail::fake();
         $user->sendEmailVerificationNotification();
-        NotificationFacade::assertSentTo($user, VerifyEmail::class);
+        Mail::assertSent(VerifyEmailMailable::class);
     }
 }

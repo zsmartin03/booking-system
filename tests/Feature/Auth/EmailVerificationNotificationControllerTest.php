@@ -2,10 +2,10 @@
 
 namespace Tests\Feature\Auth;
 
+use App\Mail\VerifyEmail as VerifyEmailMailable;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Notification;
-use Illuminate\Auth\Notifications\VerifyEmail;
+use Illuminate\Support\Facades\Mail;
 use Tests\TestCase;
 
 class EmailVerificationNotificationControllerTest extends TestCase
@@ -38,7 +38,7 @@ class EmailVerificationNotificationControllerTest extends TestCase
 
     public function test_sends_verification_notification()
     {
-        Notification::fake();
+        Mail::fake();
 
         $user = User::factory()->create([
             'email' => 'user@domain.com',
@@ -49,6 +49,6 @@ class EmailVerificationNotificationControllerTest extends TestCase
 
         $response->assertRedirect();
         $response->assertSessionHas('status', 'verification-link-sent');
-        Notification::assertSentTo($user, VerifyEmail::class);
+        Mail::assertSent(VerifyEmailMailable::class);
     }
 }
