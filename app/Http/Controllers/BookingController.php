@@ -402,14 +402,18 @@ class BookingController extends Controller
     {
         $user = Auth::user();
 
-        if (!in_array($user->role, ['admin', 'provider'])) {
+        if (!in_array($user->role, ['admin', 'provider', 'employee'])) {
             abort(403);
         }
 
         if ($user->role === 'admin') {
             $businesses = Business::with('services')->get();
-        } else {
+        } elseif ($user->role === 'provider') {
             $businesses = Business::where('user_id', $user->id)->with('services')->get();
+        } else {
+            $businesses = Business::whereHas('employees', function ($q) use ($user) {
+                $q->where('user_id', $user->id);
+            })->with('services')->get();
         }
 
         $selectedBusiness = null;
@@ -422,22 +426,29 @@ class BookingController extends Controller
             }
         }
 
+        $bookingsQuery = Booking::with(['service.business', 'employee', 'client']);
+
+        if ($user->role === 'employee') {
+            $employeeIds = Employee::where('user_id', $user->id)->pluck('id');
+            $bookingsQuery->whereIn('employee_id', $employeeIds);
+        }
+
         if ($selectedBusiness) {
-            $bookings = Booking::whereHas('service', function ($q) use ($selectedBusiness) {
+            $bookings = $bookingsQuery->whereHas('service', function ($q) use ($selectedBusiness) {
                 $q->where('business_id', $selectedBusiness->id);
-            })->with(['service.business', 'employee', 'client'])->latest()->paginate(20);
+            })->latest()->paginate(20);
         } else {
             if ($user->role === 'admin') {
-                $bookings = Booking::with(['service.business', 'employee', 'client'])->latest()->paginate(20);
+                $bookings = $bookingsQuery->latest()->paginate(20);
             } else {
                 $businessIds = $businesses->pluck('id');
-                $bookings = Booking::whereHas('service', function ($q) use ($businessIds) {
+                $bookings = $bookingsQuery->whereHas('service', function ($q) use ($businessIds) {
                     $q->whereIn('business_id', $businessIds);
-                })->with(['service.business', 'employee', 'client'])->latest()->paginate(20);
+                })->latest()->paginate(20);
             }
         }
 
-        if ($user->role === 'provider' && $businesses->count() === 1 && !$selectedBusiness) {
+        if (in_array($user->role, ['provider', 'employee']) && $businesses->count() === 1 && !$selectedBusiness) {
             $selectedBusiness = $businesses->first();
             $businessSettings = Setting::getBusinessSettings($selectedBusiness->id);
         }
@@ -467,6 +478,9 @@ class BookingController extends Controller
         if ($user->role === 'provider' && $booking->service->business->user_id !== $user->id) {
             abort(403);
         }
+        if ($user->role === 'employee' && !$user->employees()->where('id', $booking->employee_id)->exists()) {
+            abort(403);
+        }
 
         return view('bookings.show', compact('booking'));
     }
@@ -476,7 +490,19 @@ class BookingController extends Controller
         $booking = Booking::findOrFail($id);
         $user = Auth::user();
 
-        if (!in_array($user->role, ['admin', 'provider'])) {
+        $isAuthorized = false;
+
+        if (in_array($user->role, ['admin', 'provider'])) {
+            if ($user->role === 'admin') {
+                $isAuthorized = true;
+            } else {
+                $isAuthorized = $booking->service->business->user_id === $user->id;
+            }
+        } elseif ($user->role === 'employee') {
+            $isAuthorized = $user->employees()->where('id', $booking->employee_id)->exists();
+        }
+
+        if (!$isAuthorized) {
             abort(403);
         }
 

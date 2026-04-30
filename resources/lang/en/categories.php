@@ -51,4 +51,9 @@ return array (
     'name' => 'Updated EN',
     'description' => 'Updated desc EN',
   ),
+  'test' => 
+  array (
+    'name' => 'test',
+    'description' => 'test category',
+  ),
 );

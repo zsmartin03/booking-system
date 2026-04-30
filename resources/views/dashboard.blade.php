@@ -57,17 +57,19 @@
                     </a>
                 </div>
 
-                @if (auth()->user()->role === 'admin' || auth()->user()->role === 'provider')
-                    <div
-                        class="frosted-card rounded-xl p-8 flex flex-col items-center justify-center shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-105 min-h-[200px]">
-                        <x-heroicon-o-briefcase class="w-12 h-12 text-frappe-lavender mb-4" />
-                        <div class="text-frappe-text text-xl mb-2">{{ __('messages.manage_businesses') }}</div>
-                        <a href="{{ route('businesses.index') }}"
-                            class="mt-4 bg-gradient-to-r from-purple-500/30 to-violet-500/30 backdrop-blur-sm border border-purple-400/40 text-purple-300 rounded-lg hover:from-purple-500/40 hover:to-violet-500/40 transition-all px-6 py-3 flex items-center gap-2 text-lg shadow-lg">
-                            <x-heroicon-o-cog class="w-6 h-6" />
-                            {{ __('messages.manage') }}
-                        </a>
-                    </div>
+                @if (auth()->user()->role === 'admin' || auth()->user()->role === 'provider' || auth()->user()->role === 'employee')
+                    @if (auth()->user()->role === 'admin' || auth()->user()->role === 'provider')
+                        <div
+                            class="frosted-card rounded-xl p-8 flex flex-col items-center justify-center shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-105 min-h-[200px]">
+                            <x-heroicon-o-briefcase class="w-12 h-12 text-frappe-lavender mb-4" />
+                            <div class="text-frappe-text text-xl mb-2">{{ __('messages.manage_businesses') }}</div>
+                            <a href="{{ route('businesses.index') }}"
+                                class="mt-4 bg-gradient-to-r from-purple-500/30 to-violet-500/30 backdrop-blur-sm border border-purple-400/40 text-purple-300 rounded-lg hover:from-purple-500/40 hover:to-violet-500/40 transition-all px-6 py-3 flex items-center gap-2 text-lg shadow-lg">
+                                <x-heroicon-o-cog class="w-6 h-6" />
+                                {{ __('messages.manage') }}
+                            </a>
+                        </div>
+                    @endif
 
                     <div
                         class="frosted-card rounded-xl p-8 flex flex-col items-center justify-center shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-105 min-h-[200px]">

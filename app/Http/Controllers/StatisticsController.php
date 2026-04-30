@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Business;
+use App\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -43,6 +44,7 @@ class StatisticsController extends Controller
 
         $bookingsData = $business->getBookingsPerPeriod($period);
         $revenueData = $business->getRevenuePerPeriod($period);
+        $businessSettings = Setting::getBusinessSettings($business->id);
 
         $chartData = [
             'bookings' => [
@@ -63,6 +65,7 @@ class StatisticsController extends Controller
             'totalCustomers',
             'mostBookedServices',
             'chartData',
+            'businessSettings',
             'period'
         ));
     }

@@ -147,6 +147,7 @@ return [
 
     // Bookings
     'bookings' => 'Bookings',
+    'bookings_header' => 'Bookings',
     'your_bookings' => 'Your Bookings',
     'manage_bookings' => 'Manage Bookings',
     'create_booking' => 'Create Booking',
@@ -313,6 +314,8 @@ return [
     'save_settings' => 'Save Settings',
     'reset_settings' => 'Reset Settings',
     'reset_settings_confirmation' => 'Are you sure you want to reset all settings to their default values? This action cannot be undone.',
+    'settings_updated_successfully' => 'Settings updated successfully!',
+    'settings_reset_successfully' => 'Settings reset to defaults successfully!',
 
     // Form labels
     'required' => 'Required',
@@ -544,6 +547,9 @@ return [
     'add_availability_exception' => 'Add Availability Exception',
     'edit_availability_exception' => 'Edit Availability Exception',
     'no_availability_exceptions' => 'No availability exceptions found',
+    'availability_exception_created_successfully' => 'Availability exception created successfully.',
+    'availability_exception_updated_successfully' => 'Availability exception updated successfully.',
+    'availability_exception_deleted_successfully' => 'Availability exception deleted successfully.',
     'exception_type' => 'Exception Type',
     'select_type' => 'Select Type',
     'available_override_regular_hours' => 'Available (Override regular hours)',

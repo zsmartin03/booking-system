@@ -152,7 +152,9 @@
                                         <p class="text-frappe-subtext1 text-sm mb-3">{{ $service->description }}</p>
                                     @endif
                                     <div class="flex justify-between items-center">
-                                        <span class="text-frappe-blue font-semibold">{{ $service->price }} EUR</span>
+                                        <span class="text-frappe-blue font-semibold">
+                                            {{ \App\Models\Service::formatPrice($service->price, $businessSettings['currency'] ?? 'USD') }}
+                                        </span>
                                         <span class="text-frappe-subtext1 text-sm">{{ $service->duration }} min</span>
                                     </div>
                                 </div>

@@ -4,6 +4,8 @@ namespace Tests\Feature;
 
 use App\Models\Business;
 use App\Models\Category;
+use App\Models\Service;
+use App\Models\Setting;
 use App\Models\User;
 use App\Services\GeocodingService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -102,6 +104,24 @@ class BusinessControllerTest extends TestCase
         $response = $this->get(route('businesses.show', $business->id));
         $response->assertOk();
         $response->assertViewHas('business');
+    }
+
+    public function test_show_formats_service_prices_with_business_currency()
+    {
+        $business = Business::factory()->create();
+        Setting::setValue($business->id, 'currency', 'HUF');
+        Service::factory()->create([
+            'business_id' => $business->id,
+            'name' => 'Currency Test Service',
+            'price' => 1200,
+            'active' => true,
+        ]);
+
+        $response = $this->get(route('businesses.show', $business->id));
+
+        $response->assertOk();
+        $response->assertSee('1,200.00 Ft');
+        $response->assertDontSee('1200.00 EUR');
     }
 
     public function test_edit_requires_owner_or_admin()

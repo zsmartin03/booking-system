@@ -51,4 +51,9 @@ return array (
     'name' => 'Frissített HU',
     'description' => 'Frissített leírás HU',
   ),
+  'test' => 
+  array (
+    'name' => 'teszt',
+    'description' => 'teszt kategoria',
+  ),
 );

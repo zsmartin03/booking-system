@@ -146,6 +146,7 @@ return [
 
     // Bookings
     'bookings' => 'Foglalások',
+    'bookings_header' => 'Foglalások',
     'your_bookings' => 'Az Ön foglalásai',
     'manage_bookings' => 'Foglalások kezelése',
     'create_booking' => 'Foglalás létrehozása',
@@ -426,6 +427,8 @@ return [
     'save_settings' => 'Beállítások mentése',
     'reset_settings' => 'Beállítások visszaállítása',
     'reset_settings_confirmation' => 'Biztosan visszaállítja az összes beállítást az alapértékekre? Ez a művelet nem vonható vissza.',
+    'settings_updated_successfully' => 'Beállítások sikeresen frissítve!',
+    'settings_reset_successfully' => 'Beállítások sikeresen visszaállítva az alapértékekre!',
 
     // Table headers and common terms
     'day' => 'Nap',
@@ -538,6 +541,9 @@ return [
     'add_availability_exception' => 'Elérhetőségi kivétel hozzáadása',
     'edit_availability_exception' => 'Elérhetőségi kivétel szerkesztése',
     'no_availability_exceptions' => 'Nincsenek beállított elérhetőségi kivételek.',
+    'availability_exception_created_successfully' => 'Elérhetőségi kivétel sikeresen létrehozva.',
+    'availability_exception_updated_successfully' => 'Elérhetőségi kivétel sikeresen frissítve.',
+    'availability_exception_deleted_successfully' => 'Elérhetőségi kivétel sikeresen törölve.',
     'exception_type' => 'Kivétel típusa',
     'select_type' => 'Típus kiválasztása',
     'available_override_regular_hours' => 'Elérhető (felülírja a normál munkaidőt)',

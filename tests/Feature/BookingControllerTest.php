@@ -322,6 +322,68 @@ class BookingControllerTest extends TestCase
         $response->assertViewHas('bookings');
         $response->assertSee((string)$booking->id);
     }
+
+    public function test_manage_shows_employee_assigned_bookings()
+    {
+        $employeeUser = User::factory()->create(['role' => 'employee']);
+        $assignedEmployee = Employee::factory()->create([
+            'business_id' => $this->business->id,
+            'user_id' => $employeeUser->id,
+            'active' => true,
+        ]);
+        $otherEmployee = Employee::factory()->create([
+            'business_id' => $this->business->id,
+            'active' => true,
+        ]);
+        $this->service->employees()->attach([$assignedEmployee->id, $otherEmployee->id]);
+
+        $assignedBooking = Booking::factory()->create([
+            'client_id' => $this->client->id,
+            'service_id' => $this->service->id,
+            'employee_id' => $assignedEmployee->id,
+        ]);
+        $otherBooking = Booking::factory()->create([
+            'client_id' => $this->client->id,
+            'service_id' => $this->service->id,
+            'employee_id' => $otherEmployee->id,
+        ]);
+
+        $response = $this->actingAs($employeeUser)->get(route('bookings.manage'));
+
+        $response->assertOk();
+        $response->assertSee(route('bookings.update', $assignedBooking->id), false);
+        $response->assertDontSee(route('bookings.update', $otherBooking->id), false);
+    }
+
+    public function test_update_booking_status_from_manage_as_employee_redirects()
+    {
+        $employeeUser = User::factory()->create(['role' => 'employee']);
+        $employee = Employee::factory()->create([
+            'business_id' => $this->business->id,
+            'user_id' => $employeeUser->id,
+            'active' => true,
+        ]);
+        $this->service->employees()->attach($employee->id);
+
+        $booking = Booking::factory()->create([
+            'client_id' => $this->client->id,
+            'service_id' => $this->service->id,
+            'employee_id' => $employee->id,
+            'status' => 'pending',
+        ]);
+
+        $response = $this->actingAs($employeeUser)->patch(route('bookings.update', $booking->id), [
+            'status' => 'confirmed',
+            'from_manage' => 1,
+        ]);
+
+        $response->assertRedirect(route('bookings.manage', ['business_id' => $this->service->business_id]));
+        $this->assertDatabaseHas('bookings', [
+            'id' => $booking->id,
+            'status' => 'confirmed',
+        ]);
+    }
+
     public function test_show_booking_as_client()
     {
         $booking = Booking::factory()->create([
@@ -551,5 +613,184 @@ class BookingControllerTest extends TestCase
         $response->assertStatus(200);
         $json = $response->json();
         $this->assertIsArray($json);
+    }
+
+    // Employee booking status update tests
+    public function test_update_booking_status_as_employee()
+    {
+        // Create an employee user
+        $employeeUser = User::factory()->create(['role' => 'employee']);
+        $employee = Employee::factory()->create(['business_id' => $this->business->id, 'user_id' => $employeeUser->id, 'active' => true]);
+        $this->service->employees()->attach($employee->id);
+
+        // Create a booking assigned to this employee
+        $booking = Booking::factory()->create([
+            'client_id' => $this->client->id,
+            'service_id' => $this->service->id,
+            'employee_id' => $employee->id,
+            'status' => 'pending',
+        ]);
+
+        // Employee should be able to update the booking status
+        $response = $this->actingAs($employeeUser)->patch(route('bookings.update', $booking->id), [
+            'status' => 'confirmed',
+        ]);
+
+        $response->assertRedirect(route('bookings.show', $booking->id));
+        $this->assertDatabaseHas('bookings', [
+            'id' => $booking->id,
+            'status' => 'confirmed',
+        ]);
+    }
+
+    public function test_update_booking_status_as_employee_fails_for_other_employee_booking()
+    {
+        // Create two employee users
+        $employeeUser1 = User::factory()->create(['role' => 'employee']);
+        $employee1 = Employee::factory()->create(['business_id' => $this->business->id, 'user_id' => $employeeUser1->id, 'active' => true]);
+
+        $employeeUser2 = User::factory()->create(['role' => 'employee']);
+        $employee2 = Employee::factory()->create(['business_id' => $this->business->id, 'user_id' => $employeeUser2->id, 'active' => true]);
+
+        $this->service->employees()->attach($employee1->id);
+        $this->service->employees()->attach($employee2->id);
+
+        // Create a booking assigned to employee1
+        $booking = Booking::factory()->create([
+            'client_id' => $this->client->id,
+            'service_id' => $this->service->id,
+            'employee_id' => $employee1->id,
+            'status' => 'pending',
+        ]);
+
+        // Employee2 should NOT be able to update employee1's booking
+        $response = $this->actingAs($employeeUser2)->patch(route('bookings.update', $booking->id), [
+            'status' => 'confirmed',
+        ]);
+
+        $response->assertForbidden();
+        $this->assertDatabaseHas('bookings', [
+            'id' => $booking->id,
+            'status' => 'pending',
+        ]);
+    }
+
+    public function test_employee_can_update_booking_to_completed()
+    {
+        // Create an employee user
+        $employeeUser = User::factory()->create(['role' => 'employee']);
+        $employee = Employee::factory()->create(['business_id' => $this->business->id, 'user_id' => $employeeUser->id, 'active' => true]);
+        $this->service->employees()->attach($employee->id);
+
+        // Create a booking assigned to this employee
+        $booking = Booking::factory()->create([
+            'client_id' => $this->client->id,
+            'service_id' => $this->service->id,
+            'employee_id' => $employee->id,
+            'status' => 'confirmed',
+        ]);
+
+        // Employee should be able to mark booking as completed
+        $response = $this->actingAs($employeeUser)->patch(route('bookings.update', $booking->id), [
+            'status' => 'completed',
+        ]);
+
+        $response->assertRedirect(route('bookings.show', $booking->id));
+        $this->assertDatabaseHas('bookings', [
+            'id' => $booking->id,
+            'status' => 'completed',
+        ]);
+    }
+
+    public function test_employee_can_update_booking_to_cancelled()
+    {
+        // Create an employee user
+        $employeeUser = User::factory()->create(['role' => 'employee']);
+        $employee = Employee::factory()->create(['business_id' => $this->business->id, 'user_id' => $employeeUser->id, 'active' => true]);
+        $this->service->employees()->attach($employee->id);
+
+        // Create a booking assigned to this employee
+        $booking = Booking::factory()->create([
+            'client_id' => $this->client->id,
+            'service_id' => $this->service->id,
+            'employee_id' => $employee->id,
+            'status' => 'pending',
+        ]);
+
+        // Employee should be able to cancel the booking
+        $response = $this->actingAs($employeeUser)->patch(route('bookings.update', $booking->id), [
+            'status' => 'cancelled',
+        ]);
+
+        $response->assertRedirect(route('bookings.show', $booking->id));
+        $this->assertDatabaseHas('bookings', [
+            'id' => $booking->id,
+            'status' => 'cancelled',
+        ]);
+    }
+
+    public function test_employee_without_link_cannot_update_booking()
+    {
+        // Create an employee user that is not linked to the business
+        $unlinkedEmployeeUser = User::factory()->create(['role' => 'employee']);
+        // No employee record created for this user
+
+        // Create a booking assigned to a different employee
+        $booking = Booking::factory()->create([
+            'client_id' => $this->client->id,
+            'service_id' => $this->service->id,
+            'employee_id' => $this->employee->id,
+            'status' => 'pending',
+        ]);
+
+        // Unlinked employee should NOT be able to update the booking
+        $response = $this->actingAs($unlinkedEmployeeUser)->patch(route('bookings.update', $booking->id), [
+            'status' => 'confirmed',
+        ]);
+
+        $response->assertForbidden();
+    }
+
+    public function test_provider_can_still_update_booking_status()
+    {
+        // Ensure provider can still update bookings for their business
+        $booking = Booking::factory()->create([
+            'client_id' => $this->client->id,
+            'service_id' => $this->service->id,
+            'employee_id' => $this->employee->id,
+            'status' => 'pending',
+        ]);
+
+        $response = $this->actingAs($this->provider)->patch(route('bookings.update', $booking->id), [
+            'status' => 'confirmed',
+        ]);
+
+        $response->assertRedirect(route('bookings.show', $booking->id));
+        $this->assertDatabaseHas('bookings', [
+            'id' => $booking->id,
+            'status' => 'confirmed',
+        ]);
+    }
+
+    public function test_admin_can_still_update_booking_status()
+    {
+        // Ensure admin can still update all bookings
+        $admin = User::factory()->create(['role' => 'admin']);
+        $booking = Booking::factory()->create([
+            'client_id' => $this->client->id,
+            'service_id' => $this->service->id,
+            'employee_id' => $this->employee->id,
+            'status' => 'pending',
+        ]);
+
+        $response = $this->actingAs($admin)->patch(route('bookings.update', $booking->id), [
+            'status' => 'confirmed',
+        ]);
+
+        $response->assertRedirect(route('bookings.show', $booking->id));
+        $this->assertDatabaseHas('bookings', [
+            'id' => $booking->id,
+            'status' => 'confirmed',
+        ]);
     }
 }

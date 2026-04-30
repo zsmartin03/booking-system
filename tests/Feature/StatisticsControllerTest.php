@@ -3,6 +3,10 @@
 namespace Tests\Feature;
 
 use App\Models\Business;
+use App\Models\Booking;
+use App\Models\Employee;
+use App\Models\Service;
+use App\Models\Setting;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
@@ -51,6 +55,34 @@ class StatisticsControllerTest extends TestCase
         $response->assertViewHas('mostBookedServices');
         $response->assertViewHas('chartData');
         $response->assertViewHas('period');
+    }
+
+    public function test_index_formats_money_with_business_currency()
+    {
+        $user = User::factory()->create(['role' => 'provider']);
+        $client = User::factory()->create(['role' => 'client']);
+        $business = Business::factory()->create(['user_id' => $user->id]);
+        Setting::setValue($business->id, 'currency', 'HUF');
+
+        $service = Service::factory()->create([
+            'business_id' => $business->id,
+            'price' => 1200,
+        ]);
+        $employee = Employee::factory()->create(['business_id' => $business->id]);
+        Booking::factory()->create([
+            'client_id' => $client->id,
+            'service_id' => $service->id,
+            'employee_id' => $employee->id,
+            'status' => 'completed',
+            'total_price' => 1200,
+        ]);
+
+        $response = $this->actingAs($user)->get(route('statistics.index', ['business' => $business->id]));
+
+        $response->assertOk();
+        $response->assertViewHas('businessSettings');
+        $response->assertSee('1,200.00 Ft');
+        $response->assertDontSee('$1,200.00');
     }
 
     public function test_index_for_admin_sees_all_businesses()

@@ -62,7 +62,9 @@
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="text-frappe-subtext1 text-sm font-medium">{{ __('messages.total_revenue') }}</p>
-                            <p class="text-3xl font-bold text-frappe-green">${{ number_format($totalRevenue, 2) }}</p>
+                            <p class="text-3xl font-bold text-frappe-green">
+                                {{ \App\Models\Service::formatPrice($totalRevenue, $businessSettings['currency'] ?? 'USD') }}
+                            </p>
                         </div>
                         <div class="p-3 bg-green-500/20 rounded-full">
                             <x-heroicon-o-currency-dollar class="w-8 h-8 text-frappe-green" />
@@ -89,7 +91,7 @@
                             <p class="text-frappe-subtext1 text-sm font-medium">
                                 {{ __('messages.avg_revenue_per_booking') }}</p>
                             <p class="text-3xl font-bold text-frappe-lavender">
-                                ${{ $totalBookings > 0 ? number_format($totalRevenue / $totalBookings, 2) : '0.00' }}
+                                {{ \App\Models\Service::formatPrice($totalBookings > 0 ? $totalRevenue / $totalBookings : 0, $businessSettings['currency'] ?? 'USD') }}
                             </p>
                         </div>
                         <div class="p-3 bg-purple-500/20 rounded-full">
@@ -132,7 +134,8 @@
                                     <p class="text-sm text-frappe-subtext1">{{ __('messages.bookings') }}</p>
                                 </div>
                                 <div class="ml-4 text-right">
-                                    <p class="font-medium text-frappe-green">${{ number_format($service->price, 2) }}
+                                    <p class="font-medium text-frappe-green">
+                                        {{ \App\Models\Service::formatPrice($service->price, $businessSettings['currency'] ?? 'USD') }}
                                     </p>
                                     <p class="text-sm text-frappe-subtext1">{{ __('messages.per_service') }}</p>
                                 </div>
@@ -164,6 +167,38 @@
         Chart.defaults.borderColor = 'rgba(127, 132, 156, 0.2)';
 
         let chartData = @json($chartData);
+        const currency = @json($businessSettings['currency'] ?? 'USD');
+
+        function formatCurrency(value) {
+            const symbolCurrencies = {
+                USD: '$',
+                EUR: '€',
+                GBP: '£',
+                JPY: '¥',
+                CNY: '¥',
+                KRW: '₩',
+                INR: '₹',
+                RUB: '₽'
+            };
+            const textCurrencies = {
+                HUF: 'Ft',
+                CZK: 'Kč',
+                PLN: 'zł',
+                SEK: 'kr',
+                NOK: 'kr',
+                DKK: 'kr'
+            };
+            const formatted = Number(value).toLocaleString(undefined, {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+
+            if (symbolCurrencies[currency]) {
+                return symbolCurrencies[currency] + formatted;
+            }
+
+            return formatted + ' ' + (textCurrencies[currency] || currency);
+        }
 
         const bookingsCtx = document.getElementById('bookingsChart').getContext('2d');
         const bookingsChart = new Chart(bookingsCtx, {
@@ -223,7 +258,7 @@
                         beginAtZero: true,
                         ticks: {
                             callback: function(value) {
-                                return '$' + value.toFixed(2);
+                                return formatCurrency(value);
                             }
                         }
                     }

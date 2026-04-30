@@ -78,7 +78,7 @@ class SettingController extends Controller
         Setting::clearBusinessCache($businessId);
 
         return redirect()->route('settings.index', ['business_id' => $businessId])
-            ->with('success', 'Settings updated successfully!');
+            ->with('success', __('messages.settings_updated_successfully'));
     }
 
     /**
@@ -97,6 +97,6 @@ class SettingController extends Controller
         Setting::clearBusinessCache($businessId);
 
         return redirect()->route('settings.index', ['business_id' => $businessId])
-            ->with('success', 'Settings reset to defaults successfully!');
+            ->with('success', __('messages.settings_reset_successfully'));
     }
 }

@@ -74,7 +74,7 @@ class AvailabilityExceptionController extends Controller
         AvailabilityException::create($validated);
 
         return redirect()->route('availability-exceptions.index', ['employee_id' => $employee->id])
-            ->with('success', 'Availability exception created successfully.');
+            ->with('success', __('messages.availability_exception_created_successfully'));
     }
 
     public function edit($id)
@@ -125,7 +125,7 @@ class AvailabilityExceptionController extends Controller
         $exception->update($validated);
 
         return redirect()->route('availability-exceptions.index', ['employee_id' => $employee->id])
-            ->with('success', 'Availability exception updated successfully.');
+            ->with('success', __('messages.availability_exception_updated_successfully'));
     }
 
     public function destroy($id)
@@ -139,6 +139,6 @@ class AvailabilityExceptionController extends Controller
         $exception->delete();
 
         return redirect()->route('availability-exceptions.index', ['employee_id' => $employee->id])
-            ->with('success', 'Availability exception deleted successfully.');
+            ->with('success', __('messages.availability_exception_deleted_successfully'));
     }
 }

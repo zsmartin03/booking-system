@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Business;
 use App\Models\Category;
+use App\Models\Setting;
 use App\Services\GeocodingService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -320,7 +321,9 @@ class BusinessController extends Controller
             });
         }
 
-        return view('businesses.show', compact('business', 'relatedBusinesses', 'userReview', 'otherReviews'));
+        $businessSettings = Setting::getBusinessSettings($business->id);
+
+        return view('businesses.show', compact('business', 'businessSettings', 'relatedBusinesses', 'userReview', 'otherReviews'));
     }
 
     /**
